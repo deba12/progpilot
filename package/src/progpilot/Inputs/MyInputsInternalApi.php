@@ -167,7 +167,7 @@ class MyInputsInternalApi
         return false;
     }
 
-    public function isIncludedFile($name): bool
+    public function isIncludedFile(string $name): bool
     {
         $name = realpath($name);
         $basename = basename($name);
@@ -286,9 +286,9 @@ class MyInputsInternalApi
     }
 
     public function getSourceArrayByName(
-        $myFuncOrDef,
-        $arrValue = false
-    ) {
+        MyOp $myFuncOrDef,
+        string|int|bool $arrValue = false
+    ): ?MySource {
         foreach ($this->sources as $mySource) {
             if (
                 $mySource->getName() === $myFuncOrDef->getName()
@@ -1069,7 +1069,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readExcludesFile($file): void
+    public function readExcludesFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -1091,7 +1091,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readIncludesFile($file): void
+    public function readIncludesFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {

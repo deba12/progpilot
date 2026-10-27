@@ -20,7 +20,7 @@ class MyFile extends MyOp
      */
     public string $fileName;
 
-    public function __construct($fullPathFileName, $baseDir, $fakeLine, $fakeColumn)
+    public function __construct(string $fullPathFileName, string $baseDir, int $fakeLine, int $fakeColumn)
     {
         parent::__construct($fullPathFileName, $fakeLine, $fakeColumn);
         $this->baseDir = $baseDir;
@@ -47,7 +47,7 @@ class MyFile extends MyOp
         return $this->includedFromMyFile;
     }
 
-    public function printStdout($context = null): void
+    public function printStdout(mixed $context = null): void
     {
         echo "file " . $this->getName() . "\n";
         $includeFile = $this->getIncludedFromMyfile();

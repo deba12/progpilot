@@ -20,7 +20,7 @@ use progpilot\Code\Opcodes;
 
 class ConcatFetch
 {
-    public static function concatFetch(Context $context, Op $op, $expr): void
+    public static function concatFetch(Context $context, Op $op, ?string $expr): void
     {
         if ($op instanceof Concat) {
             $instDefChained = new MyInstruction(Opcodes::CONCAT_LEFT);

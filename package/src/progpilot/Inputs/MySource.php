@@ -32,7 +32,7 @@ class MySource extends MySpecify
 
     public const CONDITION_ARRAY = "condition_array";
 
-    public function __construct($name, $language)
+    public function __construct(string $name, string $language)
     {
         parent::__construct($name, $language);
 

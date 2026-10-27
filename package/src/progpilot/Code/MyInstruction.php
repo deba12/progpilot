@@ -51,7 +51,7 @@ class MyInstruction
         $this->opcode = $opcode;
     }
 
-    public function addProperty(mixed $index, $property): void
+    public function addProperty(mixed $index, mixed $property): void
     {
         $this->properties[$index] = $property;
     }

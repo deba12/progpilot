@@ -214,8 +214,12 @@ class SecurityAnalysis
     }
 
 
-    public static function isSafeStatesCondition($context, $mySink, $myDef, $condition): bool
-    {
+    public static function isSafeStatesCondition(
+        Context $context,
+        MySink $mySink,
+        MyDefinition $myDef,
+        ?string $condition
+    ): bool {
         $statesMyDef = $myDef->getStates();
         foreach ($statesMyDef as $stateMyDef) {
             if (!SecurityAnalysis::isSafeStateCondition($context, $mySink, $stateMyDef, $condition)) {

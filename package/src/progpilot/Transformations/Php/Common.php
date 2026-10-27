@@ -117,7 +117,7 @@ class Common
         return null;
     }
 
-    public static function getNameDefinition($ops, bool $lookingForProperty = false): string
+    public static function getNameDefinition(mixed $ops, bool $lookingForProperty = false): string
     {
         //  $this->property = property
         if (

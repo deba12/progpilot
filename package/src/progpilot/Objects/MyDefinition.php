@@ -66,7 +66,7 @@ class MyDefinition extends MyOp
      */
     public array $states;
 
-    public function __construct($blockId, $myFile, $varLine, $varColumn, $varName)
+    public function __construct(int $blockId, MyFile $myFile, int $varLine, int $varColumn, string $varName)
     {
         parent::__construct($varName, $varLine, $varColumn);
 
@@ -90,7 +90,7 @@ class MyDefinition extends MyOp
         $this->assignStateToBlockId($state->getId(), $blockId);
     }
 
-    public function printStdout($context = null): void
+    public function printStdout(mixed $context = null): void
     {
         echo "_____________________ start def _____________________\n";
         echo "def id " . $this->varId . " :: \

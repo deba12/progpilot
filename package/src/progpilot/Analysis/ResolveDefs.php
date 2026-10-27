@@ -333,7 +333,7 @@ class ResolveDefs
         return false;
     }
 
-    public static function getVisibilityFromInstances($context, $data, $defAssign): bool
+    public static function getVisibilityFromInstances(Context $context, array $data, MyDefinition $defAssign): bool
     {
         $visibilityFinal = true;
         $currentFunc = $context->getCurrentFunc();
@@ -368,18 +368,8 @@ class ResolveDefs
                 }
             }
         } elseif ($defAssign->isType(MyDefinition::TYPE_STATIC_PROPERTY)) {
+            // the visibility of a static property is not resolved, it is never visible
             $visibilityFinal = false;
-            $myClass = $context->getClasses()->getMyClass($defAssign->getName());
-
-            if (!is_null($myClass)) {
-                $property = $myClass->getProperty($defAssign->property->getProperties());
-                if (
-                    !is_null($property)
-                    && (ResolveDefs::getVisibility($defAssign, $property, $currentFunc))
-                ) {
-                    $visibilityFinal = true;
-                }
-            }
         }
 
         return $visibilityFinal;

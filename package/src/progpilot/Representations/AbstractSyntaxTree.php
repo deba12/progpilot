@@ -26,12 +26,12 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         return $this->edges;
     }
 
-    public function addNode($node): void
+    public function addNode(object $node): void
     {
         $this->nodes[] = $node;
     }
 
-    public function addEdge($caller, $callee): void
+    public function addEdge(object $caller, object $callee): void
     {
         $this->edges[] = [$caller, $callee];
     }

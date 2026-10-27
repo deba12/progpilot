@@ -18,7 +18,7 @@ class MyClass extends MyOp
     private array $properties;
     private ?string $extendsof = null;
 
-    public function __construct($varLine, $varColumn, $varName)
+    public function __construct(int $varLine, int $varColumn, string $varName)
     {
         parent::__construct($varName, $varLine, $varColumn);
 

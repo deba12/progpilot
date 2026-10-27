@@ -10,9 +10,11 @@
 
 namespace progpilot\Outputs;
 
+use progpilot\Objects\MyFunction;
+
 class MyOutputs extends MyOutputsInternalApi
 {
-    public function getAst($myFunc): array
+    public function getAst(?MyFunction $myFunc): array
     {
         $nodesjson = [];
         $linksjson = [];
@@ -42,7 +44,7 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
-    public function getCfg($myFunc): array
+    public function getCfg(?MyFunction $myFunc): array
     {
         $nodesjson = [];
         $linksjson = [];
@@ -73,7 +75,7 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
-    public function getCallGraph($myFunc): array
+    public function getCallGraph(?MyFunction $myFunc): array
     {
         $nodesjson = [];
         $linksjson = [];
@@ -105,7 +107,7 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
-    public function setOnAddResult($func): void
+    public function setOnAddResult(callable $func): void
     {
         $this->onAddResult = $func;
     }

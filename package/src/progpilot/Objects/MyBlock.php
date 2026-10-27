@@ -27,7 +27,7 @@ class MyBlock extends MyOp
     public array $virtualParents;
     public array $assertions;
 
-    public function __construct($startLine, $startColumn)
+    public function __construct(int $startLine, int $startColumn)
     {
         parent::__construct("", $startLine, $startColumn);
 

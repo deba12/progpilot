@@ -101,7 +101,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->sources;
     }
 
-    public function addSinks($files): void
+    public function addSinks(string|array|null $files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -117,14 +117,14 @@ class MyInputs extends MyInputsInternalApi
         return $this->sinks;
     }
 
-    public function setSinks($files): void
+    public function setSinks(string|array|null $files): void
     {
         $this->overwrittenSinks = true;
         $this->sinks = [];
         $this->addSinks($files);
     }
 
-    public function addValidators($files): void
+    public function addValidators(string|array|null $files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -135,7 +135,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setValidators($files): void
+    public function setValidators(string|array|null $files): void
     {
         $this->overwrittenValidators = true;
         $this->validators = [];
@@ -147,7 +147,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->validators;
     }
 
-    public function addSanitizers($files): void
+    public function addSanitizers(string|array|null $files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -158,7 +158,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setSanitizers($files): void
+    public function setSanitizers(string|array|null $files): void
     {
         $this->overwrittenSanitizers = true;
         $this->sanitizers = [];
@@ -170,7 +170,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->sanitizers;
     }
 
-    public function addCustomRules($files): void
+    public function addCustomRules(string|array|null $files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -181,7 +181,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setCustomRules($files): void
+    public function setCustomRules(string|array|null $files): void
     {
         $this->overwrittenCustomRules = true;
         $this->customRules = [];

@@ -26,7 +26,7 @@ use progpilot\Transformations\Php\Exprs\LiteralFetch;
 
 class Expr
 {
-    public static function explicitfetch(Context $context, Op $op, $expr): void
+    public static function explicitfetch(Context $context, Op $op, ?string $expr): void
     {
         CastFetch::castFetch($context, $op, $expr);
         ConcatFetch::concatFetch($context, $op, $expr);

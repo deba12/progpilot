@@ -18,7 +18,7 @@ class MyValidator extends MySpecify
     private bool $hasParameters;
     private bool $validWhenReturning;
 
-    public function __construct($name, $language, $validWhenReturning)
+    public function __construct(string $name, string $language, bool $validWhenReturning)
     {
         parent::__construct($name, $language);
 
@@ -32,7 +32,7 @@ class MyValidator extends MySpecify
         return $this->validWhenReturning;
     }
 
-    public function setValidWhenReturning(bool $validWhenReturning, bool $validwhenreturning, $notboolean): void
+    public function setValidWhenReturning(bool $validWhenReturning, bool $validwhenreturning, mixed $notboolean): void
     {
         $this->validWhenReturning = $validWhenReturning;
     }
@@ -81,7 +81,7 @@ class MyValidator extends MySpecify
         return null;
     }
 
-    public function isParameter($i): bool
+    public function isParameter(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];

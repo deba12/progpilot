@@ -24,7 +24,7 @@ class MyCustomFunction extends MySpecify
     private int $minNbArgs;
     private int $maxNbArgs;
 
-    public function __construct($name, $language, $orderNumberExpected = 0)
+    public function __construct(string $name, string $language, int $orderNumberExpected = 0)
     {
         parent::__construct($name, $language);
         $this->action = null;
@@ -79,7 +79,7 @@ class MyCustomFunction extends MySpecify
         $this->hasParameters = $hasParameters;
     }
 
-    public function isParameterSufficient($i): bool
+    public function isParameterSufficient(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -93,7 +93,7 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
-    public function isParameterFixed($i): bool
+    public function isParameterFixed(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -107,7 +107,7 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
-    public function isParameterValidByDefault($i): bool
+    public function isParameterValidByDefault(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -121,7 +121,7 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
-    public function getParameterValues($i): ?array
+    public function getParameterValues(int $i): ?array
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];

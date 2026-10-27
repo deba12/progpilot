@@ -21,7 +21,7 @@ class MySanitizer extends MySpecify
     private array $parameters;
     private bool $hasParameters;
 
-    public function __construct($name, $language, $prevent)
+    public function __construct(string $name, string $language, array $prevent)
     {
         parent::__construct($name, $language);
 
@@ -83,7 +83,7 @@ class MySanitizer extends MySpecify
         return null;
     }
 
-    public function isParameter($i): bool
+    public function isParameter(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];

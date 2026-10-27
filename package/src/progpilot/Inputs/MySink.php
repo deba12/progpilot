@@ -18,7 +18,7 @@ class MySink extends MySpecify
     private bool $hasParameters;
     private array $globalconditions;
 
-    public function __construct($name, $language, $attack, $cwe)
+    public function __construct(string $name, string $language, string $attack, string $cwe)
     {
         parent::__construct($name, $language);
 
@@ -56,7 +56,7 @@ class MySink extends MySpecify
         return $this->parameters;
     }
 
-    public function parameterHasconditions($i): bool
+    public function parameterHasconditions(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -94,7 +94,7 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function getParameterConditions($i): ?array
+    public function getParameterConditions(int $i): ?array
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];

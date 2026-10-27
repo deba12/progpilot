@@ -38,7 +38,7 @@ class VisitorDataflow
         $this->blocksArrays["" . $nameArray . ""] = true;
     }
 
-    public function analyze(Context $context, MyFunction $myFunc, $defsIncluded = null): void
+    public function analyze(Context $context, MyFunction $myFunc, mixed $defsIncluded = null): void
     {
         $myCode = $myFunc->getMyCode();
         $code = $myCode->getCodes();

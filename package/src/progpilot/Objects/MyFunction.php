@@ -57,7 +57,7 @@ class MyFunction extends MyOp
     private bool $hasGlobalVariables;
     private MyCode $myCode;
 
-    public function __construct($name)
+    public function __construct(string $name)
     {
         parent::__construct($name, 0, 0);
 
@@ -419,7 +419,7 @@ class MyFunction extends MyOp
         return $this->nbParams;
     }
 
-    public function getParam($i): ?MyDefinition
+    public function getParam(int $i): ?MyDefinition
     {
         if (isset($this->params[$i])) {
             return $this->params[$i];

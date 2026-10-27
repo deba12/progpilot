@@ -321,7 +321,7 @@ class Analyzer
         }
     }
 
-    public function run(Context $context, $cmdFiles = null): void
+    public function run(Context $context, ?array $cmdFiles = null): void
     {
         $currentMemoryLimit = ini_get("memory_limit");
         if (!$currentMemoryLimit) {

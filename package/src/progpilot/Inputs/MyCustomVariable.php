@@ -12,7 +12,7 @@ namespace progpilot\Inputs;
 
 class MyCustomVariable extends MySpecify
 {
-    public function __construct($name, $language)
+    public function __construct(string $name, string $language)
     {
         parent::__construct($name, $language);
     }

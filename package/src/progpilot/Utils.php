@@ -16,7 +16,7 @@ use progpilot\Objects\MyFunction;
 
 class Utils
 {
-    public static function toColumn($code, $pos): float|int
+    public static function toColumn(string $code, int $pos): float|int
     {
         if ($pos > strlen($code)) {
             return 1;
@@ -47,7 +47,7 @@ class Utils
         }
     }
 
-    public static function printError($message): never
+    public static function printError(string $message): never
     {
         throw new Exception($message);
     }
@@ -121,7 +121,7 @@ class Utils
         return $printableDef;
     }
 
-    public static function printFunction($function): string
+    public static function printFunction(MyFunction $function): string
     {
         $functionName = "\$";
         if ($function->isType(MyFunction::TYPE_FUNC_METHOD)) {
@@ -133,7 +133,7 @@ class Utils
         return $functionName;
     }
 
-    public static function printArray($array, &$print): void
+    public static function printArray(mixed $array, string &$print): void
     {
         if (is_array($array)) {
             foreach ($array as $index => $value) {

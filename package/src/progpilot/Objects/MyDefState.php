@@ -141,7 +141,7 @@ class MyDefState extends MyOp
         $this->isEmbeddedByChar = $value;
     }
 
-    public function setIsEmbeddedByChar(mixed $char, $bool): void
+    public function setIsEmbeddedByChar(mixed $char, bool $bool): void
     {
         $this->isEmbeddedByChar[$char] = $bool;
     }

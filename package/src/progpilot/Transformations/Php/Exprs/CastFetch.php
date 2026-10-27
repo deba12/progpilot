@@ -25,7 +25,7 @@ use progpilot\Code\Opcodes;
 
 class CastFetch
 {
-    public static function castFetch(Context $context, Op $op, $expr): void
+    public static function castFetch(Context $context, Op $op, ?string $expr): void
     {
         if (
                 $op instanceof Int_

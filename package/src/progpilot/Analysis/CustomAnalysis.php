@@ -27,7 +27,7 @@ use progpilot\Helpers\Analysis as HelpersAnalysis;
 
 class CustomAnalysis
 {
-    public static function disclosureOfInformation($context, $defs, $defassign): null
+    public static function disclosureOfInformation(Context $context, mixed $defs, MyDefinition $defassign): null
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {

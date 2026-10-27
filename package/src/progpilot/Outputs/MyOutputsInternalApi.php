@@ -97,7 +97,7 @@ class MyOutputsInternalApi
     }
 
     // callgraph accessors
-    public function callgraphAddNode($myFunc, $myFunccall, $myClass): void
+    public function callgraphAddNode(?MyFunction $myFunc, MyFunction $myFunccall, ?MyClass $myClass): void
     {
         if (!is_null($myFunc) && isset($this->callgraph[$myFunc->getId()])) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
@@ -105,8 +105,13 @@ class MyOutputsInternalApi
         }
     }
 
-    public function callgraphAddEdge($myFunc, $myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee): void
-    {
+    public function callgraphAddEdge(
+        ?MyFunction $myFunc,
+        MyFunction $myFuncCaller,
+        ?MyClass $myClassCaller,
+        MyFunction $myFuncCallee,
+        ?MyClass $myClassCallee
+    ): void {
         if (!is_null($myFunc) && isset($this->callgraph[$myFunc->getId()])) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
             $tmpCallgraph->addEdge($myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee);

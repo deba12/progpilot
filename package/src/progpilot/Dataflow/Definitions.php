@@ -69,7 +69,7 @@ class Definitions
         echo "\n";
     }
 
-    public static function printBlock($defsParam): void
+    public static function printBlock(?array $defsParam): void
     {
         if (!is_null($defsParam)) {
             foreach ($defsParam as $def) {
@@ -78,7 +78,7 @@ class Definitions
         }
     }
 
-    public static function printStdout($defsParam): void
+    public static function printStdout(?array $defsParam): void
     {
         if (!is_null($defsParam)) {
             foreach ($defsParam as $blockId => $defs) {
@@ -138,7 +138,7 @@ class Definitions
         }
     }
 
-    public function addIn($block, $def): bool
+    public function addIn(int $block, MyDefinition $def): bool
     {
         if (isset($this->in[$block]) && !in_array($def, $this->in[$block], true)) {
             $this->in[$block][] = $def;
@@ -148,7 +148,7 @@ class Definitions
         return false;
     }
 
-    public function addOut($block, $def): bool
+    public function addOut(int $block, MyDefinition $def): bool
     {
         if (isset($this->out[$block]) && !in_array($def, $this->out[$block], true)) {
             $this->out[$block][] = $def;
@@ -168,7 +168,7 @@ class Definitions
         return false;
     }
 
-    public function addKill($block, $def): bool
+    public function addKill(int $block, MyDefinition $def): bool
     {
         if (isset($this->kill[$block]) && !in_array($def, $this->kill[$block], true)) {
             $this->kill[$block][] = $def;
@@ -238,12 +238,12 @@ class Definitions
         return null;
     }
 
-    public function setKill($block, $kill): void
+    public function setKill(int $block, array $kill): void
     {
         $this->kill[$block] = $kill;
     }
 
-    public function setGen($block, $gen): void
+    public function setGen(int $block, array $gen): void
     {
         $this->gen[$block] = $gen;
     }

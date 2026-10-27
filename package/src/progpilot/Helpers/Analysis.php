@@ -30,7 +30,7 @@ class Analysis
         }
     }
 
-    public static function forDefsInFunctions($context, $func, $myClass): void
+    public static function forDefsInFunctions(Context $context, string $func, ?MyClass $myClass): void
     {
         foreach ($context->getFunctions()->getFunctions() as $functionsBlocks) {
             foreach ($functionsBlocks as $functionBlock) {
@@ -44,16 +44,14 @@ class Analysis
         }
     }
 
-    public static function forAllDefsOfFunctionExceptReturnDefs($func, $myFunc): void
+    public static function forAllDefsOfFunctionExceptReturnDefs(string $func, MyFunction $myFunc): void
     {
         $returnDefs = $myFunc->getReturnDefs();
         foreach ($myFunc->getDefs()->getDefs() as $defnames) {
-            if (is_array($defnames)) {
-                foreach ($defnames as $def) {
-                    if (!in_array($def, $returnDefs, true)) {
-                        $params = array($def, $myFunc->getDefs());
-                        call_user_func_array(__NAMESPACE__ . "\\$func", $params);
-                    }
+            foreach ($defnames as $def) {
+                if (!in_array($def, $returnDefs, true)) {
+                    $params = array($def, $myFunc->getDefs());
+                    call_user_func_array(__NAMESPACE__ . "\\$func", $params);
                 }
             }
         }
@@ -333,7 +331,7 @@ class Analysis
 
     public static function checkIfDefEqualDefRule(
         Context $context,
-        $defs,
+        mixed $defs,
         MyCustomRule $rule,
         MyOp $def,
         ?MyClass $myClass = null

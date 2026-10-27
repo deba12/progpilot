@@ -117,7 +117,7 @@ class MyCustomRule
         return $this->sequenceRule;
     }
 
-    public function addToSequenceWithAction($functionName, $language, $action): MyCustomFunction
+    public function addToSequenceWithAction(string $functionName, string $language, string $action): MyCustomFunction
     {
         $this->currentOrderNumber++;
         $myCustomFunction = new MyCustomFunction($functionName, $language, $this->currentOrderNumber);
