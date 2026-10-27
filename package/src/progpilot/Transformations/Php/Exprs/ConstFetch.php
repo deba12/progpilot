@@ -8,6 +8,8 @@
  */
 
 
+declare(strict_types=1);
+
 namespace progpilot\Transformations\Php\Exprs;
 
 use progpilot\Context;

@@ -76,4 +76,4 @@ Entry: `Analyzer::run($context)` in `package/src/progpilot/Analyzer.php`, where 
 
 ## Conventions
 
-PSR-12 code style (enforced by GrumPHP/phpcs). Dev docs note known unsupported cases (references, array pushes, chained calls) in `docs/DEV.md`; check there before assuming a false negative is a regression.
+`declare(strict_types=1)` is on in every file of `package/src`. PSR-12 code style (enforced by GrumPHP/phpcs). Dev docs note known unsupported cases (references, array pushes, chained calls) in `docs/DEV.md`; check there before assuming a false negative is a regression.

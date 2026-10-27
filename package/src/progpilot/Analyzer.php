@@ -7,6 +7,8 @@
  * @license MIT See LICENSE at the root of the project for more info
  */
 
+declare(strict_types=1);
+
 namespace progpilot;
 
 use PHPCfg\Parser;
@@ -375,6 +377,11 @@ class Analyzer
         $includedFiles = $context->inputs->getInclusions();
 
         foreach ($includedFiles as $includedFile) {
+            // a path that does not exist was resolved to false, there is nothing to analyze
+            if (!is_string($includedFile)) {
+                continue;
+            }
+
             if (is_dir($includedFile)) {
                 $this->getFilesOfDir($context, $includedFile, $includedFile, $files);
             } else {

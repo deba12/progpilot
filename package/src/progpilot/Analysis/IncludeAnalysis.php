@@ -8,6 +8,8 @@
  */
 
 
+declare(strict_types=1);
+
 namespace progpilot\Analysis;
 
 use progpilot\Objects\MyBlock;

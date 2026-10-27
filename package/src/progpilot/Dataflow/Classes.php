@@ -8,6 +8,8 @@
  */
 
 
+declare(strict_types=1);
+
 namespace progpilot\Dataflow;
 
 use progpilot\Objects\MyClass;

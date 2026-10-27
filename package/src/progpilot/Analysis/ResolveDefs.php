@@ -7,6 +7,8 @@
  * @license MIT See LICENSE at the root of the project for more info
  */
 
+declare(strict_types=1);
+
 namespace progpilot\Analysis;
 
 use progpilot\Context;

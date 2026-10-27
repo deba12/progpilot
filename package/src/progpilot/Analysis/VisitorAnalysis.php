@@ -8,6 +8,8 @@
  */
 
 
+declare(strict_types=1);
+
 namespace progpilot\Analysis;
 
 use progpilot\Dataflow\Definitions;
@@ -755,7 +757,7 @@ class VisitorAnalysis
                                     $this->context->getCurrentMyFile(),
                                     $originalDef->getLine(),
                                     $originalDef->getColumn(),
-                                    $arrayDim
+                                    (string) $arrayDim
                                 );
 
                                 $defGlobals = ResolveDefs::selectGlobals($this->context, $globalDef);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace progpilot\Outputs;
 
 use Bartlett\Sarif\Definition\Message;

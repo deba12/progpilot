@@ -8,6 +8,8 @@
  */
 
 
+declare(strict_types=1);
+
 namespace progpilot\Inputs;
 
 class MyCustomVariable extends MySpecify
