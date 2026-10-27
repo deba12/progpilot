@@ -106,16 +106,14 @@ class ContextInternalApi
         foreach ($this->callStack as $call) {
             $callFunc = $call[0];
 
-            if (
-                $callFunc->getName() === $curFunc->getName()
+            if ($callFunc->getName() === $curFunc->getName()
                 && !$callFunc->isType(MyFunction::TYPE_FUNC_METHOD)
                 && !$curFunc->isType(MyFunction::TYPE_FUNC_METHOD)
             ) {
                 return true;
             }
 
-            if (
-                $callFunc->getName() === $curFunc->getName()
+            if ($callFunc->getName() === $curFunc->getName()
                 && $callFunc->isType(MyFunction::TYPE_FUNC_METHOD)
                 && $curFunc->isType(MyFunction::TYPE_FUNC_METHOD)
             ) {
@@ -129,8 +127,7 @@ class ContextInternalApi
                 $curClassExtends = $curClass->getExtendsOf();
                 $callClassExtends = $callClass->getExtendsOf();
 
-                if (
-                    isset($curClassExtends) && isset($callClassExtends)
+                if (isset($curClassExtends) && isset($callClassExtends)
                     && $curClassExtends === $callClassExtends
                 ) {
                     return true;

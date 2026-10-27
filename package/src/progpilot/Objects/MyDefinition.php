@@ -134,15 +134,13 @@ class MyDefinition extends MyOp
 
     public function assignStateToBlockId($stateId, $blockId)
     {
-        if (
-            isset($this->blocksIdsStates[$blockId])
+        if (isset($this->blocksIdsStates[$blockId])
             && $blockId !== $this->getBlockId()
         ) {
             $toRemove = true;
             $overWrittentStateId = $this->blocksIdsStates[$blockId];
             foreach ($this->blocksIdsStates as $keyBlockId => $valueStateId) {
-                if (
-                    $valueStateId === $overWrittentStateId
+                if ($valueStateId === $overWrittentStateId
                     && $keyBlockId !== $blockId
                 ) {
                     $toRemove = false;

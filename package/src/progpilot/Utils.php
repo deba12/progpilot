@@ -57,8 +57,7 @@ class Utils
         $prefix = "\$";
         if ($def->isType(MyDefinition::TYPE_STATIC_PROPERTY)) {
             // oop/simple31.php
-            if (
-                !is_null($original)
+            if (!is_null($original)
                 && !empty($original)
                 && $original[0]->isType(MyDefinition::TYPE_STATIC_PROPERTY)
             ) {
@@ -73,8 +72,7 @@ class Utils
             for ($i = 0; $i < count($original); $i++) {
                 if ($original[$i] instanceof MyDefinition) {
                     $printableDef .= "$prefix" . Utils::encodeCharacters($original[$i]->getName());
-                } elseif (
-                    is_numeric($original[$i])
+                } elseif (is_numeric($original[$i])
                     || $original[$i] === ']'
                     || $original[$i] === '['
                     || $original[$i] === '->'

@@ -21,7 +21,9 @@
         "phpro/grumphp": "^2.26",
         "squizlabs/php_codesniffer": "^4.0"
     },
-    "bin": ["projects/phar/progpilot"],
+    "bin": [
+        "projects/phar/progpilot"
+    ],
     "autoload": {
         "psr-0": {
             "progpilot": "package/src"
@@ -31,5 +33,15 @@
         "allow-plugins": {
             "phpro/grumphp": true
         }
+    },
+    "scripts": {
+        "lint": "phpcs --standard=PSR2 --ignore=*/projects/tests/* package/src",
+        "lint:fix": "phpcbf --standard=PSR2 --ignore=*/projects/tests/* package/src",
+        "test": "cd projects/tests && php vendor/bin/phpunit",
+        "gate": [
+            "@lint",
+            "@test",
+            "@composer audit"
+        ]
     }
 }

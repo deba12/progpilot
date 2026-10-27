@@ -71,7 +71,8 @@ class VisitorDataflow
                         $context->setCurrentFunc($myFunc);
 
                         // representations start
-                        $hashedValue = $context->getCurrentFunc()->getName() . "-" . $context->getCurrentBlock()->getId();
+                        $hashedValue = $context->getCurrentFunc()->getName()
+                        . "-" . $context->getCurrentBlock()->getId();
                         $idCfg = hash("sha256", $hashedValue);
                         $context->outputs->cfgAddTextOfMyBlock(
                             $context->getCurrentFunc(),
@@ -265,8 +266,7 @@ class VisitorDataflow
                                     $context->getCurrentFunc()->getDefs()->addGen($myDef->getBlockId(), $myDef);
                                     $this->defineArray($myDef->getName());
                                 }
-                            } elseif (
-                                !$myDef->isType(MyDefinition::TYPE_PROPERTY)
+                            } elseif (!$myDef->isType(MyDefinition::TYPE_PROPERTY)
                                 && !$myDef->isType(MyDefinition::TYPE_STATIC_PROPERTY)
                             ) {
                                 $context->getCurrentFunc()->getDefs()->addDef($myDef->getName(), $myDef);

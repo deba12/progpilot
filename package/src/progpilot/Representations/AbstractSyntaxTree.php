@@ -36,7 +36,9 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         $this->edges[] = [$caller, $callee];
     }
 
-    public function beforeTraverse(array $nodes) {}
+    public function beforeTraverse(array $nodes)
+    {
+    }
 
     public function enterNode(Node $node)
     {
@@ -49,7 +51,11 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         }
     }
 
-    public function leaveNode(Node $node) {}
+    public function leaveNode(Node $node)
+    {
+    }
 
-    public function afterTraverse(array $nodes) {}
+    public function afterTraverse(array $nodes)
+    {
+    }
 }

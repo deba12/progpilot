@@ -72,13 +72,11 @@ class MyInputsInternalApi
 
     public static function resolvePath($file)
     {
-        if (
-            strpos($file, "/") !== false
+        if (strpos($file, "/") !== false
             || strpos($file, "\\") !== false
         ) {
             // there is a slash, the dev likely wants a path
-            if (
-                str_starts_with("./", $file) === 0
+            if (str_starts_with("./", $file) === 0
                 && str_starts_with(".\\", $file) === 0
                 && str_starts_with("/", $file) === 0
                 && preg_match("/^[a-bA-B]*:/", $file) === 0
@@ -131,8 +129,7 @@ class MyInputsInternalApi
         $folders = explode(DIRECTORY_SEPARATOR, $name);
 
         foreach ($this->excludesFilesAnalysis as $excludeFileName) {
-            if (
-                strpos($excludeFileName, "/") === false
+            if (strpos($excludeFileName, "/") === false
                 && strpos($excludeFileName, "\\") === false
             ) {
                 // it's not a path
@@ -167,8 +164,7 @@ class MyInputsInternalApi
         $folders = explode(DIRECTORY_SEPARATOR, $name);
 
         foreach ($this->includesFilesAnalysis as $includedFileName) {
-            if (
-                strpos($includedFileName, "/") === false
+            if (strpos($includedFileName, "/") === false
                 && strpos($includedFileName, "\\") === false
             ) {
                 // it's not a path
@@ -199,8 +195,7 @@ class MyInputsInternalApi
     public function getIncludeByLocation($line, $column, $sourceFile)
     {
         foreach ($this->resolvedIncludesAnalysis as $myInclude) {
-            if (
-                $myInclude->getLine() === $line
+            if ($myInclude->getLine() === $line
                 && $myInclude->getColumn() === $column
                 && $myInclude->getSourceFile() === $sourceFile
             ) {
@@ -220,8 +215,7 @@ class MyInputsInternalApi
                 }
 
                 if ($myValidator->isInstance() && $myFunc->isType(MyFunction::TYPE_FUNC_METHOD)) {
-                    if (
-                        !is_null($myClass) &&
+                    if (!is_null($myClass) &&
                         ($myValidator->getInstanceOfName() === $myClass->getName()
                             || $myValidator->getInstanceOfName() === $myClass->getExtendsOf())
                     ) {
@@ -243,8 +237,7 @@ class MyInputsInternalApi
                 }
 
                 if ($mySanitizer->isInstance() && $myFunc->isType(MyFunction::TYPE_FUNC_METHOD)) {
-                    if (
-                        !is_null($myClass) &&
+                    if (!is_null($myClass) &&
                         ($mySanitizer->getInstanceOfName() === $myClass->getName()
                             || $mySanitizer->getInstanceOfName() === $myClass->getExtendsOf())
                     ) {
@@ -266,8 +259,7 @@ class MyInputsInternalApi
                 }
 
                 if ($mySink->isInstance() && $myFunc->isType(MyFunction::TYPE_FUNC_METHOD)) {
-                    if (
-                        !is_null($myClass)
+                    if (!is_null($myClass)
                         && ($mySink->getInstanceOfName() === $myClass->getName()
                             || $mySink->getInstanceOfName() === $myClass->getExtendsOf())
                     ) {
@@ -285,8 +277,7 @@ class MyInputsInternalApi
         $arrValue = false
     ) {
         foreach ($this->sources as $mySource) {
-            if (
-                $mySource->getName() === $myFuncOrDef->getName()
+            if ($mySource->getName() === $myFuncOrDef->getName()
                 && $mySource->getIsArray()
                 && $arrValue === false
             ) {
@@ -301,8 +292,7 @@ class MyInputsInternalApi
     {
         foreach ($this->sources as $mySource) {
             if ($mySource->getName() === $myFuncOrDef->getName()) {
-                if (
-                    !$mySource->isInstance()
+                if (!$mySource->isInstance()
                     && empty($mySource->getArrayValue())
                     && !$myFuncOrDef->isType(MyFunction::TYPE_FUNC_METHOD)
                     && !$myFuncOrDef->isType(MyFunction::TYPE_FUNC_STATIC)
@@ -311,14 +301,12 @@ class MyInputsInternalApi
                     return $mySource;
                 }
 
-                if (
-                    $mySource->isInstance()
+                if ($mySource->isInstance()
                     && ($myFuncOrDef->isType(MyFunction::TYPE_FUNC_METHOD)
                         || $myFuncOrDef->isType(MyFunction::TYPE_FUNC_STATIC)
                         || $myFuncOrDef->isType(MyDefinition::TYPE_PROPERTY))
                 ) {
-                    if (
-                        !is_null($myClass) &&
+                    if (!is_null($myClass) &&
                         ($mySource->getInstanceOfName() === $myClass->getName()
                             || $mySource->getInstanceOfName() === $myClass->getExtendsOf())
                     ) {
@@ -326,8 +314,7 @@ class MyInputsInternalApi
                     }
                 }
 
-                if (
-                    $mySource->getIsArray()
+                if ($mySource->getIsArray()
                     && !empty($mySource->getArrayValue())
                     && $mySource->isAnArrayValue($dimArray)
                 ) {
@@ -433,8 +420,7 @@ class MyInputsInternalApi
             if (isset($parsedJson->{'sanitizers'})) {
                 $sanitizers = $parsedJson->{'sanitizers'};
                 foreach ($sanitizers as $sanitizer) {
-                    if (
-                        !isset($sanitizer->{'name'})
+                    if (!isset($sanitizer->{'name'})
                         || !isset($sanitizer->{'language'})
                     ) {
                         Utils::printError(Lang::FORMAT_SANITIZERS);
@@ -459,15 +445,13 @@ class MyInputsInternalApi
                         $parameters = $sanitizer->{'parameters'};
                         foreach ($parameters as $parameter) {
                             if (isset($parameter->{'id'}) && isset($parameter->{'conditions'})) {
-                                if (
-                                    is_int($parameter->{'id'})
+                                if (is_int($parameter->{'id'})
                                     && ($parameter->{'conditions'} === "equals"
                                         || $parameter->{'conditions'} === "notequals"
                                         || $parameter->{'conditions'} === "taint"
                                         || $parameter->{'conditions'} === "sanitize")
                                 ) {
-                                    if (
-                                        $parameter->{'conditions'} === "equals"
+                                    if ($parameter->{'conditions'} === "equals"
                                         || $parameter->{'conditions'} === "notequals"
                                     ) {
                                         if (isset($parameter->{'values'})) {
@@ -520,8 +504,7 @@ class MyInputsInternalApi
             if (isset($parsedJson->{'sinks'})) {
                 $sinks = $parsedJson->{'sinks'};
                 foreach ($sinks as $sink) {
-                    if (
-                        !isset($sink->{'name'})
+                    if (!isset($sink->{'name'})
                         || !isset($sink->{'language'})
                         || !isset($sink->{'attack'})
                         || !isset($sink->{'cwe'})
@@ -590,8 +573,7 @@ class MyInputsInternalApi
             if (isset($parsedJson->{'sources'})) {
                 $sources = $parsedJson->{'sources'};
                 foreach ($sources as $source) {
-                    if (
-                        !isset($source->{'name'})
+                    if (!isset($source->{'name'})
                         || !isset($source->{'language'})
                     ) {
                         Utils::printError(Lang::FORMAT_SOURCES);
@@ -656,8 +638,7 @@ class MyInputsInternalApi
                             if (is_int($parameter->{'id'})) {
                                 $mySource->addParameter($parameter->{'id'});
 
-                                if (
-                                    isset($parameter->{'is_array'})
+                                if (isset($parameter->{'is_array'})
                                     && $parameter->{'is_array'}
                                     && isset($parameter->{'array_index'})
                                 ) {
@@ -703,8 +684,7 @@ class MyInputsInternalApi
             if (isset($parsedJson->{'validators'})) {
                 $validators = $parsedJson->{'validators'};
                 foreach ($validators as $validator) {
-                    if (
-                        !isset($validator->{'name'})
+                    if (!isset($validator->{'name'})
                         || !isset($validator->{'language'})
                     ) {
                         Utils::printError(Lang::FORMAT_VALIDATORS);
@@ -724,16 +704,14 @@ class MyInputsInternalApi
                         $parameters = $validator->{'parameters'};
                         foreach ($parameters as $parameter) {
                             if (isset($parameter->{'id'}) && isset($parameter->{'conditions'})) {
-                                if (
-                                    is_int($parameter->{'id'})
+                                if (is_int($parameter->{'id'})
                                     && ($parameter->{'conditions'} === "not_tainted"
                                         || $parameter->{'conditions'} === "array_not_tainted"
                                         || $parameter->{'conditions'} === "valid"
                                         || $parameter->{'conditions'} === "equals"
                                         || $parameter->{'conditions'} === "notequals")
                                 ) {
-                                    if (
-                                        $parameter->{'conditions'} === "equals"
+                                    if ($parameter->{'conditions'} === "equals"
                                         || $parameter->{'conditions'} === "notequals"
                                     ) {
                                         if (isset($parameter->{'values'})) {
@@ -827,40 +805,35 @@ class MyInputsInternalApi
                                         foreach ($parameters as $parameter) {
                                             if (isset($parameter->{'id'}) && isset($parameter->{'values'})) {
                                                 $validbydefault = false;
-                                                if (
-                                                    isset($parameter->{'valid_by_default'})
+                                                if (isset($parameter->{'valid_by_default'})
                                                     && $parameter->{'valid_by_default'}
                                                 ) {
                                                     $validbydefault = true;
                                                 }
 
                                                 $fixed = false;
-                                                if (
-                                                    isset($parameter->{'fixed'})
+                                                if (isset($parameter->{'fixed'})
                                                     && $parameter->{'fixed'}
                                                 ) {
                                                     $fixed = true;
                                                 }
 
                                                 $sufficient = false;
-                                                if (
-                                                    isset($parameter->{'sufficient'})
+                                                if (isset($parameter->{'sufficient'})
                                                     && $parameter->{'sufficient'}
                                                 ) {
                                                     $sufficient = true;
                                                 }
 
                                                 $fail_if_not_verified = true;
-                                                if (
-                                                    isset($parameter->{'fail_if_not_verified'})
+                                                if (isset($parameter->{'fail_if_not_verified'})
                                                     && !$parameter->{'fail_if_not_verified'}
                                                 ) {
                                                     $fail_if_not_verified = false;
                                                 }
 
                                                 $notequals = false;
-                                                if (
-                                                    isset($parameter->{'notequals'})
+                                                if (isset($parameter->{'notequals'})
                                                     && $parameter->{'notequals'}
                                                 ) {
                                                     $notequals = true;
@@ -889,8 +862,7 @@ class MyInputsInternalApi
                                     }
                                 }
                             }
-                        } elseif (
-                            isset($customRule->{'name'})
+                        } elseif (isset($customRule->{'name'})
                             && isset($customRule->{'language'})
                             && isset($customRule->{'action'})
                             && isset($customRule->{'is_function'})
@@ -909,40 +881,35 @@ class MyInputsInternalApi
                                     if (isset($parameter->{'id'}) && isset($parameter->{'values'})) {
                                         if (is_int($parameter->{'id'})) {
                                             $fixed = false;
-                                            if (
-                                                isset($parameter->{'fixed'})
+                                            if (isset($parameter->{'fixed'})
                                                 && $parameter->{'fixed'}
                                             ) {
                                                 $fixed = true;
                                             }
 
                                             $validbydefault = false;
-                                            if (
-                                                isset($parameter->{'valid_by_default'})
+                                            if (isset($parameter->{'valid_by_default'})
                                                 && $parameter->{'valid_by_default'}
                                             ) {
                                                 $validbydefault = true;
                                             }
 
                                             $sufficient = false;
-                                            if (
-                                                isset($parameter->{'sufficient'})
+                                            if (isset($parameter->{'sufficient'})
                                                 && $parameter->{'sufficient'}
                                             ) {
                                                 $sufficient = true;
                                             }
 
                                             $fail_if_not_verified = true;
-                                            if (
-                                                isset($parameter->{'fail_if_not_verified'})
+                                            if (isset($parameter->{'fail_if_not_verified'})
                                                 && !$parameter->{'fail_if_not_verified'}
                                             ) {
                                                 $fail_if_not_verified = false;
                                             }
 
                                             $notequals = false;
-                                            if (
-                                                isset($parameter->{'notequals'})
+                                            if (isset($parameter->{'notequals'})
                                                 && $parameter->{'notequals'}
                                             ) {
                                                 $notequals = true;
@@ -976,8 +943,7 @@ class MyInputsInternalApi
                             if (isset($customRule->{'max_nb_args'})) {
                                 $myCustomFunction->setMaxNbArgs($customRule->{'max_nb_args'});
                             }
-                        } elseif (
-                            isset($customRule->{'name'})
+                        } elseif (isset($customRule->{'name'})
                             && isset($customRule->{'language'})
                             && isset($customRule->{'action'})
                             && (!isset($customRule->{'is_function'})

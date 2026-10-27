@@ -22,8 +22,7 @@ class CastFetch
     public static function castFetch($context, $op, $expr)
     {
         if (isset($op)) {
-            if (
-                $op instanceof Op\Expr\Cast\Int_
+            if ($op instanceof Op\Expr\Cast\Int_
                 || $op instanceof Op\Expr\Cast\Array_
                 || $op instanceof Op\Expr\Cast\Bool_
                 || $op instanceof Op\Expr\Cast\Double

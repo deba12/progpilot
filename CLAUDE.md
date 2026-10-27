@@ -26,11 +26,24 @@ php vendor/bin/phpunit RunAll.php                       # one runner
 php vendor/bin/phpunit RunAll.php --filter 'testSecurity'   # filter by test name / dataset
 ```
 
-Lint (PSR2, run by GrumPHP as a pre-commit hook; `projects/tests` is ignored):
+Lint (PSR2 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/tests` is ignored). Run `composer install` at the repo root first:
 
 ```shell
-vendor/bin/phpcs --standard=PSR2 package/src      # after `composer install` at repo root
+composer lint        # phpcs on package/src, must be clean (errors and warnings)
+composer lint:fix    # phpcbf, whitespace-only autofix
+composer gate        # lint + tests + composer audit
 ```
+
+Quality gate: run once right before committing, scoped to what changed.
+
+| Changed paths | Run |
+| --- | --- |
+| `package/src/**/*.php`, `projects/phar/progpilot` | `composer lint` and the PHPUnit suite |
+| `projects/tests/**` | PHPUnit suite |
+| `composer.json` (any) | `composer audit` plus the PHPUnit suite on PHP 8.4, 8.5 and 8.6 |
+| docs / yaml / Docker only | nothing |
+
+Commit messages follow the repo's existing short lowercase style (no conventional-commits tooling). Use `php8.4 /usr/local/bin/composer ...` for dependency work so resolution targets the PHP floor.
 
 Build a PHAR: `./build.sh` (needs `phar-composer.phar` on PATH; output in `builds/`). Docker: see `DOCKER.md`.
 

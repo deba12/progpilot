@@ -71,8 +71,7 @@ class ResolveDefs
             $classStackName[$i] = [];
             $previousChainedResults = $context->getCurrentFunc()->getOpInformation($varid);
 
-            if (
-                !is_null($previousChainedResults)
+            if (!is_null($previousChainedResults)
                 && isset($previousChainedResults["chained_results"])
             ) {
                 $instances = $previousChainedResults["chained_results"];
@@ -282,8 +281,7 @@ class ResolveDefs
             return true;
         }
 
-        if (
-            !is_null($method)
+        if (!is_null($method)
             && $method->isType(MyFunction::TYPE_FUNC_METHOD)
             && $method->getVisibility() === "public"
         ) {
@@ -299,22 +297,19 @@ class ResolveDefs
 
     public static function getVisibility($def, $property, $currentFunc)
     {
-        if (
-            !is_null($def)
+        if (!is_null($def)
             && $def->getName() === "this"
         ) {
             return true;
         }
 
-        if (
-            !is_null($def) && !is_null($currentFunc) && !is_null($currentFunc->getMyClass())
+        if (!is_null($def) && !is_null($currentFunc) && !is_null($currentFunc->getMyClass())
             && $def->getName() === $currentFunc->getMyClass()->getName()
         ) {
             return true;
         }
 
-        if (
-            !is_null($property)
+        if (!is_null($property)
             && $property->getVisibility() === "public"
         ) {
             return true;
@@ -343,8 +338,7 @@ class ResolveDefs
                     if (!is_null($tmpMyClass)) {
                         $property = $tmpMyClass->getProperty($context, $instance, $prop);
 
-                        if (
-                            !is_null($property)
+                        if (!is_null($property)
                             && (ResolveDefs::getVisibility($copyDefAssign, $property, $currentFunc))
                         ) {
                             $visibilityFinal = true;
@@ -363,8 +357,7 @@ class ResolveDefs
 
             if (!is_null($myClass)) {
                 $property = $myClass->getProperty($defAssign->property->getProperties());
-                if (
-                    !is_null($property)
+                if (!is_null($property)
                     && (ResolveDefs::getVisibility($defAssign, $property, $currentFunc))
                 ) {
                     $visibilityFinal = true;
@@ -383,8 +376,7 @@ class ResolveDefs
         }
 
         foreach ($data as $def) {
-            if (
-                Definitions::defEquality($def, $searchedDed)
+            if (Definitions::defEquality($def, $searchedDed)
                 && ResolveDefs::isNearest($context, $searchedDed, $def)
             ) {
                 // we are looking for the nearest not instance of a property
@@ -393,8 +385,7 @@ class ResolveDefs
         }
 
         // si on a trouvé des defs dans le même bloc que la ou on cherche elles killent les autres
-        if (
-            isset($defsFound[$searchedDed->getBlockId()])
+        if (isset($defsFound[$searchedDed->getBlockId()])
             && count($defsFound[$searchedDed->getBlockId()]) > 0
         ) {
             $defsFoundGood[$searchedDed->getBlockId()] = $defsFound[$searchedDed->getBlockId()];
@@ -467,8 +458,7 @@ class ResolveDefs
         if (!is_null($myClass)) {
             $property = $myClass->getProperty($context, $tempDef->getBlockId(), $tempDef, $propertyName);
 
-            if (
-                !is_null($property)
+            if (!is_null($property)
                 && (ResolveDefs::getVisibility($tempDef, $property, $currentFunc))
             ) {
                 return $property;
@@ -488,8 +478,7 @@ class ResolveDefs
         $instances = ResolveDefs::selectDefinitions($context, $data, $tempDefaProp);
 
         foreach ($instances as $instance) {
-            if (
-                $instance->isType(MyDefinition::TYPE_ITERATOR)
+            if ($instance->isType(MyDefinition::TYPE_ITERATOR)
                 && !empty($instance->getIteratorValues())
                 && $instance->getIteratorValues()[0]->getCurrentState()->isType(MyDefinition::TYPE_INSTANCE)
             ) {
@@ -497,8 +486,7 @@ class ResolveDefs
                 $instance = $instance->getIteratorValues()[0];
             }
 
-            if (
-                $instance->isType(MyDefinition::TYPE_PROPERTY)
+            if ($instance->isType(MyDefinition::TYPE_PROPERTY)
                 || $instance->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
             ) {
                 $state = $instance->getState($tempDefaProp->getBlockId());

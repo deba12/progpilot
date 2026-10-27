@@ -228,8 +228,7 @@ class Analysis
                 }
 
                 foreach ($state->getArrayIndexes() as $arrayElement) {
-                    if (
-                        $arrayElement->def !== $def
+                    if ($arrayElement->def !== $def
                         && !in_array($arrayElement->def, $defsToAnalyze, true)
                         && !in_array($arrayElement->def, $arrayTotal, true)
                         && count($arrayTotal) < 50
@@ -267,8 +266,7 @@ class Analysis
                     // is there new values to consider ?
                     if (isset($statesPastArgs[$i]) && is_array($statesPastArgs[$i])) {
                         foreach ($statesPastArgs[$i] as $statePastArg) {
-                            if (
-                                $defArg->getCurrentState()->getLastKnownValues()
+                            if ($defArg->getCurrentState()->getLastKnownValues()
                                 !== $statePastArg->getLastKnownValues()
                             ) {
                                 return true;
@@ -286,15 +284,13 @@ class Analysis
 
     public static function checkIfFuncEqualMySpecify($context, $mySpecify, $myFunc, $myClass = null)
     {
-        if (
-            !$mySpecify->isInstance()
+        if (!$mySpecify->isInstance()
             && $mySpecify->getName() === $myFunc->getName()
         ) {
             return true;
         }
 
-        if (
-            $mySpecify->isInstance() && !is_null($myClass) &&
+        if ($mySpecify->isInstance() && !is_null($myClass) &&
             ($myClass->getName() === $mySpecify->getInstanceOfName()
                 || $myClass->getExtendsOf() === $mySpecify->getInstanceOfName())
         ) {
@@ -308,15 +304,13 @@ class Analysis
     {
         $definition = $rule->getDefinition();
 
-        if (
-            !$definition->isInstance()
+        if (!$definition->isInstance()
             && $def->getName() === $definition->getName()
         ) {
             return true;
         }
 
-        if (
-            $definition->isInstance() && !is_null($myClass) && $def->getName() === $definition->getName() &&
+        if ($definition->isInstance() && !is_null($myClass) && $def->getName() === $definition->getName() &&
             ($myClass->getName() === $definition->getInstanceOfName()
                 || $myClass->getExtendsOf() === $definition->getInstanceOfName())
         ) {
@@ -328,8 +322,7 @@ class Analysis
 
     public static function createObject($context, $myDef)
     {
-        if (
-            $myDef->isType(MyDefinition::TYPE_INSTANCE)
+        if ($myDef->isType(MyDefinition::TYPE_INSTANCE)
             || $myDef->getCurrentState()->isType(MyDefinition::TYPE_INSTANCE)
         ) {
             $idObject = $context->getObjects()->addObject();

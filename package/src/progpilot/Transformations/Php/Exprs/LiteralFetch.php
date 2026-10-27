@@ -20,8 +20,7 @@ class LiteralFetch
 {
     public static function literalFetch($context, $op)
     {
-        if (
-            isset($op)
+        if (isset($op)
             && $op instanceof Operand\Literal
         ) {
             $myTemp = new MyDefinition(

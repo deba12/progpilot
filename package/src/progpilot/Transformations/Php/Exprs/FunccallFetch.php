@@ -17,8 +17,7 @@ class FunccallFetch
 {
     public static function funccallFetch($context, $op)
     {
-        if (
-            isset($op)
+        if (isset($op)
             && ($op instanceof Op\Expr\Include_
                 || $op instanceof Op\Expr\Print_
                 || $op instanceof Op\Terminal\Echo_

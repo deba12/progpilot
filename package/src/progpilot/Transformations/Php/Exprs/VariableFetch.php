@@ -20,8 +20,7 @@ class VariableFetch
 {
     public static function variableFetch($context, $op, $expr)
     {
-        if (
-            isset($op->original) && $op->original instanceof Operand\Variable
+        if (isset($op->original) && $op->original instanceof Operand\Variable
             && isset($op->original->name) && $op->original->name instanceof Operand\Literal
         ) {
             $myTemp = new MyDefinition(

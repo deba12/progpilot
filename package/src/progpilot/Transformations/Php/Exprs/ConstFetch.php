@@ -21,8 +21,7 @@ class ConstFetch
 {
     public static function constFetch($context, $op)
     {
-        if (
-            isset($op)
+        if (isset($op)
             && $op instanceof Op\Expr\ConstFetch
             && isset($op->name)
             && $op->name instanceof Operand\Literal

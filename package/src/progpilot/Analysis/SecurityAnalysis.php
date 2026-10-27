@@ -18,8 +18,7 @@ class SecurityAnalysis
     public static function inArrayStateSource($temp, $ret)
     {
         for ($i = 0; $i < count($temp["source_name"]); $i++) {
-            if (
-                $temp["source_name"][$i] === $ret["source_name"]
+            if ($temp["source_name"][$i] === $ret["source_name"]
                 && $temp["source_line"][$i] === $ret["source_line"]
                 && $temp["source_column"][$i] === $ret["source_column"]
                 && $temp["source_file"][$i] === $ret["source_file"]
@@ -124,15 +123,13 @@ class SecurityAnalysis
             && $condition !== "array_tainted"
         ) {
             if ($state->isSanitized()) {
-                if (
-                    $state->isTypeSanitized($mySink->getAttack())
+                if ($state->isTypeSanitized($mySink->getAttack())
                     || $state->isTypeSanitized("ALL")
                 ) {
                     // 1° the argument of sink must be quoted
                     if ($condition === "QUOTES" && !$state->isTypeSanitized("ALL")) {
                         // the def is embedded into quotes but quotes are not sanitized
-                        if (
-                            !$state->isTypeSanitized("QUOTES")
+                        if (!$state->isTypeSanitized("QUOTES")
                             && $state->getIsEmbeddedByChar("'")
                         ) {
                             return false;
@@ -144,19 +141,16 @@ class SecurityAnalysis
                         }
                     }
 
-                    if (
-                        $mySink->isGlobalCondition("QUOTES_HTML")
+                    if ($mySink->isGlobalCondition("QUOTES_HTML")
                         && !$state->isTypeSanitized("ALL")
                     ) {
-                        if (
-                            !$state->isTypeSanitized("QUOTES") && $state->getIsEmbeddedByChar("<")
+                        if (!$state->isTypeSanitized("QUOTES") && $state->getIsEmbeddedByChar("<")
                             && $state->getIsEmbeddedByChar("'")
                         ) {
                             return false;
                         }
 
-                        if (
-                            $state->getIsEmbeddedByChar("<")
+                        if ($state->getIsEmbeddedByChar("<")
                             && !$state->getIsEmbeddedByChar("'")
                         ) {
                             return false;

@@ -147,8 +147,7 @@ class State
         $oneStateNotSanitizer = false;
 
         foreach ($defs as $def) {
-            if (
-                $def->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
+            if ($def->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
                 || $def->isType(MyDefinition::TYPE_PROPERTY)
                 || $def->isType(MyDefinition::TYPE_REFERENCE)
             ) {

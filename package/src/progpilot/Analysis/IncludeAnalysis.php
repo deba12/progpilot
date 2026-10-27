@@ -49,8 +49,7 @@ class IncludeAnalysis
                     foreach ($myDefArg->getCurrentState()->getLastKnownValues() as $lastKnownValue) {
                         $realFile = false;
                         // else it's maybe a relative path
-                        if (
-                            strlen($lastKnownValue) > 0
+                        if (strlen($lastKnownValue) > 0
                             && (substr($lastKnownValue, 0, 1) !== DIRECTORY_SEPARATOR
                                 || preg_match("/^[a-bA-B]*:/", $lastKnownValue) === 0)
                         ) {
@@ -75,8 +74,7 @@ class IncludeAnalysis
 
                             if (!is_null($myInclude)) {
                                 $manuallyIncludedFile = $myInclude->getValue();
-                                if (
-                                    strlen($manuallyIncludedFile) > 0
+                                if (strlen($manuallyIncludedFile) > 0
                                     && (substr($manuallyIncludedFile, 0, 1) !== DIRECTORY_SEPARATOR
                                         || preg_match("/^[a-bA-B]*:/", $manuallyIncludedFile) === 0)
                                 ) {
@@ -101,8 +99,7 @@ class IncludeAnalysis
                             $arrayIncludes = &$context->getArrayIncludes();
                             $arrayRequires = &$context->getArrayRequires();
 
-                            if (
-                                !$context->inputs->isExcludedFile($nameIncludedFile)
+                            if (!$context->inputs->isExcludedFile($nameIncludedFile)
                                 && ((!in_array($nameIncludedFile, $arrayIncludes, true) && $typeInclude === 2)
                                     || (!in_array($nameIncludedFile, $arrayRequires, true) && $typeInclude === 4)
                                     || ($typeInclude === 1 || $typeInclude === 3))
@@ -164,8 +161,7 @@ class IncludeAnalysis
                                         foreach ($mainInclude->getLastBlockIds() as $lastBlockId) {
                                             $lastMyBlockConstuctor =
                                                 $mainInclude->getBlockById($lastBlockId);
-                                            if (
-                                                !is_null($context->getCurrentBlock())
+                                            if (!is_null($context->getCurrentBlock())
                                                 && !is_null($lastMyBlockConstuctor)
                                             ) {
                                                 $saveCurrentBlock->addVirtualParent($lastMyBlockConstuctor);
@@ -184,8 +180,7 @@ class IncludeAnalysis
                                             $currentFileDefs = $defs->getOutMinusKill($myFuncCall->getBlockId());
                                             if (!empty($currentFileDefs)) {
                                                 foreach ($currentFileDefs as $defToInclude) {
-                                                    if (
-                                                        $defToInclude->getLine() < $myFuncCall->getLine()
+                                                    if ($defToInclude->getLine() < $myFuncCall->getLine()
                                                         || ($defToInclude->getLine() === $myFuncCall->getLine()
                                                             && $defToInclude->getColumn() < $myFuncCall->getColumn())
                                                     ) {

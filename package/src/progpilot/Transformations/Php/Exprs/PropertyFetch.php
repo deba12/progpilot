@@ -21,8 +21,7 @@ class PropertyFetch
 {
     public static function propertyFetch($context, $op)
     {
-        if (
-            isset($op)
+        if (isset($op)
             && $op instanceof Op\Expr\PropertyFetch
             && isset($op->name->value)
         ) {

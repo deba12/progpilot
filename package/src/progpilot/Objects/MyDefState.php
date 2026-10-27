@@ -159,8 +159,7 @@ class MyDefState extends MyOp
             $value = rtrim(ltrim($value));
         }
 
-        if (
-            Common::validLastKnownValue($value)
+        if (Common::validLastKnownValue($value)
             && !in_array($value, $this->lastKnownValue, true)
             && count($this->lastKnownValue) < 10
         ) {
@@ -279,8 +278,7 @@ class MyDefState extends MyOp
 
     public function addArrayIndex($arrayIndex, $def)
     {
-        if (
-            !$this->isArrayIndexExists($arrayIndex)
+        if (!$this->isArrayIndexExists($arrayIndex)
             && count($this->arrayIndexes) < 100
         ) {
             $ele = new \stdClass;

@@ -21,8 +21,7 @@ class StaticPropertyFetch
 {
     public static function staticPropertyFetch($context, $op)
     {
-        if (
-            isset($op)
+        if (isset($op)
             && $op instanceof Op\Expr\StaticPropertyFetch
         ) {
             $instDefChained = new MyInstruction(Opcodes::STATIC_PROPERTY_FETCH);

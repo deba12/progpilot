@@ -166,8 +166,7 @@ class VisitorAnalysis
                         && !$myFunc->isType(MyFunction::TYPE_FUNC_METHOD))
                 ) {
                     // we don't visit twice function with a long execution time
-                    if (
-                        HelpersAnalysis::checkIfOneFunctionArgumentIsNew($myFunc, $instruction)
+                    if (HelpersAnalysis::checkIfOneFunctionArgumentIsNew($myFunc, $instruction)
                         || !$myFunc->isVisited()
                         || ($myFunc->isType(MyFunction::TYPE_FUNC_METHOD)
                             && !$myFunc->isType(MyFunction::TYPE_FUNC_STATIC))
@@ -316,8 +315,7 @@ class VisitorAnalysis
             $firstMyBlockCalled = $this->currentMyFunc->getBlockById($firstBlockIdCalled);
             $blockOfCallee = $this->currentMyBlock;
 
-            if (
-                !is_null($firstMyBlockCalled)
+            if (!is_null($firstMyBlockCalled)
                 && !is_null($blockOfCallee)
             ) {
                 $firstMyBlockCalled->setVirtualParents([$blockOfCallee]);
@@ -333,8 +331,7 @@ class VisitorAnalysis
                         $lastBlockIdConstuctor = $constructor->getFirstBlockId();
                         $lastMyBlockConstuctor = $constructor->getBlockById($lastBlockIdConstuctor);
 
-                        if (
-                            !is_null($firstMyBlockCalled)
+                        if (!is_null($firstMyBlockCalled)
                             && !is_null($lastMyBlockConstuctor)
                         ) {
                             $firstMyBlockCalled->addVirtualParent($lastMyBlockConstuctor);
@@ -482,8 +479,7 @@ class VisitorAnalysis
                 // needed to have a proper opinformation eachtime:
                 $opInformation["chained_results"] = [];
 
-                if (
-                    $instruction->getOpcode() !== Opcodes::ARRAYDIM_FETCH
+                if ($instruction->getOpcode() !== Opcodes::ARRAYDIM_FETCH
                     && $instruction->getOpcode() !== Opcodes::PROPERTY_FETCH
                 ) {
                     $originalFlow = [];
@@ -503,8 +499,7 @@ class VisitorAnalysis
 
                         foreach ($myBlock->parents as $blockParent) {
                             // if not in the stack (it's not a loop)
-                            if (
-                                $blockParent->getId() !== $myBlock->getId()
+                            if ($blockParent->getId() !== $myBlock->getId()
                                 && !$myBlock->isLoopParent($blockParent)
                                 && !$blockParent->hasBeenAnalyzed()
                                 && !in_array($blockParent->getId(), $blockStack, true)
@@ -582,8 +577,7 @@ class VisitorAnalysis
                                         HelpersAnalysis::updateNbChars($lastNbChars, $curLastKnownValues[0], $chars);
                                     }
 
-                                    if (
-                                        !in_array($chainedResult, $vars["chained_results"], true)
+                                    if (!in_array($chainedResult, $vars["chained_results"], true)
                                         && count($vars["chained_results"]) < 20
                                     ) {
                                         $vars["chained_results"][] = $chainedResult;
@@ -596,8 +590,7 @@ class VisitorAnalysis
                         foreach ($rightids as $rightid) {
                             $rightOpInformation = $this->context->getCurrentFunc()->getOpInformation($rightid);
                             $rightValuesSet = [];
-                            if (
-                                isset($rightOpInformation["chained_results"])
+                            if (isset($rightOpInformation["chained_results"])
                                 && !empty($rightOpInformation["chained_results"])
                             ) {
                                 foreach ($rightOpInformation["chained_results"] as $chainedResult) {
@@ -609,8 +602,7 @@ class VisitorAnalysis
                                         HelpersAnalysis::updateNbChars($lastNbChars, $curLastKnownValues[0], $chars);
                                     }
 
-                                    if (
-                                        !in_array($chainedResult, $vars["chained_results"], true)
+                                    if (!in_array($chainedResult, $vars["chained_results"], true)
                                         && count($vars["chained_results"]) < 20
                                     ) {
                                         $vars["chained_results"][] = $chainedResult;
@@ -942,8 +934,7 @@ class VisitorAnalysis
                                                 $propertyName
                                             );
 
-                                            if (
-                                                !is_null($property)
+                                            if (!is_null($property)
                                                 && ResolveDefs::getVisibility(
                                                     $previousChainedResult,
                                                     $property,
@@ -1012,8 +1003,7 @@ class VisitorAnalysis
                             foreach ($opDataVar["chained_results"] as $chainedResult) {
                                 $state = $chainedResult->getCurrentState();
                                 if (!is_null($state)) {
-                                    if (
-                                        $state->isType(MyDefinition::TYPE_ARRAY)
+                                    if ($state->isType(MyDefinition::TYPE_ARRAY)
                                         && !$state->isType(MyDefinition::TYPE_INSTANCE)
                                     ) {
                                         foreach ($state->getArrayIndexes() as $arrayIndex) {
@@ -1064,8 +1054,7 @@ class VisitorAnalysis
                                     // a classic (not array/property) could have been overwritten
                                     // we should search for the last variables
 
-                                    if (
-                                        !$ref->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
+                                    if (!$ref->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
                                         && !$ref->isType(MyDefinition::TYPE_PROPERTY)
                                     ) {
                                         $refbis = clone $ref;
@@ -1221,8 +1210,7 @@ class VisitorAnalysis
                         $leftOpInformation =
                             $this->context->getCurrentFunc()->getOpInformation($resultid);
 
-                        if (
-                            isset($rightOpInformation["chained_results"])
+                        if (isset($rightOpInformation["chained_results"])
                             && $typeCast === MyDefinition::CAST_NOT_SAFE
                         ) {
                             foreach ($rightOpInformation["chained_results"] as $chainedResult) {
@@ -1291,8 +1279,7 @@ class VisitorAnalysis
                         }
 
                         $notboolean = false;
-                        if (
-                            isset($opExprData["not_boolean"])
+                        if (isset($opExprData["not_boolean"])
                             && $opExprData["not_boolean"]
                         ) {
                             $notboolean = true;

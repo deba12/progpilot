@@ -32,8 +32,7 @@ class Common
 
     public static function isChainedKnownType($op)
     {
-        if (
-            $op instanceof Op\Expr\PropertyFetch
+        if ($op instanceof Op\Expr\PropertyFetch
             || $op instanceof Op\Expr\StaticPropertyFetch
             || $op instanceof Op\Expr\ArrayDimFetch
         ) {
@@ -50,8 +49,7 @@ class Common
         // this->foo
 
         if (isset($op->var->ops[0])) {
-            if (
-                isset($op->var->ops[0]->var->ops[0])
+            if (isset($op->var->ops[0]->var->ops[0])
                 && Common::isChainedKnownType($op->var->ops[0]->var->ops[0])
                 && $op->var->ops[0]->var->ops[0] !== $op->var->ops[0]
             ) {
@@ -83,8 +81,7 @@ class Common
         // foo = array()
         // foo = define("FOO")
         if (isset($op) && isset($op->name)) {
-            if (
-                $op instanceof Op\Expr\FuncCall
+            if ($op instanceof Op\Expr\FuncCall
                 && $op->name instanceof Operand\Literal
                 && $op->name->value === "define"
             ) {
@@ -104,8 +101,7 @@ class Common
     public static function getNameDefinition($ops, $lookingForProperty = false)
     {
         //  $this->property = property
-        if (
-            $lookingForProperty
+        if ($lookingForProperty
             && ($ops instanceof Op\Expr\PropertyFetch || $ops instanceof Op\Expr\StaticPropertyFetch)
             && isset($ops->name->value)
         ) {
