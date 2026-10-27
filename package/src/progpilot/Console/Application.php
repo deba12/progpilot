@@ -27,7 +27,7 @@ class Application extends BaseApplication
     public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         $this->setCatchExceptions(true);
-        parent::run($input, $output);
+        return parent::run($input, $output);
     }
 
     public function getDefinition(): InputDefinition

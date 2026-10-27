@@ -8,7 +8,7 @@ Progpilot is a PHP SAST tool (taint analysis for PHP code), written in PHP >= 8.
 
 ## Layout
 
-- `package/` – the library (`designsecurity/progpilot`, PSR-0 namespace `progpilot` -> `package/src`). All analysis code lives in `package/src/progpilot`.
+- `package/` – the library (`designsecurity/progpilot`, PSR-4 namespace `progpilot\` -> `package/src/progpilot/`). All analysis code lives in `package/src/progpilot`.
 - `package/src/uptodate_data/php/` – default taint config as JSON (`sources`, `sinks`, `sanitizers`, `validators`, `rules`) plus `frameworks/` and `dev/` variants. Edit these to change what counts as a source/sink.
 - `projects/phar/progpilot` – CLI entry script (registers `Command\ProgpilotCommand` in `Console\Application`; version string lives in `Application.php`).
 - `projects/tests/` – the PHPUnit project; its own `composer.json` pulls `package/` in via a path repository.
@@ -26,22 +26,27 @@ php vendor/bin/phpunit RunAll.php                       # one runner
 php vendor/bin/phpunit RunAll.php --filter 'testSecurity'   # filter by test name / dataset
 ```
 
-Lint (PSR12 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/tests` is ignored). Run `composer install` at the repo root first:
+Lint (PSR-12 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/tests` is ignored). Run `composer install` at the repo root first:
 
 ```shell
 composer lint        # phpcs on package/src, must be clean (errors and warnings)
 composer lint:fix    # phpcbf, whitespace-only autofix
-composer gate        # lint + tests + composer audit
+composer phpstan     # level 5 on package/src; pre-existing findings are in phpstan-baseline.neon
+composer psalm       # errorLevel 8 on package/src (psalm.xml)
+composer gate        # lint + phpstan + psalm + tests + composer audit
 ```
 
 Quality gate: run once right before committing, scoped to what changed.
 
 | Changed paths | Run |
 | --- | --- |
-| `package/src/**/*.php`, `projects/phar/progpilot` | `composer lint` and the PHPUnit suite |
+| `package/src/**/*.php`, `projects/phar/progpilot` | `composer lint`, `composer phpstan`, `composer psalm` and the PHPUnit suite |
+| `phpstan.neon.dist`, `phpstan-baseline.neon`, `psalm.xml` | that tool at full scope |
 | `projects/tests/**` | PHPUnit suite |
 | `composer.json` (any) | `composer audit` plus the PHPUnit suite on PHP 8.4, 8.5 and 8.6 |
 | docs / yaml / Docker only | nothing |
+
+Static analysis scope and tuning: both tools only cover `package/src` (not `projects/tests` fixtures, which are deliberately vulnerable PHP). PHPStan runs at level 5 because the code is mostly untyped (level max reports thousands of missing-type findings); the findings that existed when it was added are frozen in `phpstan-baseline.neon`, so only new findings fail the gate. Do not regenerate the baseline to hide new findings; shrink it by fixing entries. Psalm suppresses unused-code and `#[Override]` checks (public methods are library API, see comments in `psalm.xml`) and one false positive in `Dataflow/VisitorDataflow.php`.
 
 Commit messages follow the repo's existing short lowercase style (no conventional-commits tooling). Use `php8.4 /usr/local/bin/composer ...` for dependency work so resolution targets the PHP floor.
 
@@ -66,4 +71,4 @@ Entry: `Analyzer::run($context)` in `package/src/progpilot/Analyzer.php`, where 
 
 ## Conventions
 
-PSR12 code style (enforced by GrumPHP/phpcs). Dev docs note known unsupported cases (references, array pushes, chained calls) in `docs/DEV.md`; check there before assuming a false negative is a regression.
+PSR-12 code style (enforced by GrumPHP/phpcs). Dev docs note known unsupported cases (references, array pushes, chained calls) in `docs/DEV.md`; check there before assuming a false negative is a regression.

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<psalm
+    errorLevel="8"
+    resolveFromConfigFile="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+>
+    <projectFiles>
+        <directory name="package/src" />
+        <ignoreFiles>
+            <directory name="vendor" />
+        </ignoreFiles>
+    </projectFiles>
+    <issueHandlers>
+        <!-- library: public methods are the API consumed by other projects, not dead code -->
+        <PossiblyUnusedMethod errorLevel="suppress" />
+        <PossiblyUnusedProperty errorLevel="suppress" />
+        <PossiblyUnusedParam errorLevel="suppress" />
+        <UnusedClass errorLevel="suppress" />
+        <!-- #[Override] is not used anywhere in this PHP 8.4 codebase; not an established convention here -->
+        <MissingOverrideAttribute errorLevel="suppress" />
+        <!-- false positive: $blocksStack is pushed on ENTER_BLOCK and popped on LEAVE_BLOCK across loop iterations -->
+        <NoValue>
+            <errorLevel type="suppress">
+                <file name="package/src/progpilot/Dataflow/VisitorDataflow.php" />
+            </errorLevel>
+        </NoValue>
+    </issueHandlers>
+</psalm>
