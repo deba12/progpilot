@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="false"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false"
-         bootstrap="./vendor/autoload.php">
-    <testsuites>
-        <testsuite name="progpilot Test Suite">
-            <file>RunAll.php</file>
-            <file>RunAllFolders.php</file>
-            <file>RunFlows.php</file>
-            <file>RunExcludeFiles.php</file>
-            <file>RunAllConfigurations.php</file>
-        </testsuite>
-    </testsuites>
-
+<phpunit backupGlobals="false" colors="false" processIsolation="false" stopOnFailure="false" bootstrap="./vendor/autoload.php" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
+  <testsuites>
+    <testsuite name="progpilot Test Suite">
+      <file>RunAll.php</file>
+      <file>RunAllFolders.php</file>
+      <file>RunFlows.php</file>
+      <file>RunExcludeFiles.php</file>
+      <file>RunAllConfigurations.php</file>
+    </testsuite>
+  </testsuites>
 </phpunit>

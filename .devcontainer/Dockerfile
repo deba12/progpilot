@@ -1,4 +1,4 @@
-FROM php:8.1.13-cli
+FROM php:8.4-cli
 
 RUN apt-get update && apt-get install -y vim git sudo wget
 

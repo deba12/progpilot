@@ -12,4 +12,4 @@ projects/phar/composer.lock
 vendor/
 composer.lock
 indent.sh
-.DS_Store
+.DS_Storeprojects/tests/.phpunit.cache

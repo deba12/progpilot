@@ -1,5 +1,5 @@
-# Use PHP 8.3 as base image (compatible with >=8.3 requirement)
-FROM php:8.3-cli
+# Use PHP 8.4 as base image (matches the ^8.4 requirement)
+FROM php:8.4-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \

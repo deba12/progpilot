@@ -9,13 +9,13 @@
         }
     ],
     "require": {
-        "php": ">=8.3",
+        "php": "^8.4",
         "progpilot/package": "@dev",
-        "ircmaxell/php-cfg": "^0.8.0",
-        "symfony/yaml": "^7.3.2",
-        "symfony/console": "^7.3.2",
-        "myclabs/deep-copy": "^1.13.4",
-        "bartlett/sarif-php-sdk": "^2.2.0"
+        "ircmaxell/php-cfg": "^0.8.1",
+        "symfony/yaml": "^8.1",
+        "symfony/console": "^8.1",
+        "myclabs/deep-copy": "^1.14",
+        "bartlett/sarif-php-sdk": "^2.4"
     },
     "bin": ["progpilot"]
 } 
