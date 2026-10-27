@@ -10,6 +10,11 @@
 
 namespace progpilot\Code;
 
+use progpilot\Objects\MyBlock;
+use progpilot\Objects\MyFunction;
+use progpilot\Objects\MyClass;
+use progpilot\Objects\MyDefinition;
+
 class MyInstruction
 {
     public const MYBLOCK = 1;
@@ -60,19 +65,18 @@ class MyInstruction
      * The properties are set by the transformation step according to the opcode, the type depends on the key.
      * Dynamic keys (argdefN, keyN, valueN, ...) are not described here and give mixed.
      *
-     * @return ($index is self::MYBLOCK|self::MYBLOCK_IF|self::MYBLOCK_ELSE ? \progpilot\Objects\MyBlock
-     *     : ($index is self::MYFUNC|self::MYFUNC_CALL ? \progpilot\Objects\MyFunction
-     *     : ($index is self::MYCLASS ? \progpilot\Objects\MyClass
-     *     : ($index is self::DEF ? \progpilot\Objects\MyDefinition|null
-     *     : ($index is self::ORIGINAL_DEF ? \progpilot\Objects\MyDefinition|null
+     * @return ($index is self::MYBLOCK|self::MYBLOCK_IF|self::MYBLOCK_ELSE ? MyBlock
+     *     : ($index is self::MYFUNC|self::MYFUNC_CALL ? MyFunction
+     *     : ($index is self::MYCLASS ? MyClass
+     *     : ($index is self::DEF ? MyDefinition|null
+     *     : ($index is self::ORIGINAL_DEF ? MyDefinition|null
      *     : ($index is self::FUNCNAME|self::PROPERTY_NAME ? string
      *     : ($index is self::VARID ? int|null
      *     : ($index is self::TYPE_INCLUDE|self::RESULTID|self::EXPRID|self::LEFTID ? int
      *     : ($index is self::ARRAY_DIM ? int|string
      *     : ($index is self::RIGHTID ? int|array<mixed>
      *     : ($index is self::RETURN_DEFS ? array<mixed>
-     *     : ($index is self::REFERENCE ? bool
-     *     : mixed))))))))))))
+     *     : ($index is self::REFERENCE ? bool : mixed))))))))))))
      */
     public function getProperty(int|string $index): mixed
     {

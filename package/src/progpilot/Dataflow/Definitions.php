@@ -12,18 +12,21 @@ namespace progpilot\Dataflow;
 
 use progpilot\Objects\MyBlock;
 use progpilot\Objects\MyDefinition;
+use progpilot\Objects\MyFunction;
 
 class Definitions
 {
     private ?array $in = null;
     private ?array $out = null;
     private ?array $outminuskill = null;
-    private $gen;
-    private $kill;
+    /** @var array<int, list<MyDefinition>> */
+    private array $gen = [];
+    /** @var array<int, list<MyDefinition>> */
+    private array $kill = [];
     private ?array $originalDefs = null;
 
     private array $defs;
-    private $currentFunc;
+    private ?MyFunction $currentFunc = null;
     private int $nbDefs;
 
     public function __construct()
@@ -269,12 +272,12 @@ class Definitions
         $this->in[$block] = $in;
     }
 
-    public function getCurrentFunc()
+    public function getCurrentFunc(): ?MyFunction
     {
         return $this->currentFunc;
     }
 
-    public function setCurrentFunc($currentFunc): void
+    public function setCurrentFunc(?MyFunction $currentFunc): void
     {
         $this->currentFunc = $currentFunc;
     }

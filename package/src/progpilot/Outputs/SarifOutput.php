@@ -21,9 +21,10 @@ use Bartlett\Sarif\SarifLog;
 
 class SarifOutput
 {
-    private $progpilotResults;
+    /** @var list<array<string, mixed>> */
+    private array $progpilotResults;
 
-    public function __construct($progpilotResults)
+    public function __construct(array $progpilotResults)
     {
         $this->progpilotResults = $progpilotResults;
     }

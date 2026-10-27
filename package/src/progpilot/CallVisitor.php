@@ -25,35 +25,35 @@ class CallVisitor implements Visitor
         $this->context = $context;
     }
 
-    public function enterScript(Script $script)
+    public function enterScript(Script $script): void
     {
     }
 
-    public function leaveScript(Script $script)
+    public function leaveScript(Script $script): void
     {
     }
 
-    public function leaveFunc(Func $func)
+    public function leaveFunc(Func $func): void
     {
     }
 
-    public function enterFunc(Func $func)
+    public function enterFunc(Func $func): void
     {
     }
 
-    public function enterBlock(Block $block, ?Block $prior = null)
+    public function enterBlock(Block $block, ?Block $prior = null): void
     {
     }
 
-    public function skipBlock(Block $block, ?Block $prior = null)
+    public function skipBlock(Block $block, ?Block $prior = null): void
     {
     }
 
-    public function leaveOp(Op $op, Block $block)
+    public function leaveOp(Op $op, Block $block): void
     {
     }
 
-    public function leaveBlock(Block $block, ?Block $prior = null)
+    public function leaveBlock(Block $block, ?Block $prior = null): void
     {
     }
 

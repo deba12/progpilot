@@ -25,7 +25,7 @@ class ControlFlowGraph
         $this->myBlockText = [];
     }
 
-    public function getTextOfMyBlock($id)
+    public function getTextOfMyBlock($id): string
     {
         if (isset($this->myBlockText["$id"])) {
             return $this->myBlockText["$id"];

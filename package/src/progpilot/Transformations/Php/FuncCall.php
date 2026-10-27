@@ -10,6 +10,7 @@
 
 namespace progpilot\Transformations\Php;
 
+use PHPCfg\Op\Expr\NsFuncCall;
 use progpilot\Context;
 use PHPCfg\Operand;
 use PHPCfg\Op\Expr\MethodCall;
@@ -183,10 +184,10 @@ class FuncCall
             $currentOp = $context->getCurrentOp();
             if (
                 $currentOp instanceof \PHPCfg\Op\Expr\FuncCall
-                || $currentOp instanceof \PHPCfg\Op\Expr\NsFuncCall
-                || $currentOp instanceof \PHPCfg\Op\Expr\MethodCall
-                || $currentOp instanceof \PHPCfg\Op\Expr\StaticCall
-                || $currentOp instanceof \PHPCfg\Op\Expr\New_
+                || $currentOp instanceof NsFuncCall
+                || $currentOp instanceof MethodCall
+                || $currentOp instanceof StaticCall
+                || $currentOp instanceof New_
             ) {
                 $listArgs = $currentOp->args;
             }

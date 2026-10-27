@@ -10,6 +10,7 @@
 
 namespace progpilot;
 
+use LogicException;
 use progpilot\Dataflow\Definitions;
 use stdClass;
 use progpilot\Inputs\MyInputs;
@@ -28,19 +29,19 @@ use progpilot\Objects\MyFunction;
 
 abstract class ContextInternalApi
 {
-    abstract public function setAnalyzeIncludes($analyzeIncludes);
+    abstract public function setAnalyzeIncludes(bool $analyzeIncludes): void;
 
-    abstract public function setMaxFileAnalysisDuration($maxFileAnalysisDuration);
+    abstract public function setMaxFileAnalysisDuration(int $maxFileAnalysisDuration): void;
 
-    abstract public function setMaxDefinitions($maxDefinitions);
+    abstract public function setMaxDefinitions(int $maxDefinitions): void;
 
-    abstract public function setMaxFileSize($maxFileSize);
+    abstract public function setMaxFileSize(int $maxFileSize): void;
 
-    abstract public function setMaxMemory($maxMemory);
+    abstract public function setMaxMemory(int $maxMemory): void;
 
-    abstract public function setDebugMode($bool);
+    abstract public function setDebugMode(bool $bool): void;
 
-    abstract public function setPrettyPrint($bool);
+    abstract public function setPrettyPrint(bool $bool): void;
 
     protected array $arrayIncludes;
     protected array $arrayRequires;
@@ -70,8 +71,10 @@ abstract class ContextInternalApi
      * @var list<array<mixed>>
      */
     protected array $callStack;
-    protected $calltonamespaces;
-    protected $namespaces;
+    /** @var array<string, list<string>> */
+    protected array $calltonamespaces = [];
+    /** @var array<string, string> */
+    protected array $namespaces = [];
 
     protected array $analyzedDataFiles;
 
@@ -118,7 +121,7 @@ abstract class ContextInternalApi
     /**
      * @param list<MyFunction|array<mixed>|Definitions|stdClass> $val
      */
-    public function pushToCallStack(array $val)
+    public function pushToCallStack(array $val): void
     {
         array_push($this->callStack, $val);
     }
@@ -134,7 +137,7 @@ abstract class ContextInternalApi
     /**
      * @param list<array<mixed>> $callStack
      */
-    public function setCallStack(array $callStack)
+    public function setCallStack(array $callStack): void
     {
         $this->callStack = $callStack;
     }
@@ -187,12 +190,12 @@ abstract class ContextInternalApi
         return false;
     }
 
-    public function addTmpFunctions(MyFunction $myfunc)
+    public function addTmpFunctions(MyFunction $myfunc): void
     {
         $this->tmpfunctions[] = $myfunc;
     }
 
-    public function clearTmpFunctions()
+    public function clearTmpFunctions(): void
     {
         $this->tmpfunctions = [];
     }
@@ -205,7 +208,7 @@ abstract class ContextInternalApi
         return $this->tmpfunctions;
     }
 
-    public function addDataAnalyzedFile(string $file)
+    public function addDataAnalyzedFile(string $file): void
     {
         if (!in_array($file, $this->analyzedDataFiles)) {
             $this->analyzedDataFiles[] = $file;
@@ -217,17 +220,17 @@ abstract class ContextInternalApi
         return in_array($file, $this->analyzedDataFiles);
     }
 
-    public function getDefsMain()
+    public function getDefsMain(): array
     {
         return $this->defsMain;
     }
 
-    public function setDefsMain(array $defsMain)
+    public function setDefsMain(array $defsMain): void
     {
         $this->defsMain = $defsMain;
     }
 
-    public function addFileandNamepace(string $file, string $namespace)
+    public function addFileandNamepace(string $file, string $namespace): void
     {
         $this->namespaces["$namespace"] = $file;
     }
@@ -241,7 +244,7 @@ abstract class ContextInternalApi
         return null;
     }
 
-    public function addCallToNamespace(string $namespace)
+    public function addCallToNamespace(string $namespace): void
     {
         if (!isset($this->calltonamespaces["" . $this->currentMyFile->getName() . ""])) {
             $this->calltonamespaces["" . $this->currentMyFile->getName() . ""] = [];
@@ -264,7 +267,7 @@ abstract class ContextInternalApi
         return null;
     }
 
-    public function resetInternalLowvalues()
+    public function resetInternalLowvalues(): void
     {
         $this->currentOp = null;
         $this->currentBlock = null;
@@ -274,25 +277,25 @@ abstract class ContextInternalApi
         $this->currentMyCode = null;
     }
 
-    public function resetInternalValues()
+    public function resetInternalValues(): void
     {
         $this->resetInternalLowvalues();
 
         $this->inputs->setCode(null);
     }
 
-    public function resetCallStack()
+    public function resetCallStack(): void
     {
         $this->callStack = [];
     }
 
-    public function resetIncludedFiles()
+    public function resetIncludedFiles(): void
     {
         $this->arrayIncludes = [];
         $this->arrayRequires = [];
     }
 
-    public function resetDataflow()
+    public function resetDataflow(): void
     {
         $this->analyzedDataFiles = [];
         $this->objects = new Objects();
@@ -300,12 +303,12 @@ abstract class ContextInternalApi
         $this->functions = new Functions();
     }
 
-    public function setArrayIncludes(array $arrayIncludes)
+    public function setArrayIncludes(array $arrayIncludes): void
     {
         $this->arrayIncludes = $arrayIncludes;
     }
 
-    public function setArrayRequires(array $arrayRequires)
+    public function setArrayRequires(array $arrayRequires): void
     {
         $this->arrayRequires = $arrayRequires;
     }
@@ -327,7 +330,7 @@ abstract class ContextInternalApi
 
     public function requireCurrentMycode(): MyCode
     {
-        return $this->currentMyCode ?? throw new \LogicException('no code is being analyzed');
+        return $this->currentMyCode ?? throw new LogicException('no code is being analyzed');
     }
 
     public function getCurrentOp(): ?Op
@@ -342,7 +345,7 @@ abstract class ContextInternalApi
 
     public function requireCurrentBlock(): MyBlock|int
     {
-        return $this->currentBlock ?? throw new \LogicException('no block is being analyzed');
+        return $this->currentBlock ?? throw new LogicException('no block is being analyzed');
     }
 
     public function getCurrentLine(): ?int
@@ -362,7 +365,7 @@ abstract class ContextInternalApi
 
     public function requireCurrentFunc(): MyFunction
     {
-        return $this->currentFunc ?? throw new \LogicException('no function is being analyzed');
+        return $this->currentFunc ?? throw new LogicException('no function is being analyzed');
     }
 
     public function getObjects(): Objects
@@ -380,7 +383,7 @@ abstract class ContextInternalApi
         return $this->functions;
     }
 
-    public function getNbsOpInformationsAll()
+    public function getNbsOpInformationsAll(): int
     {
         $nb = 0;
         foreach ($this->getFunctions()->getFunctions() as $functionclasses) {
@@ -398,12 +401,12 @@ abstract class ContextInternalApi
         return $nb;
     }
 
-    public function getInputs()
+    public function getInputs(): MyInputs
     {
         return $this->inputs;
     }
 
-    public function getOutputs()
+    public function getOutputs(): MyOutputs
     {
         return $this->outputs;
     }
@@ -420,75 +423,75 @@ abstract class ContextInternalApi
 
     public function requireCurrentMyfile(): MyFile
     {
-        return $this->currentMyFile ?? throw new \LogicException('no file is being analyzed');
+        return $this->currentMyFile ?? throw new LogicException('no file is being analyzed');
     }
 
-    public function setCurrentMyfile(MyFile $myFile)
+    public function setCurrentMyfile(MyFile $myFile): void
     {
         $this->currentMyFile = $myFile;
     }
 
-    public function setPath(string $path)
+    public function setPath(string $path): void
     {
         $this->path = $path;
     }
 
-    public function setCurrentMycode(?MyCode $myCode)
+    public function setCurrentMycode(?MyCode $myCode): void
     {
         $this->currentMyCode = $myCode;
     }
 
-    public function setCurrentOp(?Op $currentOp)
+    public function setCurrentOp(?Op $currentOp): void
     {
         $this->currentOp = $currentOp;
     }
 
-    public function setCurrentBlock(MyBlock|int $currentBlock)
+    public function setCurrentBlock(MyBlock|int $currentBlock): void
     {
         $this->currentBlock = $currentBlock;
     }
 
-    public function setCurrentLine(int $currentLine)
+    public function setCurrentLine(int $currentLine): void
     {
         $this->currentLine = $currentLine;
     }
 
-    public function setCurrentColumn(int $currentColumn)
+    public function setCurrentColumn(int $currentColumn): void
     {
         $this->currentColumn = $currentColumn;
     }
 
-    public function setCurrentFunc(MyFunction $currentFunc)
+    public function setCurrentFunc(MyFunction $currentFunc): void
     {
         $this->currentFunc = $currentFunc;
     }
 
-    public function setObjects(Objects $objects)
+    public function setObjects(Objects $objects): void
     {
         $this->objects = $objects;
     }
 
-    public function setClasses(Classes $classes)
+    public function setClasses(Classes $classes): void
     {
         $this->classes = $classes;
     }
 
-    public function setFunctions(Functions $functions)
+    public function setFunctions(Functions $functions): void
     {
         $this->functions = $functions;
     }
 
-    public function setInputs(MyInputs $inputs)
+    public function setInputs(MyInputs $inputs): void
     {
         $this->inputs = $inputs;
     }
 
-    public function setOutputs(MyOutputs $outputs)
+    public function setOutputs(MyOutputs $outputs): void
     {
         $this->outputs = $outputs;
     }
 
-    public function readConfiguration()
+    public function readConfiguration(): void
     {
         if (!is_null($this->configurationFile)) {
             try {

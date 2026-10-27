@@ -72,7 +72,7 @@ class Functions
         $this->functions[$filenamehash][$classname][$funcname] = $myFunc;
     }
 
-    public function delFunction($filenamehash, $classname, $funcname)
+    public function delFunction($filenamehash, $classname, $funcname): ?MyFunction
     {
         $save = null;
 

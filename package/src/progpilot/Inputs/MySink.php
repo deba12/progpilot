@@ -94,7 +94,7 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function getParameterConditions($i)
+    public function getParameterConditions($i): ?array
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];

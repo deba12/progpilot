@@ -33,7 +33,7 @@ class VisitorDataflow
         return false;
     }
 
-    protected function defineArray(string $nameArray)
+    protected function defineArray(string $nameArray): void
     {
         $this->blocksArrays["" . $nameArray . ""] = true;
     }

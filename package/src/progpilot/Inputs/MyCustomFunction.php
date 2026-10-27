@@ -17,7 +17,7 @@ class MyCustomFunction extends MySpecify
     private array $parameters;
     private bool $hasParameters;
 
-    private $action;
+    private ?string $action = null;
     private int $orderNumberExpected;
     private int $orderNumberReal;
 
@@ -79,7 +79,7 @@ class MyCustomFunction extends MySpecify
         $this->hasParameters = $hasParameters;
     }
 
-    public function isParameterSufficient($i)
+    public function isParameterSufficient($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -93,7 +93,7 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
-    public function isParameterFixed($i)
+    public function isParameterFixed($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -107,7 +107,7 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
-    public function isParameterValidByDefault($i)
+    public function isParameterValidByDefault($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -121,7 +121,7 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
-    public function getParameterValues($i)
+    public function getParameterValues($i): ?array
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -155,12 +155,12 @@ class MyCustomFunction extends MySpecify
         return $this->orderNumberExpected;
     }
 
-    public function getAction()
+    public function getAction(): ?string
     {
         return $this->action;
     }
 
-    public function setAction($action)
+    public function setAction(?string $action): ?string
     {
         return $this->action = $action;
     }

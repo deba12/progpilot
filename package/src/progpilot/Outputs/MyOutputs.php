@@ -110,7 +110,7 @@ class MyOutputs extends MyOutputsInternalApi
         $this->onAddResult = $func;
     }
 
-    public function getOnAddResult()
+    public function getOnAddResult(): ?callable
     {
         return $this->onAddResult;
     }

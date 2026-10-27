@@ -919,7 +919,7 @@ class VisitorAnalysis
                                     $defFound->requireCurrentState()->setTainted(true);
                                 }
 
-                                \progpilot\Analysis\CustomAnalysis::defineObject(
+                                CustomAnalysis::defineObject(
                                     $this->context,
                                     $instruction,
                                     $defFound,

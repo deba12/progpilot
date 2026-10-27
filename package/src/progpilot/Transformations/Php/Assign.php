@@ -12,7 +12,6 @@ namespace progpilot\Transformations\Php;
 
 use progpilot\Context;
 use PHPCfg\Operand;
-use PHPCfg\Operand\Temporary;
 use PHPCfg\Op\Expr\AssignRef;
 use PHPCfg\Op;
 use progpilot\Objects\MyDefinition;
@@ -30,7 +29,7 @@ class Assign
         ?Operand $var,
         bool $isReturnDef = false,
         bool $isDefine = false
-    ) {
+    ): ?MyDefinition {
         $backDef = null;
 
         if ($isDefine) {

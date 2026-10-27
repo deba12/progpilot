@@ -10,6 +10,7 @@
 
 namespace progpilot\Outputs;
 
+use progpilot\Objects\MyFile;
 use progpilot\Objects\MyFunction;
 use progpilot\Objects\MyBlock;
 use progpilot\Objects\MyClass;
@@ -22,13 +23,14 @@ class MyOutputsInternalApi
     protected array $results;
     protected bool $writeIncludeFailures;
     protected ?string $includeFailuresFile = null;
-    protected $onAddResult;
+    /** @var callable|null */
+    protected $onAddResult = null;
     protected bool $taintedFlow;
     protected bool $sarifOutput;
     protected int $countfilesanalyzed;
 
     /**
-     * @var list<\progpilot\Objects\MyFile>
+     * @var list<MyFile>
      */
     public array $currentIncludesFile;
     public array $cfg;

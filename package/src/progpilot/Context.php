@@ -12,17 +12,17 @@ namespace progpilot;
 
 class Context extends ContextInternalApi
 {
-    public function setPrettyPrint($bool): void
+    public function setPrettyPrint(bool $bool): void
     {
         $this->prettyPrint = $bool;
     }
 
-    public function getPrettyPrint()
+    public function getPrettyPrint(): bool
     {
         return $this->prettyPrint;
     }
 
-    public function setDebugMode($bool): void
+    public function setDebugMode(bool $bool): void
     {
         $this->debugMode = $bool;
     }
@@ -32,7 +32,7 @@ class Context extends ContextInternalApi
         return $this->debugMode;
     }
 
-    public function setMaxDefinitions($maxDefinitions): void
+    public function setMaxDefinitions(int $maxDefinitions): void
     {
         $this->maxDefinitions = $maxDefinitions;
     }
@@ -42,7 +42,7 @@ class Context extends ContextInternalApi
         return $this->maxDefinitions;
     }
 
-    public function setMaxFileAnalysisDuration($maxFileAnalysisDuration): void
+    public function setMaxFileAnalysisDuration(int $maxFileAnalysisDuration): void
     {
         $this->maxFileAnalysisDuration = $maxFileAnalysisDuration;
     }
@@ -52,7 +52,7 @@ class Context extends ContextInternalApi
         return $this->maxFileAnalysisDuration;
     }
 
-    public function setMaxFileSize($maxFileSize): void
+    public function setMaxFileSize(int $maxFileSize): void
     {
         $this->maxFileSize = $maxFileSize;
     }
@@ -62,7 +62,7 @@ class Context extends ContextInternalApi
         return $this->maxFileSize;
     }
 
-    public function setMaxMemory($maxMemory): void
+    public function setMaxMemory(int $maxMemory): void
     {
         $this->maxMemory = $maxMemory;
     }
@@ -77,7 +77,7 @@ class Context extends ContextInternalApi
         return $this->analyzeIncludes;
     }
 
-    public function setAnalyzeIncludes($analyzeIncludes): void
+    public function setAnalyzeIncludes(bool $analyzeIncludes): void
     {
         $this->analyzeIncludes = $analyzeIncludes;
     }
@@ -87,7 +87,7 @@ class Context extends ContextInternalApi
         $this->configurationFile = $file;
     }
 
-    public function getConfiguration()
+    public function getConfiguration(): ?string
     {
         return $this->configurationFile;
     }

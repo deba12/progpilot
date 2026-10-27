@@ -333,7 +333,7 @@ class ResolveDefs
         return false;
     }
 
-    public static function getVisibilityFromInstances($context, $data, $defAssign)
+    public static function getVisibilityFromInstances($context, $data, $defAssign): bool
     {
         $visibilityFinal = true;
         $currentFunc = $context->getCurrentFunc();

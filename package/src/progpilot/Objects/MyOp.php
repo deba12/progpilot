@@ -12,7 +12,7 @@ namespace progpilot\Objects;
 
 class MyOp
 {
-    public static $nbObjects;
+    public static ?int $nbObjects = null;
     protected ?int $varId = null;
 
     private string $varName;

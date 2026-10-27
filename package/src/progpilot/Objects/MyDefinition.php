@@ -10,6 +10,7 @@
 
 namespace progpilot\Objects;
 
+use LogicException;
 use progpilot\Objects\MyOp;
 
 class MyDefinition extends MyOp
@@ -42,7 +43,6 @@ class MyDefinition extends MyOp
     private bool $validNotBoolean;
     private ?MyDefinition $paramToArg = null;
     private ?MyDefinition $argToParam = null;
-    private $isReturnDef;
     /**
      * @var list<MyDefinition>
      */
@@ -78,7 +78,6 @@ class MyDefinition extends MyOp
         $this->validNotBoolean = false;
         $this->paramToArg = null;
         $this->argToParam = null;
-        $this->isReturnDef = null;
         $this->refs = [];
         $this->iteratorValues = [];
 
@@ -104,7 +103,7 @@ class MyDefinition extends MyOp
         isArray = " . $this->isType(MyDefinition::TYPE_ARRAY) . " :: \
         is_const = " . $this->isType(MyDefinition::TYPE_CONSTANTE) . " :: \
         is_iterator = " . $this->isType(MyDefinition::TYPE_ITERATOR) . " :: \
-        is_return_def = " . $this->isReturnDef . " :: \
+        is_return_def = " . (int) $this->returnDef . " :: \
         blockid = " . $this->getBlockId() . "\n";
 
         if (!is_null($this->getParamToArg())) {
@@ -208,12 +207,12 @@ class MyDefinition extends MyOp
     }
 
     /**
-     * @throws \LogicException when no state has been assigned to the current block
+     * @throws LogicException when no state has been assigned to the current block
      */
     public function requireCurrentState(): MyDefState
     {
         return $this->getCurrentState()
-            ?? throw new \LogicException('the definition has no state for the current block');
+            ?? throw new LogicException('the definition has no state for the current block');
     }
 
     public function getNbStates(): int

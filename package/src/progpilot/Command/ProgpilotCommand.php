@@ -22,8 +22,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProgpilotCommand extends Command
 {
-    protected $input;
-    protected $output;
+    protected ?InputInterface $input = null;
+    protected ?OutputInterface $output = null;
 
     protected function configure(): void
     {

@@ -19,7 +19,7 @@ use progpilot\Objects\MyClass;
 class Callgraph
 {
     private array $nodes;
-    /** @var SplObjectStorage<MyBlock, \stdClass> */
+    /** @var SplObjectStorage<MyBlock, stdClass> */
     private SplObjectStorage $blocks;
 
     public function __construct()

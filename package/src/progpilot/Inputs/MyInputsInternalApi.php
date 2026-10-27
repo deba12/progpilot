@@ -45,7 +45,7 @@ class MyInputsInternalApi
     protected ?string $code = null;
     protected ?string $folder = null;
 
-    protected $falsePositives;
+    protected string|array|null $falsePositives = null;
 
     public function __construct()
     {

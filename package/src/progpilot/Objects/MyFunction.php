@@ -419,7 +419,7 @@ class MyFunction extends MyOp
         return $this->nbParams;
     }
 
-    public function getParam($i)
+    public function getParam($i): ?MyDefinition
     {
         if (isset($this->params[$i])) {
             return $this->params[$i];

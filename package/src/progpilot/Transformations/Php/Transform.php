@@ -54,7 +54,7 @@ class Transform implements Visitor
     /** @var SplObjectStorage<Operand, int> */
     private SplObjectStorage $varIds;
 
-    protected function getVarId(Operand $var)
+    protected function getVarId(Operand $var): int|float
     {
         if (isset($this->varIds[$var])) {
             return $this->varIds[$var];
@@ -207,11 +207,11 @@ class Transform implements Visitor
         }
     }
 
-    public function skipBlock(Block $block, ?Block $prior = null)
+    public function skipBlock(Block $block, ?Block $prior = null): void
     {
     }
 
-    public function leaveOp(Op $op, Block $block)
+    public function leaveOp(Op $op, Block $block): void
     {
     }
 
