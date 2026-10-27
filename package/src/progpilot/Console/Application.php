@@ -24,12 +24,14 @@ class Application extends BaseApplication
         parent::__construct(self::NAME, self::VERSION);
     }
 
+    #[\Override]
     public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
     {
         $this->setCatchExceptions(true);
         return parent::run($input, $output);
     }
 
+    #[\Override]
     public function getDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefinition();
@@ -39,6 +41,7 @@ class Application extends BaseApplication
         return $inputDefinition;
     }
 
+    #[\Override]
     protected function getCommandName(InputInterface $input): ?string
     {
         return 'progpilot';

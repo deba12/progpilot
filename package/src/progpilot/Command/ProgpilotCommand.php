@@ -25,6 +25,7 @@ class ProgpilotCommand extends Command
     protected ?InputInterface $input = null;
     protected ?OutputInterface $output = null;
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -43,12 +44,14 @@ class ProgpilotCommand extends Command
             );
     }
 
+    #[\Override]
     public function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->input = $input;
         $this->output = $output;
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $context = new Context();

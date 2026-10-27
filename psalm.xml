@@ -20,8 +20,6 @@
         <PossiblyUnusedProperty errorLevel="suppress" />
         <PossiblyUnusedParam errorLevel="suppress" />
         <UnusedClass errorLevel="suppress" />
-        <!-- #[Override] is not used anywhere in this PHP 8.4 codebase; not an established convention here -->
-        <MissingOverrideAttribute errorLevel="suppress" />
         <!-- PHPCfg operations are polymorphic: the opcode matched by the transformer guarantees the property exists -->
         <UndefinedPropertyFetch>
             <errorLevel type="suppress">

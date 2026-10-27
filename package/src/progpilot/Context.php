@@ -12,6 +12,7 @@ namespace progpilot;
 
 class Context extends ContextInternalApi
 {
+    #[\Override]
     public function setPrettyPrint(bool $bool): void
     {
         $this->prettyPrint = $bool;
@@ -22,6 +23,7 @@ class Context extends ContextInternalApi
         return $this->prettyPrint;
     }
 
+    #[\Override]
     public function setDebugMode(bool $bool): void
     {
         $this->debugMode = $bool;
@@ -32,6 +34,7 @@ class Context extends ContextInternalApi
         return $this->debugMode;
     }
 
+    #[\Override]
     public function setMaxDefinitions(int $maxDefinitions): void
     {
         $this->maxDefinitions = $maxDefinitions;
@@ -42,6 +45,7 @@ class Context extends ContextInternalApi
         return $this->maxDefinitions;
     }
 
+    #[\Override]
     public function setMaxFileAnalysisDuration(int $maxFileAnalysisDuration): void
     {
         $this->maxFileAnalysisDuration = $maxFileAnalysisDuration;
@@ -52,6 +56,7 @@ class Context extends ContextInternalApi
         return $this->maxFileAnalysisDuration;
     }
 
+    #[\Override]
     public function setMaxFileSize(int $maxFileSize): void
     {
         $this->maxFileSize = $maxFileSize;
@@ -62,6 +67,7 @@ class Context extends ContextInternalApi
         return $this->maxFileSize;
     }
 
+    #[\Override]
     public function setMaxMemory(int $maxMemory): void
     {
         $this->maxMemory = $maxMemory;
@@ -77,6 +83,7 @@ class Context extends ContextInternalApi
         return $this->analyzeIncludes;
     }
 
+    #[\Override]
     public function setAnalyzeIncludes(bool $analyzeIncludes): void
     {
         $this->analyzeIncludes = $analyzeIncludes;

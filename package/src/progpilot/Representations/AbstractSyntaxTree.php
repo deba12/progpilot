@@ -48,11 +48,13 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         $this->edges[] = [$caller, $callee];
     }
 
+    #[\Override]
     public function beforeTraverse(array $nodes)
     {
         return null;
     }
 
+    #[\Override]
     public function enterNode(Node $node)
     {
         foreach ($node->getSubNodeNames() as $name) {
@@ -66,11 +68,13 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         return null;
     }
 
+    #[\Override]
     public function leaveNode(Node $node)
     {
         return null;
     }
 
+    #[\Override]
     public function afterTraverse(array $nodes)
     {
         return null;

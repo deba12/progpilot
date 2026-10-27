@@ -33,6 +33,7 @@ class MyClass extends MyOp
         $this->extendsof = null;
     }
 
+    #[\Override]
     public function __clone()
     {
         for ($i = 0; $i < count($this->properties); $i++) {

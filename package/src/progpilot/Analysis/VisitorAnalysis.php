@@ -271,6 +271,13 @@ class VisitorAnalysis
         $this->context = $context;
     }
 
+    private function requireCurrentMyBlock(): MyBlock
+    {
+        return $this->currentMyBlock instanceof MyBlock
+            ? $this->currentMyBlock
+            : throw new \LogicException('no block is being analyzed');
+    }
+
     public function setContext(Context $context): void
     {
         $this->context = $context;
@@ -283,7 +290,7 @@ class VisitorAnalysis
     {
         $defsFound = ResolveDefs::selectDefinitions(
             $this->context,
-            $this->defs->getOutMinusKill($this->currentMyBlock->getId()),
+            $this->defs->getOutMinusKill($this->requireCurrentMyBlock()->getId()),
             $variable
         );
 
@@ -760,7 +767,7 @@ class VisitorAnalysis
                                 // we get the last definitions
                                 $defsFound = ResolveDefs::selectArrays(
                                     $this->context,
-                                    $this->defs->getOutMinusKill($this->currentMyBlock->getId()),
+                                    $this->defs->getOutMinusKill($this->requireCurrentMyBlock()->getId()),
                                     $originalDef,
                                     $arrayDim
                                 );
@@ -813,10 +820,10 @@ class VisitorAnalysis
 
                             if (isset($previousOpInformation["chained_results"])) {
                                 foreach ($previousOpInformation["chained_results"] as $previousChainedResult) {
-                                    $state = $previousChainedResult->getState($this->currentMyBlock->getId());
+                                    $state = $previousChainedResult->getState($this->requireCurrentMyBlock()->getId());
                                     if (!is_null($state)) {
                                         $newArrs = $state->getOrCreateDefArrayIndex(
-                                            $this->currentMyBlock->getId(),
+                                            $this->requireCurrentMyBlock()->getId(),
                                             $previousChainedResult,
                                             $arrayDim
                                         )[1];
@@ -910,7 +917,7 @@ class VisitorAnalysis
                             $originalDef->setId(0);
                             $defsFound = ResolveDefs::selectProperties(
                                 $this->context,
-                                $this->defs->getOutMinusKill($this->currentMyBlock->getId()),
+                                $this->defs->getOutMinusKill($this->requireCurrentMyBlock()->getId()),
                                 $originalDef,
                                 $propertyName
                             );
@@ -948,7 +955,7 @@ class VisitorAnalysis
 
                             if (isset($previousOpInformation["chained_results"])) {
                                 foreach ($previousOpInformation["chained_results"] as $previousChainedResult) {
-                                    $state = $previousChainedResult->getState($this->currentMyBlock->getId());
+                                    $state = $previousChainedResult->getState($this->requireCurrentMyBlock()->getId());
                                     if (!is_null($state)) {
                                         $idObject = $state->getObjectId();
                                         $tmpMyClass = $this->context->getObjects()->getMyClassFromObject($idObject);
@@ -956,7 +963,7 @@ class VisitorAnalysis
                                         if (!is_null($tmpMyClass)) {
                                             $property = $tmpMyClass->getProperty(
                                                 $this->context,
-                                                $this->currentMyBlock->getId(),
+                                                $this->requireCurrentMyBlock()->getId(),
                                                 $previousChainedResult,
                                                 $propertyName
                                             );

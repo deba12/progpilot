@@ -25,38 +25,47 @@ class CallVisitor implements Visitor
         $this->context = $context;
     }
 
+    #[\Override]
     public function enterScript(Script $script): void
     {
     }
 
+    #[\Override]
     public function leaveScript(Script $script): void
     {
     }
 
+    #[\Override]
     public function leaveFunc(Func $func): void
     {
     }
 
+    #[\Override]
     public function enterFunc(Func $func): void
     {
     }
 
+    #[\Override]
     public function enterBlock(Block $block, ?Block $prior = null): void
     {
     }
 
+    #[\Override]
     public function skipBlock(Block $block, ?Block $prior = null): void
     {
     }
 
+    #[\Override]
     public function leaveOp(Op $op, Block $block): void
     {
     }
 
+    #[\Override]
     public function leaveBlock(Block $block, ?Block $prior = null): void
     {
     }
 
+    #[\Override]
     public function enterOp(Op $op, Block $block): void
     {
         if (isset($op->class->value)) {

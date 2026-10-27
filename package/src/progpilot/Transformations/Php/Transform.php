@@ -82,6 +82,7 @@ class Transform implements Visitor
         $this->context = $context;
     }
 
+    #[\Override]
     public function enterScript(Script $script): void
     {
         $this->context->outputs->currentIncludesFile = [];
@@ -121,6 +122,7 @@ class Transform implements Visitor
         return false;
     }
 
+    #[\Override]
     public function leaveScript(Script $script): void
     {
         foreach ($this->blockIfToBeResolved as $blockResolved) {
@@ -182,6 +184,7 @@ class Transform implements Visitor
         }
     }
 
+    #[\Override]
     public function enterBlock(Block $block, ?Block $prior = null): void
     {
         $this->insideInclude = false;
@@ -213,14 +216,17 @@ class Transform implements Visitor
         }
     }
 
+    #[\Override]
     public function skipBlock(Block $block, ?Block $prior = null): void
     {
     }
 
+    #[\Override]
     public function leaveOp(Op $op, Block $block): void
     {
     }
 
+    #[\Override]
     public function leaveBlock(Block $block, ?Block $prior = null): void
     {
         if (!$this->insideInclude) {
@@ -243,6 +249,7 @@ class Transform implements Visitor
         }
     }
 
+    #[\Override]
     public function enterFunc(Func $func): void
     {
         $myFunction = new MyFunction($func->name);
@@ -305,6 +312,7 @@ class Transform implements Visitor
         $this->context->setCurrentFunc($myFunction);
     }
 
+    #[\Override]
     public function leaveFunc(Func $func): void
     {
         $myCodeCodes = $this->context->requireCurrentMycode()->getCodes();
@@ -338,6 +346,7 @@ class Transform implements Visitor
         $this->context->addTmpFunctions($myFunction);
     }
 
+    #[\Override]
     public function enterOp(Op $op, Block $block): void
     {
         $this->context->setCurrentOp($op);

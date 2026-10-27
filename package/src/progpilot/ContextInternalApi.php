@@ -376,9 +376,11 @@ abstract class ContextInternalApi
         return $this->currentBlock;
     }
 
-    public function requireCurrentBlock(): MyBlock|int
+    public function requireCurrentBlock(): MyBlock
     {
-        return $this->currentBlock ?? throw new LogicException('no block is being analyzed');
+        return $this->currentBlock instanceof MyBlock
+            ? $this->currentBlock
+            : throw new LogicException('no block is being analyzed');
     }
 
     public function getCurrentLine(): ?int

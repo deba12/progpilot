@@ -46,7 +46,7 @@ Quality gate: run once right before committing, scoped to what changed.
 | `composer.json` (any) | `composer audit` plus the PHPUnit suite on PHP 8.4, 8.5 and 8.6 |
 | docs / yaml / Docker only | nothing |
 
-Static analysis scope and tuning: both tools only cover `package/src` (not `projects/tests` fixtures, which are deliberately vulnerable PHP). There is no baseline file: PHPStan level 6 and Psalm level 5 are clean. Psalm suppresses unused-code and `#[Override]` checks (public methods are library API) and a few polymorphic PHPCfg property accesses, each with a comment in `psalm.xml`. Raising the levels is the next quality step: `phpstan --level=max` still reports about 2000 findings, mostly untyped parameters and array element types in code that the test suite does not execute.
+Static analysis scope and tuning: both tools only cover `package/src` (not `projects/tests` fixtures, which are deliberately vulnerable PHP). There is no baseline file: PHPStan level 6 and Psalm level 5 are clean. Psalm suppresses unused-code checks (public methods are library API) and a few polymorphic PHPCfg property accesses, each with a comment in `psalm.xml`. Raising the levels is the next quality step: `phpstan --level=max` still reports about 2000 findings, mostly untyped parameters and array element types in code that the test suite does not execute.
 
 Typing conventions that the analysers rely on:
 - `Context::getCurrentFunc()`, `getCurrentBlock()`, `getCurrentMyfile()`, `getCurrentMycode()` and `MyDefinition::getCurrentState()` return null when nothing is current. Use the `require*` variant (`requireCurrentFunc()`, ...) when null is a bug: it throws a `LogicException` instead of a null dereference.
