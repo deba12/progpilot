@@ -115,9 +115,9 @@ class Analyzer
         }
     }
 
-    public function runFunctionAnalysis(Context $context, MyFunction $myFunc, bool $updatemyfile = true): void
+    public function runFunctionAnalysis(Context $context, ?MyFunction $myFunc, bool $updatemyfile = true): void
     {
-        if (!$myFunc->isVisited()) {
+        if (!is_null($myFunc) && !$myFunc->isVisited()) {
             $myFunc->setIsVisited(true);
 
             $myFunc->getMyCode()->setStart(0);

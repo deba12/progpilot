@@ -175,9 +175,11 @@ class MyDefState extends MyOp
         return $this->cast;
     }
 
-    public function addLastKnownValue(string|int|bool|float $value): void
+    public function addLastKnownValue(string|int|bool|float|null $value): void
     {
-        $value = rtrim(ltrim((string) $value));
+        if ($value !== null) {
+            $value = rtrim(ltrim((string) $value));
+        }
 
         if (
             Common::validLastKnownValue($value)
@@ -189,7 +191,7 @@ class MyDefState extends MyOp
     }
 
     /**
-     * @return list<string>
+     * @return list<string|null>
      */
     public function getLastKnownValues(): array
     {

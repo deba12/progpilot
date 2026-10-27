@@ -22,7 +22,7 @@ class Objects
     }
 
     /**
-     * @return list<MyClass>
+     * @return list<MyClass|null>
      */
     public function getObjects(): array
     {

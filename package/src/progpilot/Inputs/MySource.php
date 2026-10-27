@@ -120,7 +120,7 @@ class MySource extends MySpecify
         $this->isArray = $isArray;
     }
 
-    public function isAnArrayValue(string $arr): bool
+    public function isAnArrayValue(string|int|null $arr): bool
     {
         if (in_array($arr, $this->arrayValue, true)) {
             return true;

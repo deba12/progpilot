@@ -308,9 +308,13 @@ class MyFunction extends MyOp
         return $this->opInformations;
     }
 
-    public function getOpId(Operand $op): ?int
+    public function getOpId(?Operand $op): ?int
     {
+        if (is_object($op)) {
             return spl_object_id($op);
+        }
+
+        return null;
     }
 
     public function getNbsOpInformations(): int

@@ -31,8 +31,8 @@ Lint (PSR-12 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/
 ```shell
 composer lint        # phpcs on package/src, must be clean (errors and warnings)
 composer lint:fix    # phpcbf, whitespace-only autofix
-composer phpstan     # level 5 on package/src;
-composer psalm       # errorLevel 8 on package/src (psalm.xml)
+composer phpstan     # level 5 on package/src (phpstan.neon.dist)
+composer psalm       # errorLevel 5 on package/src (psalm.xml)
 composer gate        # lint + phpstan + psalm + tests + composer audit
 ```
 
@@ -46,13 +46,18 @@ Quality gate: run once right before committing, scoped to what changed.
 | `composer.json` (any) | `composer audit` plus the PHPUnit suite on PHP 8.4, 8.5 and 8.6 |
 | docs / yaml / Docker only | nothing |
 
-Static analysis scope and tuning: both tools only cover `package/src` (not `projects/tests` fixtures, which are deliberately vulnerable PHP). PHPStan runs at level 5 because the code is mostly untyped (level max reports thousands of missing-type findings); the findings that existed when it was added are frozen in `phpstan-baseline.neon`, so only new findings fail the gate. Do not regenerate the baseline to hide new findings; shrink it by fixing entries. Psalm suppresses unused-code and `#[Override]` checks (public methods are library API, see comments in `psalm.xml`) and one false positive in `Dataflow/VisitorDataflow.php`.
+Static analysis scope and tuning: both tools only cover `package/src` (not `projects/tests` fixtures, which are deliberately vulnerable PHP). There is no baseline file: PHPStan level 5 and Psalm level 5 are clean. Psalm suppresses unused-code and `#[Override]` checks (public methods are library API) and a few polymorphic PHPCfg property accesses, each with a comment in `psalm.xml`. Raising the levels is the next quality step: `phpstan --level=max` still reports about 2000 findings, mostly untyped parameters and array element types in code that the test suite does not execute.
+
+Typing conventions that the analysers rely on:
+- `Context::getCurrentFunc()`, `getCurrentBlock()`, `getCurrentMyfile()`, `getCurrentMycode()` and `MyDefinition::getCurrentState()` return null when nothing is current. Use the `require*` variant (`requireCurrentFunc()`, ...) when null is a bug: it throws a `LogicException` instead of a null dereference.
+- `MyInstruction::getProperty()` is a keyed bag; its docblock maps each `MyInstruction::*` constant to its type. Dynamic keys (`argdefN`, `keyN`, ...) are `mixed`.
+- Known issue kept on purpose: `VisitorAnalysis::analyzecode()` keeps a stack of block ids and assigns an id (int) to `currentMyBlock` on `LEAVE_BLOCK`. Resolving the id to its block changes the analysis results (91 test failures), so the int is still tolerated (`MyBlock|int|null`).
 
 Commit messages follow the repo's existing short lowercase style (no conventional-commits tooling). Use `php8.4 /usr/local/bin/composer ...` for dependency work so resolution targets the PHP floor.
 
 Build a PHAR: `./build.sh` (needs `phar-composer.phar` on PATH; output in `builds/`). Docker: see `DOCKER.md`.
 
-CI (`.github/workflows/main.yml`) runs PHPUnit on PHP 8.3 and 8.4.
+CI (`.github/workflows/main.yml`) runs PHPUnit on PHP 8.4, 8.5 and 8.6.
 
 ## Test architecture
 

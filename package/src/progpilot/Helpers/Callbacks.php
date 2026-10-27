@@ -23,10 +23,10 @@ class Callbacks
     public static function modifyMyclassOfObject(
         Context $context,
         int $idObject,
-        MyClass $currentMyclass,
+        ?MyClass $currentMyclass,
         MyClass $newMyclass
     ): void {
-        if ($currentMyclass->getName() === $newMyclass->getName()) {
+        if (!is_null($currentMyclass) && $currentMyclass->getName() === $newMyclass->getName()) {
             $context->getObjects()->addMyclassToObject($idObject, $newMyclass);
         }
     }

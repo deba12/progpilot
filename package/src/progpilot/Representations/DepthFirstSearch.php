@@ -37,9 +37,9 @@ class DepthFirstSearch
         $this->search($root);
     }
 
-    public function search(NodeCG $node): void
+    public function search(?NodeCG $node): void
     {
-        if (array_key_exists($node->getId(), $this->nodes)) {
+        if (!is_null($node) && array_key_exists($node->getId(), $this->nodes)) {
             $this->visitor->examineNode($node);
 
             foreach ($node->getChildren() as $childId) {

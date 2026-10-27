@@ -389,9 +389,13 @@ class ResolveDefs
      * @return mixed[]
      * @param list<MyDefinition> $data
      */
-    public static function selectDefinitions(Context $context, array $data, MyDefinition $searchedDed): array
+    public static function selectDefinitions(Context $context, ?array $data, MyDefinition $searchedDed): array
     {
         $defsFound = [];
+        if (is_null($data)) {
+            return $defsFound;
+        }
+
 
         foreach ($data as $def) {
             if (

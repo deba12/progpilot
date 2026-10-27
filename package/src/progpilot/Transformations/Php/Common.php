@@ -33,8 +33,12 @@ class Common
         return $operand instanceof Literal ? $operand->value : null;
     }
 
-    public static function validLastKnownValue(string $value): bool
+    public static function validLastKnownValue(?string $value): bool
     {
+        if ($value === null) {
+            return true;
+        }
+
         if (strpos($value, '\n') === false && strpos($value, '\r') === false && strlen($value) < 200) {
             return true;
         }

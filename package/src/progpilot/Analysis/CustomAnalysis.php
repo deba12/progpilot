@@ -73,6 +73,7 @@ class CustomAnalysis
             if (
                 $customRule->getType() === MyCustomRule::TYPE_VARIABLE
                 && $customRule->getAction() === "DEFINE_OBJECT"
+                && !is_null($customRule->getExtra())
             ) {
                 $result = HelpersAnalysis::checkIfDefEqualDefRule(
                     $context,
@@ -135,6 +136,7 @@ class CustomAnalysis
             if (
                 $customRule->getType() === MyCustomRule::TYPE_FUNCTION
                 && $customRule->getAction() === "DEFINE_OBJECT"
+                && !is_null($customRule->getExtra())
             ) {
                 $result = HelpersAnalysis::checkIfDefEqualDefRule(
                     $context,

@@ -170,12 +170,16 @@ class Analysis
      * @param array<string, int> $nbChars
      * @param list<string> $arrayChars
      */
-    public static function updateNbChars(array &$nbChars, string $string, array $arrayChars): void
+    public static function updateNbChars(array &$nbChars, ?string $string, array $arrayChars): void
     {
         foreach ($arrayChars as $char) {
             if (!isset($nbChars[$char])) {
                 $nbChars[$char] = 0;
             }
+        }
+
+        if (!is_string($string)) {
+            return;
         }
 
         for ($i = 0; $i < strlen($string); $i++) {
@@ -191,12 +195,16 @@ class Analysis
      * @return int[]
      * @param list<string> $arrayChars
      */
-    public static function getNbChars(string $string, array $arrayChars): array
+    public static function getNbChars(?string $string, array $arrayChars): array
     {
         $nbChars = [];
 
         foreach ($arrayChars as $char) {
             $nbChars[$char] = 0;
+        }
+
+        if (!is_string($string)) {
+            return $nbChars;
         }
 
         for ($i = 0; $i < strlen($string); $i++) {
@@ -256,8 +264,12 @@ class Analysis
         return false;
     }
 
-    public static function checkIfOneFunctionArgumentIsNew(MyFunction $myFunc, MyInstruction $instruction): bool
+    public static function checkIfOneFunctionArgumentIsNew(?MyFunction $myFunc, MyInstruction $instruction): bool
     {
+        if (is_null($myFunc)) {
+            return false;
+        }
+
             $params = $myFunc->getParams();
 
         if (empty($params)) {

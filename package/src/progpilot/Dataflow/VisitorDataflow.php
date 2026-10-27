@@ -181,6 +181,10 @@ class VisitorDataflow
                         // functions are generally parsed before the main and so declarations of instances
                         if ($myFunc->isType(MyFunction::TYPE_FUNC_METHOD)) {
                             foreach ($context->getObjects()->getObjects() as $idobject => $myClass) {
+                                if (is_null($myClass)) {
+                                    continue;
+                                }
+
                                 foreach ($myClass->getMethods() as $myMethod) {
                                     if ($myMethod->getName() === $myFunc->getName()) {
                                         $myMethod->setLastBlockIds($lastBlockIds);

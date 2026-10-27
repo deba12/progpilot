@@ -41,7 +41,9 @@ class Utils
             fwrite(STDERR, "file: '" . $context->requireCurrentMyfile()->getName() . "'\n");
 
             // sometimes it's called outside of function context
-                fwrite(STDERR, "function: '" . $context->requireCurrentFunc()->getName() . "'\n");
+            if (!is_null($context->getCurrentFunc())) {
+                fwrite(STDERR, "function: '" . $context->getCurrentFunc()->getName() . "'\n");
+            }
         }
     }
 
