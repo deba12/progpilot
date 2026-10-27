@@ -20,7 +20,7 @@ class CallVisitor implements Visitor
 {
     private $context;
 
-    public function setContext($context)
+    public function setContext($context): void
     {
         $this->context = $context;
     }
@@ -57,7 +57,7 @@ class CallVisitor implements Visitor
     {
     }
 
-    public function enterOp(Op $op, Block $block)
+    public function enterOp(Op $op, Block $block): void
     {
         if (isset($op->class->value)) {
             if (strpos($op->class->value, "\\") !== false) {

@@ -26,7 +26,7 @@ class MyDefOriginal
         return $this->def;
     }
 
-    public function setDef($myDef)
+    public function setDef($myDef): void
     {
         $this->def = $myDef;
     }
@@ -36,7 +36,7 @@ class MyDefOriginal
         return $this->arrayIndexAccessor;
     }
 
-    public function setArrayIndexAccessor($arrayIndexAccessor)
+    public function setArrayIndexAccessor($arrayIndexAccessor): void
     {
         $this->arrayIndexAccessor = $arrayIndexAccessor;
     }

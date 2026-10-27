@@ -18,36 +18,36 @@ class MyFunction extends MyOp
     public const TYPE_FUNC_STATIC = 0x0002;
     public const TYPE_FUNC_METHOD = 0x0004;
 
-    private $lastLine;
-    private $lastColumn;
-    private $firstBlockId;
-    private $lastBlockIds;
+    private int $lastLine;
+    private int $lastColumn;
+    private int $firstBlockId;
+    private array $lastBlockIds;
 
-    private $nbParams;
-    private $args;
-    private $params;
-    private $returnDefs;
-    private $initialReturnDefs;
-    private $defs;
-    private $opInformations;
-    private $blocks;
-    private $visibility;
+    private int $nbParams;
+    private array $args;
+    private array $params;
+    private array $returnDefs;
+    private array $initialReturnDefs;
+    private \progpilot\Dataflow\Definitions $defs;
+    private ?array $opInformations = null;
+    private array $blocks;
+    private string $visibility;
     private $myClass;
-    private $blockId;
+    private int $blockId;
     private $nameInstance;
 
     private $thisDef;
-    private $instanceClassName;
+    private string $instanceClassName;
 
-    private $thisHasBeenUpdated;
-    private $isVisited;
-    private $isVisitedFromInclude;
+    private bool $thisHasBeenUpdated;
+    private bool $isVisited;
+    private bool $isVisitedFromInclude;
 
-    private $startExecutionTime;
-    private $lastExecutionTime;
-    private $nbExecutions;
-    private $hasGlobalVariables;
-    private $myCode;
+    private float $startExecutionTime;
+    private float $lastExecutionTime;
+    private int $nbExecutions;
+    private bool $hasGlobalVariables;
+    private \progpilot\Code\MyCode $myCode;
 
     public function __construct($name)
     {
@@ -85,12 +85,12 @@ class MyFunction extends MyOp
         $this->myCode = new \progpilot\Code\MyCode();
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->opInformations = [];
     }
 
-    public function setNbExecutions($nbExecutions)
+    public function setNbExecutions($nbExecutions): void
     {
         $this->nbExecutions = $nbExecutions;
     }
@@ -100,7 +100,7 @@ class MyFunction extends MyOp
         return $this->nbExecutions;
     }
 
-    public function setStartExecutionTime($startExecutionTime)
+    public function setStartExecutionTime($startExecutionTime): void
     {
         $this->startExecutionTime = $startExecutionTime;
     }
@@ -110,7 +110,7 @@ class MyFunction extends MyOp
         return $this->startExecutionTime;
     }
 
-    public function setLastExecutionTime($lastExecutionTime)
+    public function setLastExecutionTime($lastExecutionTime): void
     {
         $this->lastExecutionTime = $lastExecutionTime;
     }
@@ -120,7 +120,7 @@ class MyFunction extends MyOp
         return $this->lastExecutionTime;
     }
 
-    public function setThisHasBeenUpdated($thisHasBeenUpdated)
+    public function setThisHasBeenUpdated($thisHasBeenUpdated): void
     {
         $this->thisHasBeenUpdated = $thisHasBeenUpdated;
     }
@@ -130,7 +130,7 @@ class MyFunction extends MyOp
         return $this->thisHasBeenUpdated;
     }
 
-    public function setHasGlobalVariables($hasGlobalVariables)
+    public function setHasGlobalVariables($hasGlobalVariables): void
     {
         $this->hasGlobalVariables = $hasGlobalVariables;
     }
@@ -140,7 +140,7 @@ class MyFunction extends MyOp
         return $this->hasGlobalVariables;
     }
 
-    public function setIsVisitedFromInclude($isVisited)
+    public function setIsVisitedFromInclude($isVisited): void
     {
         $this->isVisitedFromInclude = $isVisited;
     }
@@ -150,7 +150,7 @@ class MyFunction extends MyOp
         return $this->isVisitedFromInclude;
     }
 
-    public function setIsVisited($isVisited)
+    public function setIsVisited($isVisited): void
     {
         $this->isVisited = $isVisited;
     }
@@ -160,7 +160,7 @@ class MyFunction extends MyOp
         return $this->isVisited;
     }
 
-    public function setMyCode($myCode)
+    public function setMyCode($myCode): void
     {
         $this->myCode = $myCode;
     }
@@ -170,17 +170,17 @@ class MyFunction extends MyOp
         return $this->myCode;
     }
 
-    public function setLastLine($lastLine)
+    public function setLastLine($lastLine): void
     {
         $this->lastLine = $lastLine;
     }
 
-    public function setLastColumn($lastColumn)
+    public function setLastColumn($lastColumn): void
     {
         $this->lastColumn = $lastColumn;
     }
 
-    public function setLastBlockIds($lastBlockIds)
+    public function setLastBlockIds($lastBlockIds): void
     {
         $this->lastBlockIds = $lastBlockIds;
     }
@@ -190,7 +190,7 @@ class MyFunction extends MyOp
         return $this->lastBlockIds;
     }
 
-    public function addLastBlockId($id)
+    public function addLastBlockId($id): void
     {
         if (!in_array($id, $this->lastBlockIds, true)) {
             $this->lastBlockIds[] = $id;
@@ -212,7 +212,7 @@ class MyFunction extends MyOp
         return $this->myClass;
     }
 
-    public function setMyClass($myClass)
+    public function setMyClass($myClass): void
     {
         $this->myClass = $myClass;
     }
@@ -222,7 +222,7 @@ class MyFunction extends MyOp
         return $this->thisDef;
     }
 
-    public function setThisDef($thisDef)
+    public function setThisDef($thisDef): void
     {
         $this->thisDef = $thisDef;
     }
@@ -232,7 +232,7 @@ class MyFunction extends MyOp
         return $this->instanceClassName;
     }
 
-    public function setInstanceClassName($instanceClassName)
+    public function setInstanceClassName($instanceClassName): void
     {
         $this->instanceClassName = $instanceClassName;
     }
@@ -242,12 +242,12 @@ class MyFunction extends MyOp
         return $this->nameInstance;
     }
 
-    public function setNameInstance($nameInstance)
+    public function setNameInstance($nameInstance): void
     {
         $this->nameInstance = $nameInstance;
     }
 
-    public function setVisibility($visibility)
+    public function setVisibility($visibility): void
     {
         $this->visibility = $visibility;
     }
@@ -257,7 +257,7 @@ class MyFunction extends MyOp
         return $this->visibility;
     }
 
-    public function setBlocks($blocks)
+    public function setBlocks($blocks): void
     {
         $this->blocks = $blocks;
     }
@@ -278,7 +278,7 @@ class MyFunction extends MyOp
         return null;
     }
 
-    public function setOpInformations($opInformations)
+    public function setOpInformations($opInformations): void
     {
         $this->opInformations = $opInformations;
     }
@@ -288,7 +288,7 @@ class MyFunction extends MyOp
         return $this->opInformations;
     }
 
-    public function getOpId($op)
+    public function getOpId($op): ?int
     {
         if (is_object($op)) {
             return spl_object_id($op);
@@ -297,7 +297,7 @@ class MyFunction extends MyOp
         return null;
     }
 
-    public function getNbsOpInformations()
+    public function getNbsOpInformations(): int
     {
         $nb = 0;
         if (is_array($this->opInformations)) {
@@ -319,12 +319,12 @@ class MyFunction extends MyOp
         return $nb;
     }
 
-    public function cleanOpInformations()
+    public function cleanOpInformations(): void
     {
         $this->opInformations = null;
     }
 
-    public function cleanOpInformation($id)
+    public function cleanOpInformation($id): void
     {
         if (isset($this->opInformations[$id])) {
             unset($this->opInformations[$id]);
@@ -340,14 +340,14 @@ class MyFunction extends MyOp
         return null;
     }
 
-    public function storeOpInformation($id, $infos)
+    public function storeOpInformation($id, $infos): void
     {
         if (!empty($id)) {
             $this->opInformations[$id] = $infos;
         }
     }
 
-    public function setDefs($defs)
+    public function setDefs($defs): void
     {
         $this->defs = $defs;
     }
@@ -362,12 +362,12 @@ class MyFunction extends MyOp
         return $this->args;
     }
 
-    public function addStatePastArgument($nbparam, $state)
+    public function addStatePastArgument(mixed $nbparam, $state): void
     {
         $this->args[$nbparam][] = $state;
     }
 
-    public function addParam($param)
+    public function addParam($param): void
     {
         $this->params[] = $param;
     }
@@ -377,7 +377,7 @@ class MyFunction extends MyOp
         return $this->params;
     }
 
-    public function setNbParams($nbParams)
+    public function setNbParams($nbParams): void
     {
         $this->nbParams = $nbParams;
     }
@@ -401,12 +401,12 @@ class MyFunction extends MyOp
         return $this->returnDefs;
     }
 
-    public function addReturnDef($return_def)
+    public function addReturnDef($return_def): void
     {
         $this->returnDefs[] = $return_def;
     }
 
-    public function setReturnDefs($returndefs)
+    public function setReturnDefs($returndefs): void
     {
         $this->returnDefs = $returndefs;
     }
@@ -416,12 +416,12 @@ class MyFunction extends MyOp
         return $this->initialReturnDefs;
     }
 
-    public function addInitialReturnDef($returnDef)
+    public function addInitialReturnDef($returnDef): void
     {
         $this->initialReturnDefs[] = $returnDef;
     }
 
-    public function setInitialReturnDefs($returndefs)
+    public function setInitialReturnDefs($returndefs): void
     {
         $this->initialReturnDefs = $returndefs;
     }
@@ -431,7 +431,7 @@ class MyFunction extends MyOp
         return $this->firstBlockId;
     }
 
-    public function setFirstBlockId($blockId)
+    public function setFirstBlockId($blockId): void
     {
         $this->firstBlockId = $blockId;
     }
@@ -441,7 +441,7 @@ class MyFunction extends MyOp
         return $this->blockId;
     }
 
-    public function setBlockId($blockId)
+    public function setBlockId($blockId): void
     {
         $this->blockId = $blockId;
     }

@@ -17,7 +17,7 @@ use progpilot\Code\Opcodes;
 
 class ConcatFetch
 {
-    public static function concatFetch($context, $op, $expr)
+    public static function concatFetch($context, $op, $expr): void
     {
         if (isset($op)) {
             if ($op instanceof Op\Expr\BinaryOp\Concat) {

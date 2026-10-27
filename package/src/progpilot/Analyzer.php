@@ -19,7 +19,7 @@ class Analyzer
 {
     public const PHP = "php";
 
-    private $parser;
+    private \PHPCfg\Parser $parser;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class Analyzer
         $this->parser = new \PHPCfg\Parser($astparser);
     }
 
-    public function getFilesOfDir($context, $dir, $initialDir, &$files)
+    public function getFilesOfDir($context, $dir, $initialDir, &$files): void
     {
         if (is_dir($dir) && !$context->inputs->isExcludedFile($dir)) {
             $filesanddirs = @scandir($dir);
@@ -64,10 +64,10 @@ class Analyzer
             try {
                 if (is_null($context->inputs->getCode())) {
                     $fileContent = @file_get_contents($context->inputs->getFile());
-                    if (Analyzer::getTypeOfLanguage(Analyzer::PHP, $fileContent)) {
+                    if ($fileContent !== false && Analyzer::getTypeOfLanguage(Analyzer::PHP, $fileContent)) {
                         $context->inputs->setCode($fileContent);
                         $context->setPath(dirname($context->inputs->getFile()));
-                        $script = $this->parser->parse($context->inputs->getCode(), $context->inputs->getFile());
+                        $script = $this->parser->parse($fileContent, $context->inputs->getFile());
                     }
                 } else {
                     if (Analyzer::getTypeOfLanguage(Analyzer::PHP, $context->inputs->getCode())) {
@@ -82,7 +82,7 @@ class Analyzer
         return $script;
     }
 
-    public function transformPhp($context, $script)
+    public function transformPhp($context, $script): void
     {
         // transform
         if (!is_null($script)) {
@@ -102,7 +102,7 @@ class Analyzer
         }
     }
 
-    public function runFunctionAnalysis($context, $myFunc, $updatemyfile = true)
+    public function runFunctionAnalysis($context, $myFunc, $updatemyfile = true): void
     {
         if (!is_null($myFunc) && !$myFunc->isVisited()) {
             $myFunc->setIsVisited(true);
@@ -140,7 +140,7 @@ class Analyzer
         }
     }
 
-    public function visitDataFlow($context)
+    public function visitDataFlow($context): void
     {
         // analyze
         if (!is_null($context)) {
@@ -164,7 +164,7 @@ class Analyzer
         }
     }
 
-    public function computeDataFlowPhp($context)
+    public function computeDataFlowPhp($context): void
     {
         // free memory
         if (function_exists('gc_mem_caches')) {
@@ -182,7 +182,7 @@ class Analyzer
         $this->visitDataFlow($context);
     }
 
-    public function computeDataFlow($context)
+    public function computeDataFlow($context): void
     {
         $filename = $context->inputs->getFile();
 
@@ -210,7 +210,7 @@ class Analyzer
         }
     }
 
-    public static function getTypeOfLanguage($lookfor, $content)
+    public static function getTypeOfLanguage($lookfor, $content): bool
     {
         if ($lookfor === Analyzer::PHP && !empty($content)) {
             if (
@@ -224,7 +224,7 @@ class Analyzer
         return false;
     }
 
-    public function getNamespace($context, $file)
+    public function getNamespace($context, $file): void
     {
         try {
             if (@filesize($file) <= $context->getMaxFileSize()) {
@@ -247,7 +247,7 @@ class Analyzer
         }
     }
 
-    public function computeDataFlowOfNamespaces($context, $file)
+    public function computeDataFlowOfNamespaces($context, $file): void
     {
         $nsCalls = $context->getCallsToNamespace($file);
         if (!is_null($nsCalls)) {
@@ -269,7 +269,7 @@ class Analyzer
         }
     }
 
-    public function runAnalysisOfCurrentMyFile($context)
+    public function runAnalysisOfCurrentMyFile($context): void
     {
         $functions = $context->getFunctions()->getFunctions();
         $fileNameHash = hash("sha256", $context->getCurrentMyfile()->getName());
@@ -312,7 +312,7 @@ class Analyzer
         }
     }
 
-    public function run($context, $cmdFiles = null)
+    public function run($context, $cmdFiles = null): void
     {
         $currentMemoryLimit = ini_get("memory_limit");
         if (!$currentMemoryLimit) {

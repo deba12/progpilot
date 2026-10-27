@@ -37,7 +37,7 @@ class MyInstruction
     public const RIGHTID = 26;
     public const REFERENCE = 27;
 
-    private $properties;
+    private array $properties;
     private $opcode;
 
     public function __construct($opcode)
@@ -46,12 +46,12 @@ class MyInstruction
         $this->opcode = $opcode;
     }
 
-    public function addProperty($index, $property)
+    public function addProperty(mixed $index, $property): void
     {
         $this->properties[$index] = $property;
     }
 
-    public function isPropertyExist($index)
+    public function isPropertyExist(mixed $index): bool
     {
         return isset($this->properties[$index]);
     }

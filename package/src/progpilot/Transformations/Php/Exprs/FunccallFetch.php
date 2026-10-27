@@ -15,7 +15,7 @@ use progpilot\Transformations\Php\FuncCall;
 
 class FunccallFetch
 {
-    public static function funccallFetch($context, $op)
+    public static function funccallFetch($context, $op): void
     {
         if (
             isset($op)

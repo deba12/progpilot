@@ -12,8 +12,8 @@ namespace progpilot\Objects;
 
 class MyClass extends MyOp
 {
-    private $methods;
-    private $properties;
+    private array $methods;
+    private array $properties;
     private $extendsof;
 
     public function __construct($varLine, $varColumn, $varName)
@@ -36,7 +36,7 @@ class MyClass extends MyOp
         }
     }
 
-    public function addMethod($method)
+    public function addMethod($method): void
     {
         $exist = false;
         foreach ($this->methods as $methodClass) {
@@ -72,7 +72,7 @@ class MyClass extends MyOp
         return $this->properties;
     }
 
-    public function addProperty($property)
+    public function addProperty($property): void
     {
         $exist = false;
         foreach ($this->properties as $defClass) {
@@ -122,7 +122,7 @@ class MyClass extends MyOp
         return $this->extendsof;
     }
 
-    public function setExtendsOf($extendsof)
+    public function setExtendsOf($extendsof): void
     {
         $this->extendsof = $extendsof;
     }

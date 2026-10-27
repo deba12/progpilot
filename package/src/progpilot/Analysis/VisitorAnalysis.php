@@ -48,7 +48,7 @@ class VisitorAnalysis
         $instruction,
         $funcName,
         $myFuncCall
-    ) {
+    ): void {
         $hasSources = false;
 
         $listMyFunc = [];
@@ -259,17 +259,20 @@ class VisitorAnalysis
         }
     }
 
-    public function getMyblock($context)
+    public function getMyblock($context): void
     {
         $this->context = $context;
     }
 
-    public function setContext($context)
+    public function setContext($context): void
     {
         $this->context = $context;
     }
 
-    public function fetchVariable($variable)
+    /**
+     * @return mixed[]
+     */
+    public function fetchVariable($variable): array
     {
         $defsFound = ResolveDefs::selectDefinitions(
             $this->context,
@@ -285,7 +288,7 @@ class VisitorAnalysis
         return $newDefFounds;
     }
 
-    public function analyzeFunc($myFunc, $myFuncCalled = null)
+    public function analyzeFunc($myFunc, $myFuncCalled = null): void
     {
         if (HelpersAnalysis::checkIfTimeExecutionIsAcceptable($this->context, $myFunc)) {
             $this->context->outputs->createRepresentationsForFunction($myFunc);
@@ -445,7 +448,7 @@ class VisitorAnalysis
         return $this->analyzecode($myFunc->getMyCode(), $blockStack, true);
     }
 
-    public function analyzecode($myCode, $blockStack, $fromParent = false)
+    public function analyzecode($myCode, $blockStack, $fromParent = false): bool
     {
         $startTime = microtime(true);
         $index = $myCode->getStart();

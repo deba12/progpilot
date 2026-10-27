@@ -14,16 +14,16 @@ use progpilot\Transformations\Php\Common;
 
 class MyDefState extends MyOp
 {
-    private $isTainted;
-    private $taintedByDefs;
-    private $isSanitized;
-    private $typeSanitized;
-    private $lastKnownValue;
-    private $cast;
-    private $isEmbeddedByChar;
-    private $label;
-    private $objectId;
-    private $arrayIndexes;
+    private bool $isTainted;
+    private array $taintedByDefs;
+    private bool $isSanitized;
+    private array $typeSanitized;
+    private array $lastKnownValue;
+    private int $cast;
+    private array $isEmbeddedByChar;
+    private int $label;
+    private int $objectId;
+    private array $arrayIndexes;
 
     public function __construct()
     {
@@ -41,7 +41,7 @@ class MyDefState extends MyOp
         $this->arrayIndexes = [];
     }
 
-    public function printStdout()
+    public function printStdout(): void
     {
         echo "cast = " . $this->getCast() . "\n";
 
@@ -77,7 +77,7 @@ class MyDefState extends MyOp
         }
     }
 
-    public function addTaintedByDef($taintedByDef)
+    public function addTaintedByDef($taintedByDef): void
     {
         if (!in_array($taintedByDef, $this->taintedByDefs, true)) {
             $this->taintedByDefs[] = $taintedByDef;
@@ -89,12 +89,12 @@ class MyDefState extends MyOp
         return $this->taintedByDefs;
     }
 
-    public function setTaintedByDefs($defs)
+    public function setTaintedByDefs($defs): void
     {
         $this->taintedByDefs = $defs;
     }
 
-    public function updateIsEmbeddedByChars($chars)
+    public function updateIsEmbeddedByChars($chars): void
     {
         foreach ($chars as $char => $value) {
             $curChar = isset($this->isEmbeddedByChar[$char]) ? $this->isEmbeddedByChar[$char] : 0;
@@ -102,7 +102,7 @@ class MyDefState extends MyOp
         }
     }
 
-    public function setIsEmbeddedByChars($chars)
+    public function setIsEmbeddedByChars($chars): void
     {
         foreach ($chars as $char => $value) {
             $this->isEmbeddedByChar[$char] = $value % 2;
@@ -114,12 +114,12 @@ class MyDefState extends MyOp
         return $this->isEmbeddedByChar;
     }
 
-    public function setEmbeddedByChar($value)
+    public function setEmbeddedByChar($value): void
     {
         $this->isEmbeddedByChar = $value;
     }
 
-    public function setIsEmbeddedByChar($char, $bool)
+    public function setIsEmbeddedByChar(mixed $char, $bool): void
     {
         $this->isEmbeddedByChar[$char] = $bool;
     }
@@ -133,7 +133,7 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function setLabel($label)
+    public function setLabel($label): void
     {
         $this->label = $label;
     }
@@ -143,7 +143,7 @@ class MyDefState extends MyOp
         return $this->label;
     }
 
-    public function setCast($cast)
+    public function setCast($cast): void
     {
         $this->cast = $cast;
     }
@@ -153,7 +153,7 @@ class MyDefState extends MyOp
         return $this->cast;
     }
 
-    public function addLastKnownValue($value)
+    public function addLastKnownValue($value): void
     {
         if ($value !== null) {
             $value = rtrim(ltrim($value));
@@ -173,7 +173,7 @@ class MyDefState extends MyOp
         return $this->lastKnownValue;
     }
 
-    public function setSanitized($isSanitized)
+    public function setSanitized($isSanitized): void
     {
         $this->isSanitized = $isSanitized;
     }
@@ -183,7 +183,7 @@ class MyDefState extends MyOp
         return $this->isSanitized;
     }
 
-    public function setTypeSanitized($typeSanitized)
+    public function setTypeSanitized($typeSanitized): void
     {
         $this->typeSanitized = $typeSanitized;
     }
@@ -193,14 +193,14 @@ class MyDefState extends MyOp
         return $this->typeSanitized;
     }
 
-    public function addTypeSanitized($typeSanitized)
+    public function addTypeSanitized($typeSanitized): void
     {
         if (!in_array($typeSanitized, $this->typeSanitized, true)) {
             $this->typeSanitized[] = $typeSanitized;
         }
     }
 
-    public function isTypeSanitized($typeSanitized)
+    public function isTypeSanitized($typeSanitized): bool
     {
         if (in_array($typeSanitized, $this->typeSanitized, true)) {
             return true;
@@ -214,12 +214,12 @@ class MyDefState extends MyOp
         return $this->isTainted;
     }
 
-    public function setTainted($tainted)
+    public function setTainted($tainted): void
     {
         $this->isTainted = $tainted;
     }
 
-    public function createDefArrayIndex($blockId, $myArrayDef, $arrayIndex)
+    public function createDefArrayIndex($blockId, $myArrayDef, $arrayIndex): array
     {
         $myDef = new MyDefinition(
             $blockId,
@@ -266,7 +266,7 @@ class MyDefState extends MyOp
         return $this->createDefArrayIndex($blockId, $myArrayDef, $arrayIndex);
     }
 
-    public function isArrayIndexExists($arrayIndex)
+    public function isArrayIndexExists($arrayIndex): bool
     {
         for ($i = 0; $i < count($this->arrayIndexes); $i++) {
             if ($this->arrayIndexes[$i]->index === $arrayIndex) {
@@ -277,7 +277,7 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function addArrayIndex($arrayIndex, $def)
+    public function addArrayIndex($arrayIndex, $def): bool
     {
         if (
             !$this->isArrayIndexExists($arrayIndex)
@@ -294,7 +294,7 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function overwriteArrayIndex($arrayIndex, $def)
+    public function overwriteArrayIndex($arrayIndex, $def): void
     {
         for ($i = 0; $i < count($this->arrayIndexes); $i++) {
             if ($this->arrayIndexes[$i]->index === $arrayIndex) {
@@ -304,7 +304,7 @@ class MyDefState extends MyOp
         }
     }
 
-    public function setArrayIndexes($arrayIndexes)
+    public function setArrayIndexes($arrayIndexes): void
     {
         $this->arrayIndexes = $arrayIndexes;
     }
@@ -319,7 +319,7 @@ class MyDefState extends MyOp
         return $this->objectId;
     }
 
-    public function setObjectId($objectId)
+    public function setObjectId($objectId): void
     {
         $this->objectId = $objectId;
     }

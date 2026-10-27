@@ -20,9 +20,9 @@ use progpilot\Lang;
 
 class VisitorDataflow
 {
-    private $blocksArrays;
+    private ?array $blocksArrays = null;
 
-    protected function isArrayAlreadyDefined($nameArray)
+    protected function isArrayAlreadyDefined($nameArray): bool
     {
         if (isset($this->blocksArrays["" . $nameArray . ""])) {
             return true;
@@ -36,7 +36,7 @@ class VisitorDataflow
         $this->blocksArrays["" . $nameArray . ""] = true;
     }
 
-    public function analyze($context, $myFunc, $defsIncluded = null)
+    public function analyze($context, $myFunc, $defsIncluded = null): void
     {
         $myCode = $myFunc->getMyCode();
         $code = $myCode->getCodes();

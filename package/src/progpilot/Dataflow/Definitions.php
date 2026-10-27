@@ -17,11 +17,11 @@ class Definitions
     private $outminuskill;
     private $gen;
     private $kill;
-    private $originalDefs;
+    private ?array $originalDefs = null;
 
-    private $defs;
+    private array $defs;
     private $currentFunc;
-    private $nbDefs;
+    private int $nbDefs;
 
     public function __construct()
     {
@@ -30,7 +30,7 @@ class Definitions
         $this->defs = [];
     }
 
-    public function setNbDefs($nbDefs)
+    public function setNbDefs($nbDefs): void
     {
         $this->nbDefs = $nbDefs;
     }
@@ -40,7 +40,7 @@ class Definitions
         return $this->nbDefs;
     }
 
-    public function printAll()
+    public function printAll(): void
     {
         echo "print gen : \n";
         Definitions::printStdout($this->gen);
@@ -63,7 +63,7 @@ class Definitions
         echo "\n";
     }
 
-    public static function printBlock($defsParam)
+    public static function printBlock($defsParam): void
     {
         if (!is_null($defsParam)) {
             foreach ($defsParam as $def) {
@@ -72,7 +72,7 @@ class Definitions
         }
     }
 
-    public static function printStdout($defsParam)
+    public static function printStdout($defsParam): void
     {
         if (!is_null($defsParam)) {
             foreach ($defsParam as $blockId => $defs) {
@@ -87,7 +87,7 @@ class Definitions
         }
     }
 
-    public function createBlock($id)
+    public function createBlock($id): void
     {
         $this->in[$id] = [];
         $this->out[$id] = [];
@@ -111,7 +111,7 @@ class Definitions
         return null;
     }
 
-    public function addDef($name, $def)
+    public function addDef($name, $def): void
     {
         $continue = true;
 
@@ -129,7 +129,7 @@ class Definitions
         }
     }
 
-    public function addIn($block, $def)
+    public function addIn($block, $def): bool
     {
         if (isset($this->in[$block]) && !in_array($def, $this->in[$block], true)) {
             $this->in[$block][] = $def;
@@ -139,7 +139,7 @@ class Definitions
         return false;
     }
 
-    public function addOut($block, $def)
+    public function addOut($block, $def): bool
     {
         if (isset($this->out[$block]) && !in_array($def, $this->out[$block], true)) {
             $this->out[$block][] = $def;
@@ -149,7 +149,7 @@ class Definitions
         return false;
     }
 
-    public function addGen($block, $def)
+    public function addGen($block, $def): bool
     {
         if (isset($this->gen[$block]) && !in_array($def, $this->gen[$block], true)) {
             $this->gen[$block][] = $def;
@@ -159,7 +159,7 @@ class Definitions
         return false;
     }
 
-    public function addKill($block, $def)
+    public function addKill($block, $def): bool
     {
         if (isset($this->kill[$block]) && !in_array($def, $this->kill[$block], true)) {
             $this->kill[$block][] = $def;
@@ -214,27 +214,27 @@ class Definitions
         return null;
     }
 
-    public function setKill($block, $kill)
+    public function setKill($block, $kill): void
     {
         $this->kill[$block] = $kill;
     }
 
-    public function setGen($block, $gen)
+    public function setGen($block, $gen): void
     {
         $this->gen[$block] = $gen;
     }
 
-    public function setOut($block, $out)
+    public function setOut($block, $out): void
     {
         $this->out[$block] = $out;
     }
 
-    public function setOutMinusKill($block, $outminuskill)
+    public function setOutMinusKill($block, $outminuskill): void
     {
         $this->outminuskill[$block] = $outminuskill;
     }
 
-    public function setIn($block, $in)
+    public function setIn($block, $in): void
     {
         $this->in[$block] = $in;
     }
@@ -244,7 +244,7 @@ class Definitions
         return $this->currentFunc;
     }
 
-    public function setCurrentFunc($currentFunc)
+    public function setCurrentFunc($currentFunc): void
     {
         $this->currentFunc = $currentFunc;
     }
@@ -259,7 +259,7 @@ class Definitions
     }
 
     // def1 = def, def2 = defsearch inside ResolveDefs function
-    public static function defEquality($def1, $def2)
+    public static function defEquality($def1, $def2): bool
     {
         if ($def1->getName() === $def2->getName()) {
             return true;
@@ -269,7 +269,7 @@ class Definitions
     }
 
     // $this->data["gen"][$blockId]
-    public function computeKill($blockId)
+    public function computeKill($blockId): void
     {
         foreach ($this->gen[$blockId] as $gen) {
             $tmpdefs = $this->getDefRefByName($gen->getName());
@@ -285,7 +285,7 @@ class Definitions
         }
     }
 
-    public function reachingDefs($myBlocks)
+    public function reachingDefs($myBlocks): void
     {
         foreach ($myBlocks as $block) {
             $blockId = $block->getId();

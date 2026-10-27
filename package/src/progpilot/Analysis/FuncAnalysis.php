@@ -21,7 +21,7 @@ class FuncAnalysis
         $myClass,
         $myFuncCall,
         $instruction
-    ) {
+    ): void {
         $resultid = $instruction->getProperty(MyInstruction::RESULTID);
         $opInformation = $context->getCurrentFunc()->getOpInformation($resultid);
 
@@ -90,7 +90,7 @@ class FuncAnalysis
         $context->getCurrentFunc()->storeOpInformation($resultid, $opInformation);
     }
 
-    public static function funccallBefore($myFunc, $instruction)
+    public static function funccallBefore($myFunc, $instruction): void
     {
         $nbParams = 0;
         $params = $myFunc->getParams();

@@ -17,7 +17,7 @@ use progpilot\Transformations\Php\Expr;
 
 class ArrayFetch
 {
-    public static function arrayFetch($context, $op)
+    public static function arrayFetch($context, $op): void
     {
         if (
             isset($op)

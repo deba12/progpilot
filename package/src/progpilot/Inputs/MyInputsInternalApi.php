@@ -93,7 +93,10 @@ class MyInputsInternalApi
         return $file;
     }
 
-    public static function resolvePaths($files)
+    /**
+     * @return mixed[]
+     */
+    public static function resolvePaths($files): array
     {
         $resolvePaths = [];
         foreach ($files as $file) {
@@ -103,7 +106,7 @@ class MyInputsInternalApi
         return $resolvePaths;
     }
 
-    public function resolvePathsIncludedAndExcludedFiles()
+    public function resolvePathsIncludedAndExcludedFiles(): void
     {
         $tmpFiles = MyInputsInternalApi::resolvePaths($this->excludesFilesAnalysis);
         $this->excludesFilesAnalysis = [];
@@ -124,7 +127,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function isExcludedFile($name)
+    public function isExcludedFile($name): bool
     {
         $name = realpath($name);
         $basename = basename($name);
@@ -158,7 +161,7 @@ class MyInputsInternalApi
         return false;
     }
 
-    public function isIncludedFile($name)
+    public function isIncludedFile($name): bool
     {
         $name = realpath($name);
         $basename = basename($name);
@@ -346,7 +349,7 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function readDir($dir, &$files)
+    public function readDir($dir, &$files): void
     {
         if (is_dir($dir)) {
             $filesanddirs = @scandir($dir);
@@ -367,7 +370,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readFrameworks()
+    public function readFrameworks(): void
     {
         $frameworksConfigurationFiles = [];
         $frameworksDir = __DIR__ . "/../../uptodate_data/php/frameworks/";
@@ -408,14 +411,14 @@ class MyInputsInternalApi
         }
     }
 
-    public function readDefaultSanitizers()
+    public function readDefaultSanitizers(): void
     {
         if (!$this->overwrittenSanitizers) {
             $this->readSanitizersFile(__DIR__ . "/../../uptodate_data/php/sanitizers.json");
         }
     }
 
-    public function readSanitizersFile($file)
+    public function readSanitizersFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -496,14 +499,14 @@ class MyInputsInternalApi
         }
     }
 
-    public function readDefaultSinks()
+    public function readDefaultSinks(): void
     {
         if (!$this->overwrittenSinks) {
             $this->readSinksFile(__DIR__ . "/../../uptodate_data/php/sinks.json");
         }
     }
 
-    public function readSinksFile($file)
+    public function readSinksFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -566,14 +569,14 @@ class MyInputsInternalApi
         }
     }
 
-    public function readDefaultSources()
+    public function readDefaultSources(): void
     {
         if (!$this->overwrittenSources) {
             $this->readSourcesFile(__DIR__ . "/../../uptodate_data/php/sources.json");
         }
     }
 
-    public function readSourcesFile($file)
+    public function readSourcesFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -679,14 +682,14 @@ class MyInputsInternalApi
         }
     }
 
-    public function readDefaultValidators()
+    public function readDefaultValidators(): void
     {
         if (!$this->overwrittenValidators) {
             $this->readValidatorsFile(__DIR__ . "/../../uptodate_data/php/validators.json");
         }
     }
 
-    public function readValidatorsFile($file)
+    public function readValidatorsFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -767,14 +770,14 @@ class MyInputsInternalApi
         }
     }
 
-    public function readDefaultCustomRules()
+    public function readDefaultCustomRules(): void
     {
         if (!$this->overwrittenCustomRules) {
             $this->readCustomFile(__DIR__ . "/../../uptodate_data/php/rules.json");
         }
     }
 
-    public function readCustomFile($file)
+    public function readCustomFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -818,7 +821,7 @@ class MyInputsInternalApi
                                         $seq->{'language'}
                                     );
 
-                                    if (isset($seq->{'parameters'}) && !is_null($myCustomFunction)) {
+                                    if (isset($seq->{'parameters'})) {
                                         $parameters = $seq->{'parameters'};
                                         foreach ($parameters as $parameter) {
                                             if (isset($parameter->{'id'}) && isset($parameter->{'values'})) {
@@ -1001,7 +1004,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readFalsePositives($falsePositives)
+    public function readFalsePositives($falsePositives): void
     {
         if (!is_null($falsePositives)) {
             if (is_string($falsePositives)) {
@@ -1026,7 +1029,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readFalsePositivesFile($file)
+    public function readFalsePositivesFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -1058,7 +1061,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readExcludesFile($file)
+    public function readExcludesFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -1080,7 +1083,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readIncludesFile($file)
+    public function readIncludesFile($file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {

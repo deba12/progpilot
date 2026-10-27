@@ -12,9 +12,9 @@ namespace progpilot\Representations;
 
 class ControlFlowGraph
 {
-    private $nodes;
-    private $edges;
-    private $myBlockText;
+    private array $nodes;
+    private array $edges;
+    private array $myBlockText;
 
     public function __construct()
     {
@@ -32,7 +32,7 @@ class ControlFlowGraph
         return "";
     }
 
-    public function addTextOfMyBlock($id, $text)
+    public function addTextOfMyBlock($id, $text): void
     {
         if (isset($this->myBlockText["$id"])) {
             $this->myBlockText["$id"] = $this->myBlockText["$id"] . "$text";
@@ -51,7 +51,7 @@ class ControlFlowGraph
         return $this->edges;
     }
 
-    public function addNode($id, $block)
+    public function addNode($id, $block): void
     {
         $this->nodes["$id"] = $block;
     }
@@ -67,7 +67,7 @@ class ControlFlowGraph
         return -1;
     }
 
-    public function addEdge($caller, $callee)
+    public function addEdge($caller, $callee): void
     {
         $this->edges[] = [$caller, $callee];
     }

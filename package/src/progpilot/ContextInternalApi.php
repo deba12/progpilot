@@ -61,7 +61,13 @@ abstract class ContextInternalApi
 
     protected $analyzedDataFiles;
 
+    /**
+     * @var \progpilot\Inputs\MyInputs
+     */
     public $inputs;
+    /**
+     * @var \progpilot\Outputs\MyOutputs
+     */
     public $outputs;
 
     public function __construct()

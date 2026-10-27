@@ -20,7 +20,7 @@ use progpilot\Helpers\Analysis as HelpersAnalysis;
 
 class CustomAnalysis
 {
-    public static function disclosureOfInformation($context, $defs, $defassign)
+    public static function disclosureOfInformation($context, $defs, $defassign): null
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
@@ -136,7 +136,7 @@ class CustomAnalysis
         return null;
     }
 
-    public static function mustVerifyDefinition($context, $instruction, $myFunc, $myClass = null)
+    public static function mustVerifyDefinition($context, $instruction, $myFunc, $myClass = null): void
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
@@ -326,7 +326,7 @@ class CustomAnalysis
         }
     }
 
-    public static function mustVerifyCallFlow($context, $callgraph)
+    public static function mustVerifyCallFlow($context, $callgraph): void
     {
         $firstCustomFunctions = [];
         $rulesVerifyCallFlow = [];

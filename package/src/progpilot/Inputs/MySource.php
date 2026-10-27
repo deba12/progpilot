@@ -14,18 +14,18 @@ use progpilot\Objects\MyDefinition;
 
 class MySource extends MySpecify
 {
-    private $isObject;
-    private $isArrayOfObjects;
-    private $isArrayOfArrays;
-    private $isArray;
-    private $isFunction;
-    private $arrayValue;
+    private bool $isObject;
+    private bool $isArrayOfObjects;
+    private bool $isArrayOfArrays;
+    private bool $isArray;
+    private bool $isFunction;
+    private array $arrayValue;
     private $returnArrayValue;
-    private $isReturnArray;
-    private $parameters;
-    private $conditionsParameters;
-    private $hasParameters;
-    private $label;
+    private bool $isReturnArray;
+    private array $parameters;
+    private array $conditionsParameters;
+    private bool $hasParameters;
+    private int $label;
 
     public const CONDITION_ARRAY = "condition_array";
 
@@ -52,12 +52,12 @@ class MySource extends MySpecify
         return $this->isReturnArray;
     }
 
-    public function setReturnArray($arr)
+    public function setReturnArray($arr): void
     {
         $this->isReturnArray = $arr;
     }
 
-    public function setReturnArrayValue($arr)
+    public function setReturnArrayValue($arr): void
     {
         $this->returnArrayValue = $arr;
     }
@@ -72,7 +72,7 @@ class MySource extends MySpecify
         return $this->label;
     }
 
-    public function setLabel($label)
+    public function setLabel($label): void
     {
         $this->label = $label;
     }
@@ -82,7 +82,7 @@ class MySource extends MySpecify
         return $this->isObject;
     }
 
-    public function setIsObject($isObject)
+    public function setIsObject($isObject): void
     {
         $this->isObject = $isObject;
     }
@@ -92,7 +92,7 @@ class MySource extends MySpecify
         return $this->isArrayOfObjects;
     }
 
-    public function setIsArrayOfObjects($isArrayOfObjects)
+    public function setIsArrayOfObjects($isArrayOfObjects): void
     {
         $this->isArrayOfObjects = $isArrayOfObjects;
     }
@@ -102,7 +102,7 @@ class MySource extends MySpecify
         return $this->isArrayOfArrays;
     }
 
-    public function setIsArrayOfArrays($isArrayOfArrays)
+    public function setIsArrayOfArrays($isArrayOfArrays): void
     {
         $this->isArrayOfArrays = $isArrayOfArrays;
     }
@@ -112,12 +112,12 @@ class MySource extends MySpecify
         return $this->isArray;
     }
 
-    public function setIsArray($isArray)
+    public function setIsArray($isArray): void
     {
         $this->isArray = $isArray;
     }
 
-    public function isAnArrayValue($arr)
+    public function isAnArrayValue($arr): bool
     {
         if (in_array($arr, $this->arrayValue, true)) {
             return true;
@@ -131,7 +131,7 @@ class MySource extends MySpecify
         return $this->arrayValue;
     }
 
-    public function setArrayValue($arrayValue)
+    public function setArrayValue($arrayValue): void
     {
         $this->arrayValue = $arrayValue;
     }
@@ -141,17 +141,17 @@ class MySource extends MySpecify
         return $this->isFunction;
     }
 
-    public function setIsFunction($isFunction)
+    public function setIsFunction($isFunction): void
     {
         $this->isFunction = $isFunction;
     }
 
-    public function addconditionsParameter($parameter, $conditions, $value)
+    public function addconditionsParameter(mixed $parameter, $conditions, $value): void
     {
         $this->conditionsParameters[$parameter][] = [$conditions, $value];
     }
 
-    public function getconditionsParameter($parameter, $conditions)
+    public function getconditionsParameter(mixed $parameter, $conditions)
     {
         foreach ($this->conditionsParameters[$parameter] as $conditionsParam) {
             if ($conditionsParam[0] === $conditions) {
@@ -162,7 +162,7 @@ class MySource extends MySpecify
         return null;
     }
 
-    public function addParameter($parameter)
+    public function addParameter($parameter): void
     {
         $this->parameters[] = $parameter;
     }
@@ -172,7 +172,7 @@ class MySource extends MySpecify
         return $this->parameters;
     }
 
-    public function isParameter($i)
+    public function isParameter($i): bool
     {
         foreach ($this->parameters as $parameter) {
             if ($parameter === $i) {
@@ -188,7 +188,7 @@ class MySource extends MySpecify
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters)
+    public function setHasParameters($hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

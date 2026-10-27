@@ -17,7 +17,7 @@ use progpilot\Code\Opcodes;
 
 class VariableFetch
 {
-    public static function variableFetch($context, $op, $expr)
+    public static function variableFetch($context, $op, $expr): void
     {
         if (
             isset($op->original) && $op->original instanceof Operand\Variable

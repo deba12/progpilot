@@ -12,7 +12,7 @@ namespace progpilot\Objects;
 
 class MyProperty extends MyDefinition
 {
-    private $visibility;
+    private string $visibility;
 
     public function __construct($blockId, $myFile, $varLine, $varColumn, $varName)
     {
@@ -22,7 +22,7 @@ class MyProperty extends MyDefinition
         $this->visibility = "public";
     }
 
-    public function setVisibility($visibility)
+    public function setVisibility($visibility): void
     {
         $this->visibility = $visibility;
     }

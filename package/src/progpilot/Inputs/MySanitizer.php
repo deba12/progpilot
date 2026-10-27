@@ -13,8 +13,8 @@ namespace progpilot\Inputs;
 class MySanitizer extends MySpecify
 {
     private $prevent;
-    private $parameters;
-    private $hasParameters;
+    private array $parameters;
+    private bool $hasParameters;
 
     public function __construct($name, $language, $prevent)
     {
@@ -30,7 +30,7 @@ class MySanitizer extends MySpecify
         return $this->prevent;
     }
 
-    public function addParameter($parameter, $conditions, $values = null)
+    public function addParameter($parameter, $conditions, $values = null): void
     {
         $this->parameters[] = [$parameter, $conditions, $values];
     }
@@ -69,7 +69,7 @@ class MySanitizer extends MySpecify
         return null;
     }
 
-    public function isParameter($i)
+    public function isParameter($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -88,7 +88,7 @@ class MySanitizer extends MySpecify
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters)
+    public function setHasParameters($hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

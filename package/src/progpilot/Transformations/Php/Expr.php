@@ -23,7 +23,7 @@ use progpilot\Transformations\Php\Exprs\LiteralFetch;
 
 class Expr
 {
-    public static function explicitfetch($context, $op, $expr)
+    public static function explicitfetch($context, $op, $expr): void
     {
         CastFetch::castFetch($context, $op, $expr);
         ConcatFetch::concatFetch($context, $op, $expr);
@@ -36,7 +36,7 @@ class Expr
         ConstFetch::constFetch($context, $op);
     }
 
-    public static function implicitfetch($context, $op, $expr)
+    public static function implicitfetch($context, $op, $expr): void
     {
         VariableFetch::variableFetch($context, $op, $expr);
         LiteralFetch::literalFetch($context, $op);

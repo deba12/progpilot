@@ -20,7 +20,7 @@ class MyOp
     private $varColumn;
     private $sourceMyFile;
 
-    private $flags;
+    private int $flags;
 
     public const TYPE_VARIABLE = "type_variable";
     public const TYPE_LITERAL = "type_literal";
@@ -50,7 +50,7 @@ class MyOp
         $this->varId = MyOp::$nbObjects++;
     }
 
-    public function setType($flags)
+    public function setType($flags): void
     {
         $this->flags = $flags;
     }
@@ -60,24 +60,24 @@ class MyOp
         return $this->flags;
     }
 
-    public function isType($type)
+    public function isType($type): bool
     {
         return (bool) ($this->flags & $type);
     }
 
-    public function addType($type)
+    public function addType($type): void
     {
         $this->flags |= $type;
     }
 
-    public function removeType($type)
+    public function removeType($type): void
     {
         if ($this->isType($type)) {
             $this->flags ^= $type;
         }
     }
 
-    public function setId($varId)
+    public function setId($varId): void
     {
         $this->varId = $varId;
     }
@@ -97,12 +97,12 @@ class MyOp
         return $this->varColumn;
     }
 
-    public function setLine($line)
+    public function setLine($line): void
     {
         $this->varLine = $line;
     }
 
-    public function setColumn($column)
+    public function setColumn($column): void
     {
         $this->varColumn = $column;
     }
@@ -112,12 +112,12 @@ class MyOp
         return $this->sourceMyFile;
     }
 
-    public function setSourceMyFile($sourceMyFile)
+    public function setSourceMyFile($sourceMyFile): void
     {
         $this->sourceMyFile = $sourceMyFile;
     }
 
-    public function setName($varName)
+    public function setName($varName): void
     {
         $this->varName = $varName;
     }

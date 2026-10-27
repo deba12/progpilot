@@ -12,7 +12,7 @@ namespace progpilot\Dataflow;
 
 class Objects
 {
-    private $objects;
+    private array $objects;
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class Objects
         return $this->objects;
     }
 
-    public function addObject()
+    public function addObject(): int
     {
         $idObject = count($this->objects);
         $this->objects[$idObject] = null;
@@ -32,7 +32,7 @@ class Objects
         return $idObject;
     }
 
-    public function addMyclassToObject($idObject, $myClass)
+    public function addMyclassToObject(mixed $idObject, $myClass): void
     {
         $this->objects[$idObject] = $myClass;
     }

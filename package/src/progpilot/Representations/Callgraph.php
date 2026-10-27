@@ -12,8 +12,8 @@ namespace progpilot\Representations;
 
 class Callgraph
 {
-    private $nodes;
-    private $blocks;
+    private array $nodes;
+    private \SplObjectStorage|array $blocks;
 
     public function __construct()
     {
@@ -26,7 +26,7 @@ class Callgraph
         return $this->nodes;
     }
 
-    public function newBlock($myBlock)
+    public function newBlock($myBlock): void
     {
         $obj = new \stdClass();
         $obj->calls = [];
@@ -35,7 +35,7 @@ class Callgraph
         $this->blocks[$myBlock] = $obj;
     }
 
-    public function addNode($myFunc, $myClass)
+    public function addNode($myFunc, $myClass): void
     {
         $NodeCG = new NodeCG(
             $myFunc->getName(),
@@ -50,7 +50,7 @@ class Callgraph
         }
     }
 
-    public function addEdge($myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee)
+    public function addEdge($myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee): void
     {
         $NodeCGCaller = new NodeCG(
             $myFuncCaller->getName(),
@@ -84,7 +84,7 @@ class Callgraph
         }
     }
 
-    public function addFuncCall($myBlock, $myFunc, $myClass)
+    public function addFuncCall($myBlock, $myFunc, $myClass): void
     {
         if (!$this->blocks->offsetExists($myBlock)) {
             $this->newBlock($myBlock);
@@ -97,7 +97,7 @@ class Callgraph
         }
     }
 
-    public function addChild($myBlockParent, $myBlockChild)
+    public function addChild($myBlockParent, $myBlockChild): void
     {
         if ($myBlockParent !== $myBlockChild) {
             if (!$this->blocks->offsetExists($myBlockParent)) {
@@ -125,7 +125,7 @@ class Callgraph
         return null;
     }
 
-    public function computeCallGraph()
+    public function computeCallGraph(): void
     {
         // transform parents to children
         foreach ($this->blocks as $myBlock) {

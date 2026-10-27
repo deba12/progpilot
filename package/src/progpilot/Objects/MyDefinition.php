@@ -36,18 +36,21 @@ class MyDefinition extends MyOp
     public const SECURITY_LOW = 2;
 
     private $blockId;
-    private $className;
-    private $returnedFromValidator;
-    private $validWhenReturning;
-    private $validNotBoolean;
+    private string $className;
+    private bool $returnedFromValidator;
+    private bool $validWhenReturning;
+    private bool $validNotBoolean;
     private $paramToArg;
     private $argToParam;
     private $isReturnDef;
-    private $refs;
-    private $iteratorValues;
-    private $blocksIdsStates;
+    private array $refs;
+    private array $iteratorValues;
+    private array $blocksIdsStates;
     private $returnDef;
 
+    /**
+     * @var \progpilot\Objects\MyDefOriginal
+     */
     public $original;
     public $states;
 
@@ -76,7 +79,7 @@ class MyDefinition extends MyOp
         $this->assignStateToBlockId($state->getId(), $blockId);
     }
 
-    public function printStdout($context = null)
+    public function printStdout($context = null): void
     {
         echo "_____________________ start def _____________________\n";
         echo "def id " . $this->varId . " :: \
@@ -112,12 +115,12 @@ class MyDefinition extends MyOp
         echo "_____________________ end def _____________________\n\n\n";
     }
 
-    public function unsetState($blockId)
+    public function unsetState(mixed $blockId): void
     {
         unset($this->blocksIdsStates[$blockId]);
     }
 
-    public function setStatesToBlocksIds($statesToBlocksIds)
+    public function setStatesToBlocksIds($statesToBlocksIds): void
     {
         $this->blocksIdsStates = $statesToBlocksIds;
     }
@@ -127,12 +130,12 @@ class MyDefinition extends MyOp
         return $this->blocksIdsStates;
     }
 
-    public function setStates($states)
+    public function setStates($states): void
     {
         $this->states = $states;
     }
 
-    public function assignStateToBlockId($stateId, $blockId)
+    public function assignStateToBlockId($stateId, $blockId): void
     {
         if (
             isset($this->blocksIdsStates[$blockId])
@@ -158,7 +161,7 @@ class MyDefinition extends MyOp
         $this->blocksIdsStates[$blockId] = $stateId;
     }
 
-    public function createState()
+    public function createState(): \progpilot\Objects\MyDefState
     {
         $state = new MyDefState();
         $this->states[$state->getId()] = $state;
@@ -166,7 +169,7 @@ class MyDefinition extends MyOp
         return $state;
     }
 
-    public function addState($newstate)
+    public function addState($newstate): void
     {
         $this->states[$newstate->getId()] = $newstate;
     }
@@ -183,7 +186,7 @@ class MyDefinition extends MyOp
         return null;
     }
 
-    public function getNbStates()
+    public function getNbStates(): int
     {
         return count($this->states);
     }
@@ -205,7 +208,7 @@ class MyDefinition extends MyOp
         return null;
     }
 
-    public function setArgToParam($def)
+    public function setArgToParam($def): void
     {
         $this->argToParam = $def;
     }
@@ -215,7 +218,7 @@ class MyDefinition extends MyOp
         return $this->argToParam;
     }
 
-    public function setParamToArg($def)
+    public function setParamToArg($def): void
     {
         $this->paramToArg = $def;
     }
@@ -225,7 +228,7 @@ class MyDefinition extends MyOp
         return $this->paramToArg;
     }
 
-    public function setValidWhenReturning($value)
+    public function setValidWhenReturning($value): void
     {
         $this->validWhenReturning = $value;
     }
@@ -235,7 +238,7 @@ class MyDefinition extends MyOp
         return $this->validWhenReturning;
     }
 
-    public function setValidNotBoolean($value)
+    public function setValidNotBoolean($value): void
     {
         $this->validNotBoolean = $value;
     }
@@ -245,7 +248,7 @@ class MyDefinition extends MyOp
         return $this->validNotBoolean;
     }
 
-    public function setReturnedFromValidator($value)
+    public function setReturnedFromValidator($value): void
     {
         $this->returnedFromValidator = $value;
     }
@@ -260,7 +263,7 @@ class MyDefinition extends MyOp
         return $this->className;
     }
 
-    public function setClassName($className)
+    public function setClassName($className): void
     {
         $this->className = $className;
     }
@@ -270,7 +273,7 @@ class MyDefinition extends MyOp
         return $this->refs;
     }
 
-    public function setRefs($refs)
+    public function setRefs($refs): void
     {
         $this->refs = $refs;
     }
@@ -280,7 +283,7 @@ class MyDefinition extends MyOp
         return $this->iteratorValues;
     }
 
-    public function setIteratorValues($iteratorValues)
+    public function setIteratorValues($iteratorValues): void
     {
         $this->iteratorValues = $iteratorValues;
     }
@@ -290,7 +293,7 @@ class MyDefinition extends MyOp
         return $this->blockId;
     }
 
-    public function setBlockId($blockId)
+    public function setBlockId($blockId): void
     {
         $this->blockId = $blockId;
     }
@@ -300,7 +303,7 @@ class MyDefinition extends MyOp
         return $this->returnDef;
     }
 
-    public function setReturnDef($returnDef)
+    public function setReturnDef($returnDef): void
     {
         $this->returnDef = $returnDef;
     }

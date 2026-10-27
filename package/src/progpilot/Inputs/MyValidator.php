@@ -12,8 +12,8 @@ namespace progpilot\Inputs;
 
 class MyValidator extends MySpecify
 {
-    private $parameters;
-    private $hasParameters;
+    private array $parameters;
+    private bool $hasParameters;
     private $validWhenReturning;
 
     public function __construct($name, $language, $validWhenReturning)
@@ -30,12 +30,12 @@ class MyValidator extends MySpecify
         return $this->validWhenReturning;
     }
 
-    public function setValidWhenReturning($validWhenReturning, $validwhenreturning, $notboolean)
+    public function setValidWhenReturning($validWhenReturning, $validwhenreturning, $notboolean): void
     {
         $this->validWhenReturning = $validWhenReturning;
     }
 
-    public function addParameter($parameter, $conditions, $values = null)
+    public function addParameter($parameter, $conditions, $values = null): void
     {
         $this->parameters[] = [$parameter, $conditions, $values];
     }
@@ -73,7 +73,7 @@ class MyValidator extends MySpecify
         return null;
     }
 
-    public function isParameter($i)
+    public function isParameter($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -91,7 +91,7 @@ class MyValidator extends MySpecify
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters)
+    public function setHasParameters($hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

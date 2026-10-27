@@ -17,7 +17,7 @@ use progpilot\Helpers\Analysis as HelpersAnalysis;
 
 class ResolveDefs
 {
-    public static function funccallReturnValues($myFuncCall, $instruction, $virtualReturnDef)
+    public static function funccallReturnValues($myFuncCall, $instruction, $virtualReturnDef): void
     {
         if ($myFuncCall->getName() === "dirname") {
             if ($instruction->isPropertyExist("argdef0")) {
@@ -30,7 +30,7 @@ class ResolveDefs
         }
     }
 
-    public static function funccallClass($context, $data, $myFuncCall, $instruction)
+    public static function funccallClass($context, $data, $myFuncCall, $instruction): array
     {
         $varid = $instruction->getProperty(MyInstruction::VARID);
         $resultid = $instruction->getProperty(MyInstruction::RESULTID);
@@ -119,7 +119,7 @@ class ResolveDefs
 
     // def1 and def2 defined in different files
     // return true if def1 is deeper by def2
-    public static function isNearestIncludes($def1, $def2)
+    public static function isNearestIncludes($def1, $def2): bool
     {
         $def1IncludedByDef2 = false;
         $def1IncludedToDef2 = false;
@@ -279,7 +279,7 @@ class ResolveDefs
         return false;
     }
 
-    public static function getVisibilityMethod($defName, $method)
+    public static function getVisibilityMethod($defName, $method): bool
     {
         if ($defName === "this") {
             return true;
@@ -300,7 +300,7 @@ class ResolveDefs
         return false;
     }
 
-    public static function getVisibility($def, $property, $currentFunc)
+    public static function getVisibility($def, $property, $currentFunc): bool
     {
         if (
             !is_null($def)
@@ -378,7 +378,10 @@ class ResolveDefs
         return $visibilityFinal;
     }
 
-    public static function selectDefinitions($context, $data, $searchedDed)
+    /**
+     * @return mixed[]
+     */
+    public static function selectDefinitions($context, $data, $searchedDed): array
     {
         $defsFound = [];
         if (is_null($data)) {
@@ -431,7 +434,10 @@ class ResolveDefs
         return $trueDefsFoundParams;
     }
 
-    public static function selectArrays($context, $data, $tempDefa, $arrayDim)
+    /**
+     * @return mixed[]
+     */
+    public static function selectArrays($context, $data, $tempDefa, $arrayDim): array
     {
         $arrayDefs = [];
 
@@ -478,7 +484,10 @@ class ResolveDefs
         return null;
     }
 
-    public static function selectProperties($context, $data, $tempDefa, $propertyName)
+    /**
+     * @return array{mixed, mixed}[]
+     */
+    public static function selectProperties($context, $data, $tempDefa, $propertyName): array
     {
         $propertiesDefs = [];
         $currentFunc = $context->getCurrentFunc();

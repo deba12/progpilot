@@ -17,10 +17,10 @@ class NodeCG
     private $line;
     private $column;
     private $file;
-    private $nbParents;
-    private $nbViews;
-    private $children;
-    private $color;
+    private int $nbParents;
+    private int $nbViews;
+    private array $children;
+    private string $color;
 
     public function __construct($name, $line, $column, $file, $myClass)
     {
@@ -41,7 +41,7 @@ class NodeCG
         return $this->myclass;
     }
 
-    public function setMyClass($myClass)
+    public function setMyClass($myClass): void
     {
         $this->myclass = $myClass;
     }
@@ -86,47 +86,47 @@ class NodeCG
         return $this->color;
     }
 
-    public function setColor($color)
+    public function setColor($color): void
     {
         $this->color = $color;
     }
 
-    public function setChildren($children)
+    public function setChildren($children): void
     {
         $this->children = $children;
     }
 
-    public function setNbViews($nbViews)
+    public function setNbViews($nbViews): void
     {
         $this->nbViews = $nbViews;
     }
 
-    public function setNbParents($nbParents)
+    public function setNbParents($nbParents): void
     {
         $this->nbParents = $nbParents;
     }
 
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name = $name;
     }
 
-    public function setLine($line)
+    public function setLine($line): void
     {
         $this->line = $line;
     }
 
-    public function setColumn($column)
+    public function setColumn($column): void
     {
         $this->column = $column;
     }
 
-    public function setFile($file)
+    public function setFile($file): void
     {
         $this->file = $file;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return hash("sha256", $this->name);
     }

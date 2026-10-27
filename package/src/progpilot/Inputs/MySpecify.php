@@ -15,7 +15,7 @@ class MySpecify
     private $name;
     private $language;
     private $instanceOfName;
-    private $isInstance;
+    private bool $isInstance;
 
     public function __construct($name, $language)
     {
@@ -35,7 +35,7 @@ class MySpecify
         return $this->language;
     }
 
-    public function setIsInstance($isInstance)
+    public function setIsInstance($isInstance): void
     {
         $this->isInstance = $isInstance;
     }

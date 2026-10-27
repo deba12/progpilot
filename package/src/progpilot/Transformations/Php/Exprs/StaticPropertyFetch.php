@@ -19,7 +19,7 @@ use progpilot\Transformations\Php\Common;
 
 class StaticPropertyFetch
 {
-    public static function staticPropertyFetch($context, $op)
+    public static function staticPropertyFetch($context, $op): void
     {
         if (
             isset($op)

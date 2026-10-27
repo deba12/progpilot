@@ -18,7 +18,7 @@ use progpilot\Code\Opcodes;
 
 class PropertyFetch
 {
-    public static function propertyFetch($context, $op)
+    public static function propertyFetch($context, $op): void
     {
         if (
             isset($op)

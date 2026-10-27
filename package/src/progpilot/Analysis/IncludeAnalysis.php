@@ -17,7 +17,7 @@ use progpilot\Helpers\State as HelpersState;
 
 class IncludeAnalysis
 {
-    public static function isCircularInclude($myFile)
+    public static function isCircularInclude($myFile): bool
     {
         $includedMyFile = $myFile->getIncludedFromMyfile();
         while (!is_null($includedMyFile)) {
@@ -31,7 +31,7 @@ class IncludeAnalysis
         return false;
     }
 
-    public static function funccall($context, $blocks, $defs, $instruction)
+    public static function funccall($context, $blocks, $defs, $instruction): void
     {
         $funcName = $instruction->getProperty(MyInstruction::FUNCNAME);
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);

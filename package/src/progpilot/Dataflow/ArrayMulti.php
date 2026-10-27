@@ -34,7 +34,10 @@ class ArrayMulti
         return $newar1;
     }
 
-    public static function arrayMinusMulti($ar1, $ar2)
+    /**
+     * @return mixed[]
+     */
+    public static function arrayMinusMulti($ar1, $ar2): array
     {
         $newar1 = [];
 

@@ -15,6 +15,9 @@ class MyFile extends MyOp
     private $includedFromMyFile;
     private $includedToMyFile;
     public $baseDir;
+    /**
+     * @var string
+     */
     public $fileName;
 
     public function __construct($fullPathFileName, $baseDir, $fakeLine, $fakeColumn)
@@ -24,7 +27,7 @@ class MyFile extends MyOp
         $this->fileName = substr($fullPathFileName, strlen($baseDir) + 1);
     }
 
-    public function setIncludedToMyfile($myFileTo)
+    public function setIncludedToMyfile($myFileTo): void
     {
         $this->includedToMyFile = $myFileTo;
     }
@@ -34,7 +37,7 @@ class MyFile extends MyOp
         return $this->includedToMyFile;
     }
 
-    public function setIncludedFromMyfile($myFileFrom)
+    public function setIncludedFromMyfile($myFileFrom): void
     {
         $this->includedFromMyFile = $myFileFrom;
     }
@@ -44,7 +47,7 @@ class MyFile extends MyOp
         return $this->includedFromMyFile;
     }
 
-    public function printStdout($context = null)
+    public function printStdout($context = null): void
     {
         echo "file " . $this->getName() . "\n";
         $includeFile = $this->getIncludedFromMyfile();

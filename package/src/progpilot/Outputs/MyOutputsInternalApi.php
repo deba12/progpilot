@@ -45,14 +45,14 @@ class MyOutputsInternalApi
         $this->ast = [];
     }
 
-    public function resetRepresentationsForAllFunctions()
+    public function resetRepresentationsForAllFunctions(): void
     {
         $this->cfg = [];
         $this->callgraph = [];
         $this->ast = [];
     }
 
-    public function createRepresentationsForFunction($myFunc)
+    public function createRepresentationsForFunction($myFunc): void
     {
         if (!is_null($myFunc)) {
             $this->cfg[$myFunc->getId()] = new ControlFlowGraph();
@@ -62,7 +62,7 @@ class MyOutputsInternalApi
     }
 
     // cfg accessors
-    public function cfgAddTextOfMyBlock($myFunc, $id, $text)
+    public function cfgAddTextOfMyBlock($myFunc, $id, $text): void
     {
         if (!is_null($myFunc) && isset($this->cfg[$myFunc->getId()])) {
             $tmpCfg = $this->cfg[$myFunc->getId()];
@@ -70,7 +70,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function cfgAddNode($myFunc, $id, $block)
+    public function cfgAddNode($myFunc, $id, $block): void
     {
         if (!is_null($myFunc) && isset($this->cfg[$myFunc->getId()])) {
             $tmpCfg = $this->cfg[$myFunc->getId()];
@@ -78,7 +78,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function cfgAddEdge($myFunc, $caller, $callee)
+    public function cfgAddEdge($myFunc, $caller, $callee): void
     {
         if (!is_null($myFunc) && isset($this->cfg[$myFunc->getId()])) {
             $tmpCfg = $this->cfg[$myFunc->getId()];
@@ -87,7 +87,7 @@ class MyOutputsInternalApi
     }
 
     // callgraph accessors
-    public function callgraphAddNode($myFunc, $myFunccall, $myClass)
+    public function callgraphAddNode($myFunc, $myFunccall, $myClass): void
     {
         if (!is_null($myFunc) && isset($this->callgraph[$myFunc->getId()])) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
@@ -95,7 +95,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function callgraphAddEdge($myFunc, $myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee)
+    public function callgraphAddEdge($myFunc, $myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee): void
     {
         if (!is_null($myFunc) && isset($this->callgraph[$myFunc->getId()])) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
@@ -103,7 +103,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function callgraphAddFuncCall($myFunc, $myBlock, $myFunccall, $myClass)
+    public function callgraphAddFuncCall($myFunc, $myBlock, $myFunccall, $myClass): void
     {
         if (
             !is_null($myFunc)
@@ -114,7 +114,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function callgraphAddChild($myFunc, $myBlockParent, $myBlockChild)
+    public function callgraphAddChild($myFunc, $myBlockParent, $myBlockChild): void
     {
         if (!is_null($myFunc) && isset($this->callgraph[$myFunc->getId()])) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
@@ -122,7 +122,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function addResult($temp)
+    public function addResult($temp): void
     {
         if (!in_array($temp, $this->results, true)) {
             if (!is_null($this->onAddResult)) {
@@ -134,7 +134,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function setResults(&$results)
+    public function setResults(&$results): void
     {
         $this->results = &$results;
     }
@@ -144,7 +144,7 @@ class MyOutputsInternalApi
         return $this->countfilesanalyzed;
     }
 
-    public function setCountAnalyzedFiles($nb)
+    public function setCountAnalyzedFiles($nb): void
     {
         $this->countfilesanalyzed = $nb;
     }
@@ -154,12 +154,12 @@ class MyOutputsInternalApi
         return $this->writeIncludeFailures;
     }
 
-    public function setWriteIncludeFailures($writeIncludeFailures)
+    public function setWriteIncludeFailures($writeIncludeFailures): void
     {
         $this->writeIncludeFailures = $writeIncludeFailures;
     }
 
-    public function writeIncludesFile()
+    public function writeIncludesFile(): void
     {
         if ($this->writeIncludeFailures) {
             $fp = fopen($this->includeFailuresFile, "w");

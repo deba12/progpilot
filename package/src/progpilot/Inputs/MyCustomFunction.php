@@ -12,15 +12,15 @@ namespace progpilot\Inputs;
 
 class MyCustomFunction extends MySpecify
 {
-    private $parameters;
-    private $hasParameters;
+    private array $parameters;
+    private bool $hasParameters;
 
     private $action;
     private $orderNumberExpected;
-    private $orderNumberReal;
+    private int $orderNumberReal;
 
-    private $minNbArgs;
-    private $maxNbArgs;
+    private int $minNbArgs;
+    private int $maxNbArgs;
 
     public function __construct($name, $language, $orderNumberExpected = 0)
     {
@@ -44,7 +44,7 @@ class MyCustomFunction extends MySpecify
         $failifnotverified,
         $notequals,
         $values = null
-    ) {
+    ): void {
         $this->parameters[] = [
             $parameter,
             $values,
@@ -66,7 +66,7 @@ class MyCustomFunction extends MySpecify
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters)
+    public function setHasParameters($hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }
@@ -127,7 +127,7 @@ class MyCustomFunction extends MySpecify
         return null;
     }
 
-    public function setOrderNumberReal($orderNumberReal)
+    public function setOrderNumberReal($orderNumberReal): void
     {
         $this->orderNumberReal = $orderNumberReal;
     }
@@ -137,7 +137,7 @@ class MyCustomFunction extends MySpecify
         return $this->orderNumberReal;
     }
 
-    public function setOrderNumberExpected($orderNumberExpected)
+    public function setOrderNumberExpected($orderNumberExpected): void
     {
         $this->orderNumberExpected = $orderNumberExpected;
     }

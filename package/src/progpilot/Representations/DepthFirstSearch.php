@@ -16,13 +16,13 @@ class DepthFirstSearch
 
     private DFSVisitor $visitor;
 
-    public function __construct($nodes, $visitor)
+    public function __construct($nodes, \progpilot\Representations\DFSVisitor $visitor)
     {
         $this->nodes = $nodes;
         $this->visitor = $visitor;
     }
 
-    public function init($root)
+    public function init($root): void
     {
         foreach ($this->nodes as $key => $value) {
             $this->visitor->initializeNode($value);
@@ -31,7 +31,7 @@ class DepthFirstSearch
         $this->search($root);
     }
 
-    public function search($node)
+    public function search($node): void
     {
         if (!is_null($node) && array_key_exists($node->getId(), $this->nodes)) {
             $this->visitor->examineNode($node);

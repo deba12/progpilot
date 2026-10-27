@@ -24,7 +24,7 @@ class Common
         return $operand instanceof Operand\Literal ? $operand->value : null;
     }
 
-    public static function validLastKnownValue($value)
+    public static function validLastKnownValue($value): bool
     {
         if ($value === null) {
             return true;
@@ -37,7 +37,7 @@ class Common
         return false;
     }
 
-    public static function isChainedKnownType($op)
+    public static function isChainedKnownType($op): bool
     {
         if (
             $op instanceof Op\Expr\PropertyFetch
@@ -205,7 +205,7 @@ class Common
          public const FLAG_CLOSURE     = 0x80;
      */
 
-    public static function getTypeVisibility($visibility)
+    public static function getTypeVisibility($visibility): string
     {
         switch ($visibility) {
             case 1:

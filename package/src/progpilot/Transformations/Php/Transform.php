@@ -29,12 +29,12 @@ use progpilot\Transformations\Php\Common;
 
 class Transform implements Visitor
 {
-    private $blocksStack;
-    private $sBlocks;
+    private array $blocksStack;
+    private \SplObjectStorage|array $sBlocks;
     private $context;
-    private $blockIfToBeResolved;
-    private $insideInclude;
-    private $varIds;
+    private array $blockIfToBeResolved;
+    private ?bool $insideInclude = null;
+    private array|\SplObjectStorage $varIds;
 
     protected function getVarId(Operand $var)
     {
@@ -53,17 +53,17 @@ class Transform implements Visitor
         $this->blocksStack = [];
     }
 
-    public function setContext($context)
+    public function setContext($context): void
     {
         $this->context = $context;
     }
 
-    public function enterScript(Script $script)
+    public function enterScript(Script $script): void
     {
         $this->context->outputs->currentIncludesFile = [];
     }
 
-    public function checkIsALoop($block, $blockToLook)
+    public function checkIsALoop($block, $blockToLook): bool
     {
         $allBlocks = [];
         $allBlocks[] = $block;
@@ -97,7 +97,7 @@ class Transform implements Visitor
         return false;
     }
 
-    public function leaveScript(Script $script)
+    public function leaveScript(Script $script): void
     {
         foreach ($this->blockIfToBeResolved as $blockResolved) {
             $instructionIf = $blockResolved[0];
@@ -158,7 +158,7 @@ class Transform implements Visitor
         }
     }
 
-    public function enterBlock(Block $block, ?Block $prior = null)
+    public function enterBlock(Block $block, ?Block $prior = null): void
     {
         $this->insideInclude = false;
         if (!($this->context->getCurrentOp() instanceof Op\Expr\Include_)) {
@@ -197,7 +197,7 @@ class Transform implements Visitor
     {
     }
 
-    public function leaveBlock(Block $block, ?Block $prior = null)
+    public function leaveBlock(Block $block, ?Block $prior = null): void
     {
         if (!$this->insideInclude) {
             if ($this->sBlocks->offsetExists($block)) {
@@ -219,7 +219,7 @@ class Transform implements Visitor
         }
     }
 
-    public function enterFunc(Func $func)
+    public function enterFunc(Func $func): void
     {
         $myFunction = new MyFunction($func->name);
         $this->context->setCurrentMycode($myFunction->getMyCode());
@@ -281,7 +281,7 @@ class Transform implements Visitor
         $this->context->setCurrentFunc($myFunction);
     }
 
-    public function leaveFunc(Func $func)
+    public function leaveFunc(Func $func): void
     {
         $myCodeCodes = $this->context->getCurrentMycode()->getCodes();
 
@@ -314,7 +314,7 @@ class Transform implements Visitor
         $this->context->addTmpFunctions($myFunction);
     }
 
-    public function enterOp(Op $op, Block $block)
+    public function enterOp(Op $op, Block $block): void
     {
         $this->context->setCurrentOp($op);
 

@@ -30,17 +30,17 @@ class MyInputs extends MyInputsInternalApi
         return $this->code;
     }
 
-    public function setFolder($folder)
+    public function setFolder($folder): void
     {
         $this->folder = $folder;
     }
 
-    public function setFile($file)
+    public function setFile($file): void
     {
         $this->file = $file;
     }
 
-    public function setCode($code)
+    public function setCode($code): void
     {
         $this->code = $code;
     }
@@ -50,7 +50,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->dev;
     }
 
-    public function setDev($dev)
+    public function setDev($dev): void
     {
         $this->dev = $dev;
 
@@ -72,7 +72,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function addSources($files)
+    public function addSources($files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -83,7 +83,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setSources($files)
+    public function setSources($files): void
     {
         $this->overwrittenSources = true;
         $this->sources = [];
@@ -95,7 +95,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->sources;
     }
 
-    public function addSinks($files)
+    public function addSinks($files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -111,14 +111,14 @@ class MyInputs extends MyInputsInternalApi
         return $this->sinks;
     }
 
-    public function setSinks($files)
+    public function setSinks($files): void
     {
         $this->overwrittenSinks = true;
         $this->sinks = [];
         $this->addSinks($files);
     }
 
-    public function addValidators($files)
+    public function addValidators($files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -129,7 +129,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setValidators($files)
+    public function setValidators($files): void
     {
         $this->overwrittenValidators = true;
         $this->validators = [];
@@ -141,7 +141,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->validators;
     }
 
-    public function addSanitizers($files)
+    public function addSanitizers($files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -152,7 +152,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setSanitizers($files)
+    public function setSanitizers($files): void
     {
         $this->overwrittenSanitizers = true;
         $this->sanitizers = [];
@@ -164,7 +164,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->sanitizers;
     }
 
-    public function addCustomRules($files)
+    public function addCustomRules($files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -175,7 +175,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setCustomRules($files)
+    public function setCustomRules($files): void
     {
         $this->overwrittenCustomRules = true;
         $this->customRules = [];
@@ -187,7 +187,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->customRules;
     }
 
-    public function setResolvedIncludes($resolvedIncludes)
+    public function setResolvedIncludes($resolvedIncludes): void
     {
         if (!is_null($resolvedIncludes)) {
             if (!file_exists($resolvedIncludes)) {
@@ -234,7 +234,7 @@ class MyInputs extends MyInputsInternalApi
         return $this->falsePositivesAnalysis;
     }
 
-    public function setFalsePositives($falsePositives)
+    public function setFalsePositives($falsePositives): void
     {
         $this->readFalsePositives($falsePositives);
     }
@@ -249,19 +249,19 @@ class MyInputs extends MyInputsInternalApi
         return $this->excludesFilesAnalysis;
     }
 
-    public function setExclusions($exclusions)
+    public function setExclusions($exclusions): void
     {
         $this->excludesFilesAnalysis = [];
         $this->addExclusions($exclusions);
     }
 
-    public function setInclusions($inclusions)
+    public function setInclusions($inclusions): void
     {
         $this->includesFilesAnalysis = [];
         $this->addInclusions($inclusions);
     }
 
-    public function addExclusions($exclusions)
+    public function addExclusions($exclusions): void
     {
         if (!is_null($exclusions)) {
             if (is_string($exclusions)) {
@@ -276,7 +276,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function addInclusions($inclusions)
+    public function addInclusions($inclusions): void
     {
         if (!is_null($inclusions)) {
             if (is_string($inclusions)) {

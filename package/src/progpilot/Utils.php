@@ -15,7 +15,7 @@ use progpilot\Objects\MyFunction;
 
 class Utils
 {
-    public static function toColumn($code, $pos)
+    public static function toColumn($code, $pos): float|int
     {
         if ($pos > strlen($code)) {
             return 1;
@@ -28,12 +28,12 @@ class Utils
         return $pos - $lineStartPos;
     }
 
-    public static function encodeCharacters($string)
+    public static function encodeCharacters($string): string
     {
         return htmlentities($string, ENT_QUOTES, 'UTF-8');
     }
 
-    public static function printWarning($context, $message)
+    public static function printWarning($context, $message): void
     {
         if ($context->isDebugMode()) {
             fwrite(STDERR, "progpilot warning: $message\n");
@@ -46,12 +46,12 @@ class Utils
         }
     }
 
-    public static function printError($message)
+    public static function printError($message): never
     {
         throw new \Exception($message);
     }
 
-    public static function printDefinition($def, $original = null)
+    public static function printDefinition($def, $original = null): string
     {
 
         $prefix = "\$";
@@ -117,7 +117,7 @@ class Utils
         return $printableDef;
     }
 
-    public static function printFunction($function)
+    public static function printFunction($function): string
     {
         $functionName = "\$";
         if ($function->isType(MyFunction::TYPE_FUNC_METHOD)) {
@@ -129,7 +129,7 @@ class Utils
         return $functionName;
     }
 
-    public static function printArray($array, &$print)
+    public static function printArray($array, &$print): void
     {
         if (is_array($array)) {
             foreach ($array as $index => $value) {

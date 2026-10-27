@@ -12,7 +12,7 @@ namespace progpilot\Code;
 
 class MyCode
 {
-    private $code;
+    private array $code;
     private $start;
     private $end;
 
@@ -31,17 +31,17 @@ class MyCode
         return $this->end;
     }
 
-    public function setStart($start)
+    public function setStart($start): void
     {
         $this->start = $start;
     }
 
-    public function setEnd($end)
+    public function setEnd($end): void
     {
         $this->end = $end;
     }
 
-    public function setCodes($codes)
+    public function setCodes($codes): void
     {
         $this->code = $codes;
     }
@@ -51,7 +51,7 @@ class MyCode
         return $this->code;
     }
 
-    public function addCode($code)
+    public function addCode($code): void
     {
         $this->code[] = $code;
     }
@@ -62,7 +62,7 @@ class MyCode
         return $this->code[$last_index - 1];
     }
 
-    public function printStdout()
+    public function printStdout(): void
     {
         $index = 0;
         $currentFunc = null;

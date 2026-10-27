@@ -14,25 +14,25 @@ use progpilot\Objects\MyAssertion;
 
 class Callbacks
 {
-    public static function modifyMyclassOfObject($context, $idObject, $currentMyclass, $newMyclass)
+    public static function modifyMyclassOfObject($context, $idObject, $currentMyclass, $newMyclass): void
     {
         if (!is_null($currentMyclass) && $currentMyclass->getName() === $newMyclass->getName()) {
             $context->getObjects()->addMyclassToObject($idObject, $newMyclass);
         }
     }
 
-    public static function addStateDefAsAPastArgument($myfunc, $nbparam, $arg)
+    public static function addStateDefAsAPastArgument($myfunc, $nbparam, $arg): void
     {
         $myfunc->addStatePastArgument($nbparam, $arg->getCurrentState());
     }
 
-    public static function addAttributesOfInitialReturnDefs($returnDef, $initialReturnDef)
+    public static function addAttributesOfInitialReturnDefs($returnDef, $initialReturnDef): void
     {
         $returnDef->setStates($initialReturnDef->getStates());
         $returnDef->setStatesToBlocksIds($initialReturnDef->getStatesToBlocksIds());
     }
 
-    public static function addSanitizedTypes($defValid, $sanitizedTypes)
+    public static function addSanitizedTypes($defValid, $sanitizedTypes): void
     {
         $defValid->getCurrentState()->setSanitized(true);
         if (is_array($sanitizedTypes)) {
@@ -42,13 +42,13 @@ class Callbacks
         }
     }
 
-    public static function addValidAssertion($defValid, $block)
+    public static function addValidAssertion($defValid, $block): void
     {
         $myAssertion = new MyAssertion($defValid, "valid");
         $block->addAssertion($myAssertion);
     }
 
-    public static function cleanTaintedDef($def, $funcDefs)
+    public static function cleanTaintedDef($def, $funcDefs): void
     {
         $originalDef = $funcDefs->getOriginalDef($def->getId());
 

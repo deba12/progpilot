@@ -17,7 +17,7 @@ use progpilot\Code\Opcodes;
 
 class LiteralFetch
 {
-    public static function literalFetch($context, $op)
+    public static function literalFetch($context, $op): void
     {
         if (
             isset($op)

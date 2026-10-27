@@ -12,7 +12,7 @@ namespace progpilot\Outputs;
 
 class MyOutputs extends MyOutputsInternalApi
 {
-    public function getAst($myFunc)
+    public function getAst($myFunc): array
     {
         $nodesjson = [];
         $linksjson = [];
@@ -42,7 +42,7 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
-    public function getCfg($myFunc)
+    public function getCfg($myFunc): array
     {
         $nodesjson = [];
         $linksjson = [];
@@ -73,7 +73,7 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
-    public function getCallGraph($myFunc)
+    public function getCallGraph($myFunc): array
     {
         $nodesjson = [];
         $linksjson = [];
@@ -105,7 +105,7 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
-    public function setOnAddResult($func)
+    public function setOnAddResult($func): void
     {
         $this->onAddResult = $func;
     }
@@ -120,7 +120,7 @@ class MyOutputs extends MyOutputsInternalApi
         return $this->results;
     }
 
-    public function setIncludeFailuresFile($file)
+    public function setIncludeFailuresFile($file): void
     {
         $log = true;
         if (is_null($file) || empty($file)) {
@@ -136,7 +136,7 @@ class MyOutputs extends MyOutputsInternalApi
         return $this->includeFailuresFile;
     }
 
-    public function taintedFlow($bool)
+    public function taintedFlow($bool): void
     {
         $this->taintedFlow = $bool;
     }
@@ -146,7 +146,7 @@ class MyOutputs extends MyOutputsInternalApi
         return $this->taintedFlow;
     }
 
-    public function sarifOutput($bool)
+    public function sarifOutput($bool): void
     {
         $this->sarifOutput = $bool;
     }

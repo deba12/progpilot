@@ -16,7 +16,7 @@ use progpilot\Analysis\AssertionAnalysis;
 
 class State
 {
-    public static function updateBlocksOfDef($context, $def, &$defStack)
+    public static function updateBlocksOfDef($context, $def, &$defStack): void
     {
         if (!is_null($def->getParamToArg())) {
             $def = $def->getParamToArg();
@@ -36,7 +36,7 @@ class State
         }
     }
 
-    public static function blockSwitching($context, $myFunc)
+    public static function blockSwitching($context, $myFunc): void
     {
         $defStack = [];
         $tmpDefs = $myFunc->getDefs();
@@ -51,7 +51,7 @@ class State
         }
     }
 
-    public static function updateBlocksOfArrayElement($context, $arrayElement, &$defStack)
+    public static function updateBlocksOfArrayElement($context, $arrayElement, &$defStack): void
     {
         $myBlock = $context->getCurrentBlock();
         $states = [];
@@ -79,7 +79,7 @@ class State
         }
     }
 
-    public static function updateBlocksOfArrayElements($context, $state, &$defStack)
+    public static function updateBlocksOfArrayElements($context, $state, &$defStack): void
     {
         $arrayIndexes = $state->getArrayIndexes();
         foreach ($arrayIndexes as $arrayIndexArr) {
@@ -89,7 +89,7 @@ class State
         }
     }
 
-    public static function updateBlocksOfProperty($context, $property, &$defStack)
+    public static function updateBlocksOfProperty($context, $property, &$defStack): void
     {
         $myBlock = $context->getCurrentBlock();
         $states = [];
@@ -125,7 +125,7 @@ class State
         }
     }
 
-    public static function updateBlocksOfProperties($context, $state, &$defStack)
+    public static function updateBlocksOfProperties($context, $state, &$defStack): void
     {
         $idObject = $state->getObjectId();
         $tmpMyClass = $context->getObjects()->getMyClassFromObject($idObject);
@@ -138,7 +138,7 @@ class State
         }
     }
 
-    public static function mergeDefsBlockIdStates($defs, $concatValues, $block)
+    public static function mergeDefsBlockIdStates($defs, $concatValues, $block): \progpilot\Objects\MyDefState
     {
         $blockId = $block->getId();
 
@@ -232,7 +232,7 @@ class State
         return $myState;
     }
 
-    public static function mergeDefStates($states)
+    public static function mergeDefStates($states): \progpilot\Objects\MyDefState
     {
         $myState = new MyDefState();
 

@@ -12,14 +12,17 @@ namespace progpilot\Dataflow;
 
 class Functions
 {
-    private $functions;
+    private array $functions;
 
     public function __construct()
     {
         $this->functions = [];
     }
 
-    public function getAllFunctions($funcname, $className = "function")
+    /**
+     * @return mixed[]
+     */
+    public function getAllFunctions($funcname, $className = "function"): array
     {
         $functionsTmp = [];
 
@@ -59,7 +62,7 @@ class Functions
         return $this->functions;
     }
 
-    public function addFunction($filenamehash, $classname, $funcname, $myFunc)
+    public function addFunction(mixed $filenamehash, $classname, $funcname, $myFunc): void
     {
         $this->functions[$filenamehash][$classname][$funcname] = $myFunc;
     }

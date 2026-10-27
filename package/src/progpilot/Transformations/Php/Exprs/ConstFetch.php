@@ -18,7 +18,7 @@ use progpilot\Code\Opcodes;
 
 class ConstFetch
 {
-    public static function constFetch($context, $op)
+    public static function constFetch($context, $op): void
     {
         if (
             isset($op)

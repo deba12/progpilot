@@ -15,7 +15,7 @@ use progpilot\Objects\MyClass;
 
 class Analysis
 {
-    public static function forAllobjects($context, $func, $myClass)
+    public static function forAllobjects($context, $func, $myClass): void
     {
         foreach ($context->getObjects()->getObjects() as $id => $objectClass) {
             $params = array($context, $id, $objectClass, $myClass);
@@ -23,7 +23,7 @@ class Analysis
         }
     }
 
-    public static function forDefsInFunctions($context, $func, $myClass)
+    public static function forDefsInFunctions($context, $func, $myClass): void
     {
         foreach ($context->getFunctions()->getFunctions() as $functionsBlocks) {
             foreach ($functionsBlocks as $functionBlock) {
@@ -37,7 +37,7 @@ class Analysis
         }
     }
 
-    public static function forAllDefsOfFunctionExceptReturnDefs($func, $myFunc)
+    public static function forAllDefsOfFunctionExceptReturnDefs($func, $myFunc): void
     {
         $returnDefs = $myFunc->getReturnDefs();
         foreach ($myFunc->getDefs()->getDefs() as $defnames) {
@@ -52,7 +52,7 @@ class Analysis
         }
     }
 
-    public static function forAllReturnDefsOfFunction($func, $myFunc)
+    public static function forAllReturnDefsOfFunction($func, $myFunc): void
     {
         $initialReturnDefs = $myFunc->getInitialReturnDefs();
         $returnDefs = $myFunc->getReturnDefs();
@@ -67,7 +67,7 @@ class Analysis
         }
     }
 
-    public static function forAllDefsOfFunction($func, $myFunc)
+    public static function forAllDefsOfFunction($func, $myFunc): void
     {
         foreach ($myFunc->getDefs()->getDefs() as $defnames) {
             if (is_array($defnames)) {
@@ -79,7 +79,7 @@ class Analysis
         }
     }
 
-    public static function forAllArgumentsOfFunction($func, $myfunc, $instruction)
+    public static function forAllArgumentsOfFunction($func, $myfunc, $instruction): void
     {
         $params = $myfunc->getParams();
 
@@ -92,7 +92,7 @@ class Analysis
         }
     }
 
-    public static function checkIfTimeExecutionIsAcceptable($context, $myFunc)
+    public static function checkIfTimeExecutionIsAcceptable($context, $myFunc): bool
     {
         $threshold1 = $context->getMaxFileAnalysisDuration() / 4; // 7.5 seconds by default
         $threshold2 = $context->getMaxFileAnalysisDuration() / 15; // 2 seconds by defaults
@@ -110,7 +110,7 @@ class Analysis
         return true;
     }
 
-    public static function getBytes($val)
+    public static function getBytes($val): string|int
     {
         $val = trim($val);
         $last = strtolower($val[strlen($val) - 1]);
@@ -132,7 +132,7 @@ class Analysis
         return $val;
     }
 
-    public static function isASource($context, $def, $myClass, $arrayDim)
+    public static function isASource($context, $def, $myClass, $arrayDim): bool
     {
         $source = $context->inputs->getSourceByName($def, $myClass, $arrayDim);
 
@@ -143,7 +143,7 @@ class Analysis
         return false;
     }
 
-    public static function forEachTaintedByDefs($def, $block, $callback)
+    public static function forEachTaintedByDefs($def, $block, $callback): void
     {
         foreach ($def->getStates() as $state) {
             $taintedDefs = $state->getTaintedByDefs();
@@ -157,7 +157,7 @@ class Analysis
         }
     }
 
-    public static function updateNbChars(&$nbChars, $string, $arrayChars)
+    public static function updateNbChars(array &$nbChars, $string, $arrayChars): void
     {
         if (is_string($string)) {
             foreach ($arrayChars as $char) {
@@ -176,7 +176,10 @@ class Analysis
         }
     }
 
-    public static function getNbChars($string, $arrayChars)
+    /**
+     * @return int[]
+     */
+    public static function getNbChars($string, $arrayChars): array
     {
         $nbChars = [];
 
@@ -197,7 +200,7 @@ class Analysis
         return $nbChars;
     }
 
-    public static function checkCallStackReachMaxTime($context)
+    public static function checkCallStackReachMaxTime($context): bool
     {
         $callStack = $context->getCallStack();
         $endTime = microtime(true);
@@ -217,7 +220,7 @@ class Analysis
         return false;
     }
 
-    public static function checkDeeplyIfDefIsTainted($def)
+    public static function checkDeeplyIfDefIsTainted($def): bool
     {
         $arrayTotal[] = $def;
         $defsToAnalyze[] = $def;
@@ -245,7 +248,7 @@ class Analysis
         return false;
     }
 
-    public static function checkIfOneFunctionArgumentIsNew($myFunc, $instruction)
+    public static function checkIfOneFunctionArgumentIsNew($myFunc, $instruction): bool
     {
         if (!is_null($myFunc)) {
             $params = $myFunc->getParams();
@@ -285,7 +288,7 @@ class Analysis
         return false;
     }
 
-    public static function checkIfFuncEqualMySpecify($context, $mySpecify, $myFunc, $myClass = null)
+    public static function checkIfFuncEqualMySpecify($context, $mySpecify, $myFunc, $myClass = null): bool
     {
         if (
             !$mySpecify->isInstance()
@@ -306,7 +309,7 @@ class Analysis
         return false;
     }
 
-    public static function checkIfDefEqualDefRule($context, $defs, $rule, $def, $myClass = null)
+    public static function checkIfDefEqualDefRule($context, $defs, $rule, $def, $myClass = null): bool
     {
         $definition = $rule->getDefinition();
 
@@ -330,7 +333,7 @@ class Analysis
         return false;
     }
 
-    public static function createObject($context, $myDef)
+    public static function createObject($context, $myDef): void
     {
         if (
             $myDef->isType(MyDefinition::TYPE_INSTANCE)

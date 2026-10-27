@@ -19,7 +19,7 @@ use progpilot\Transformations\Php\Expr;
 
 class FuncCall
 {
-    public static function argument($context, $arg, $instFuncCallMain, $funcCallName, $numParam)
+    public static function argument($context, $arg, $instFuncCallMain, $funcCallName, $numParam): void
     {
         Expr::implicitfetch($context, $arg, null);
 
@@ -62,7 +62,7 @@ class FuncCall
     arg2 : expr for the return
     arg3 : arr for the return : function_call()[0] (arr = [0])
      */
-    public static function instruction($context)
+    public static function instruction($context): void
     {
         $isMethod = false;
         $nbparams = 0;

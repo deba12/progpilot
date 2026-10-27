@@ -17,13 +17,13 @@ class MyCustomRule
     public const TYPE_SEQUENCE = "sequence";
 
     private $action;
-    private $type;
+    private string $type;
     private $definition;
     private $attack;
     private $cwe;
     private $descriptionRule;
-    private $sequenceRule;
-    private $currentOrderNumber;
+    private array $sequenceRule;
+    private int $currentOrderNumber;
     private $extra;
 
     public function __construct($descriptionRule)
@@ -44,7 +44,7 @@ class MyCustomRule
         return $this->extra;
     }
 
-    public function setExtra($extra)
+    public function setExtra($extra): void
     {
         $this->extra = $extra;
     }
@@ -54,7 +54,7 @@ class MyCustomRule
         return $this->attack;
     }
 
-    public function setAttack($attack)
+    public function setAttack($attack): void
     {
         $this->attack = $attack;
     }
@@ -64,7 +64,7 @@ class MyCustomRule
         return $this->cwe;
     }
 
-    public function setCwe($cwe)
+    public function setCwe($cwe): void
     {
         $this->cwe = $cwe;
     }
@@ -74,7 +74,7 @@ class MyCustomRule
         return $this->type;
     }
 
-    public function setType($type)
+    public function setType($type): void
     {
         $this->type = $type;
     }
@@ -84,7 +84,7 @@ class MyCustomRule
         return $this->definition;
     }
 
-    public function setDefinition($definition)
+    public function setDefinition($definition): void
     {
         $this->definition = $definition;
     }
@@ -94,7 +94,7 @@ class MyCustomRule
         return $this->descriptionRule;
     }
 
-    public function setDescription($descriptionRule)
+    public function setDescription($descriptionRule): void
     {
         $this->descriptionRule = $descriptionRule;
     }
@@ -104,7 +104,7 @@ class MyCustomRule
         return $this->currentOrderNumber;
     }
 
-    public function setCurrentOrderNumber($currentOrderNumber)
+    public function setCurrentOrderNumber($currentOrderNumber): void
     {
         $this->currentOrderNumber = $currentOrderNumber;
     }
@@ -114,7 +114,7 @@ class MyCustomRule
         return $this->sequenceRule;
     }
 
-    public function addToSequenceWithAction($functionName, $language, $action)
+    public function addToSequenceWithAction($functionName, $language, $action): \progpilot\Inputs\MyCustomFunction
     {
         $this->currentOrderNumber++;
         $myCustomFunction = new MyCustomFunction($functionName, $language, $this->currentOrderNumber);
@@ -124,7 +124,7 @@ class MyCustomRule
         return $myCustomFunction;
     }
 
-    public function addToSequence($functionName, $language)
+    public function addToSequence($functionName, $language): \progpilot\Inputs\MyCustomFunction
     {
         $this->currentOrderNumber++;
         $myCustomFunction = new MyCustomFunction($functionName, $language, $this->currentOrderNumber);
@@ -133,7 +133,7 @@ class MyCustomRule
         return $myCustomFunction;
     }
 
-    public function addFunctionDefinition($functionName, $language)
+    public function addFunctionDefinition($functionName, $language): \progpilot\Inputs\MyCustomFunction
     {
         $myCustomFunction = new MyCustomFunction($functionName, $language);
         $this->definition = $myCustomFunction;
@@ -141,7 +141,7 @@ class MyCustomRule
         return $myCustomFunction;
     }
 
-    public function addVariableDefinition($variableName, $language)
+    public function addVariableDefinition($variableName, $language): \progpilot\Inputs\MyCustomVariable
     {
         $myCustomVariable = new MyCustomVariable($variableName, $language);
         $this->definition = $myCustomVariable;

@@ -15,7 +15,7 @@ use progpilot\Code\MyInstruction;
 
 class SecurityAnalysis
 {
-    public static function inArrayStateSource($temp, $ret)
+    public static function inArrayStateSource(array $temp, array $ret): bool
     {
         for ($i = 0; $i < count($temp["source_name"]); $i++) {
             if (
@@ -31,7 +31,7 @@ class SecurityAnalysis
         return false;
     }
 
-    public static function funccall($context, $instruction, $myClass = null)
+    public static function funccall($context, $instruction, $myClass = null): void
     {
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
 
@@ -54,7 +54,7 @@ class SecurityAnalysis
         }
     }
 
-    public static function taintedStateFlow($context, $mySink, $indexParameter, $taintedDef, $taintedState)
+    public static function taintedStateFlow($context, $mySink, $indexParameter, $taintedDef, $taintedState): array
     {
         $resultTaintedFlow = [];
         $idFlow = \progpilot\Utils::printDefinition($taintedDef);
@@ -103,7 +103,7 @@ class SecurityAnalysis
         return [$resultTaintedFlow, $idFlow];
     }
 
-    public static function isSafeState($context, $mySink, $indexParameter, $myState)
+    public static function isSafeState($context, $mySink, $indexParameter, $myState): bool
     {
         $possibleConditions = ["QUOTES", "object_tainted", "array_tainted", "variable_tainted", null];
 
@@ -118,7 +118,7 @@ class SecurityAnalysis
         return true;
     }
 
-    public static function isSafeStateCondition($context, $mySink, $state, $condition, $isFlow = false)
+    public static function isSafeStateCondition($context, $mySink, $state, $condition, $isFlow = false): bool
     {
         if (
             ($state->isTainted())
@@ -191,7 +191,7 @@ class SecurityAnalysis
     }
 
 
-    public static function isSafeStatesCondition($context, $mySink, $myDef, $condition)
+    public static function isSafeStatesCondition($context, $mySink, $myDef, $condition): bool
     {
         $statesMyDef = $myDef->getStates();
         foreach ($statesMyDef as $stateMyDef) {
@@ -203,7 +203,7 @@ class SecurityAnalysis
         return true;
     }
 
-    public static function callbis($indexParameter, $myFuncCall, $context, $mySink, $myDef)
+    public static function callbis($indexParameter, $myFuncCall, $context, $mySink, $myDef): void
     {
         $hashIdVuln = "";
 

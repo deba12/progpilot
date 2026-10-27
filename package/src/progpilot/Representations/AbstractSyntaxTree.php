@@ -7,8 +7,8 @@ use PhpParser\NodeVisitorAbstract;
 
 class AbstractSyntaxTree extends NodeVisitorAbstract
 {
-    private $nodes;
-    private $edges;
+    private array $nodes;
+    private array $edges;
 
     public function __construct()
     {
@@ -26,12 +26,12 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         return $this->edges;
     }
 
-    public function addNode($node)
+    public function addNode($node): void
     {
         $this->nodes[] = $node;
     }
 
-    public function addEdge($caller, $callee)
+    public function addEdge($caller, $callee): void
     {
         $this->edges[] = [$caller, $callee];
     }

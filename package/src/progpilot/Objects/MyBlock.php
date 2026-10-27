@@ -12,12 +12,12 @@ namespace progpilot\Objects;
 
 class MyBlock extends MyOp
 {
-    private $returnDefs;
-    private $startAddressBlock;
-    private $endAddressBlock;
-    private $needUpdateOfState;
-    private $hasBeenAnalyzed;
-    private $loopParents;
+    private array $returnDefs;
+    private int $startAddressBlock;
+    private int $endAddressBlock;
+    private bool $needUpdateOfState;
+    private bool $hasBeenAnalyzed;
+    private array $loopParents;
 
     public $children;
     public $parents;
@@ -45,12 +45,12 @@ class MyBlock extends MyOp
         return $this->hasBeenAnalyzed;
     }
 
-    public function setHasBeenAnalyzed($hasBeenAnalyzed)
+    public function setHasBeenAnalyzed($hasBeenAnalyzed): void
     {
         $this->hasBeenAnalyzed = $hasBeenAnalyzed;
     }
 
-    public function setNeedUpdateOfState($update)
+    public function setNeedUpdateOfState($update): void
     {
         $this->needUpdateOfState = $update;
     }
@@ -60,26 +60,26 @@ class MyBlock extends MyOp
         return $this->needUpdateOfState;
     }
 
-    public function addLoopParent($parent)
+    public function addLoopParent($parent): void
     {
         if (!in_array($parent, $this->loopParents, true)) {
             $this->loopParents[] = $parent;
         }
     }
 
-    public function isLoopParent($parent)
+    public function isLoopParent($parent): bool
     {
         return in_array($parent, $this->loopParents, true);
     }
 
-    public function addVirtualParent($parent)
+    public function addVirtualParent($parent): void
     {
         if (!in_array($parent, $this->virtualParents, true)) {
             $this->virtualParents[] = $parent;
         }
     }
 
-    public function setVirtualParents($parents)
+    public function setVirtualParents($parents): void
     {
         $this->virtualParents = $parents;
     }
@@ -89,7 +89,7 @@ class MyBlock extends MyOp
         return $this->virtualParents;
     }
 
-    public function addParent($parent)
+    public function addParent($parent): void
     {
         if (!in_array($parent, $this->parents, true)) {
             $this->parents[] = $parent;
@@ -101,7 +101,7 @@ class MyBlock extends MyOp
         return $this->parents;
     }
 
-    public function addChild($child)
+    public function addChild($child): void
     {
         if (!in_array($child, $this->children, true)) {
             $this->children[] = $child;
@@ -113,7 +113,7 @@ class MyBlock extends MyOp
         return $this->children;
     }
 
-    public function addReturnDef($def)
+    public function addReturnDef($def): void
     {
         if (!in_array($def, $this->returnDefs, true)) {
             $this->returnDefs[] = $def;
@@ -125,7 +125,7 @@ class MyBlock extends MyOp
         return $this->returnDefs;
     }
 
-    public function addAssertion($myassertion)
+    public function addAssertion($myassertion): void
     {
         if (!in_array($myassertion, $this->assertions, true)) {
             $this->assertions[] = $myassertion;
@@ -137,12 +137,12 @@ class MyBlock extends MyOp
         return $this->assertions;
     }
 
-    public function setStartAddressBlock($address)
+    public function setStartAddressBlock($address): void
     {
         $this->startAddressBlock = $address;
     }
 
-    public function setEndAddressBlock($address)
+    public function setEndAddressBlock($address): void
     {
         $this->endAddressBlock = $address;
     }

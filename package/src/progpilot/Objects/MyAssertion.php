@@ -21,7 +21,7 @@ class MyAssertion
         $this->mydef = $myDef;
     }
 
-    public function addDef($myDef)
+    public function addDef($myDef): void
     {
         $this->mydef = $myDef;
     }
@@ -31,7 +31,7 @@ class MyAssertion
         return $this->mydef;
     }
 
-    public function addType($typeAssertion)
+    public function addType($typeAssertion): void
     {
         $this->typeAssertion = $typeAssertion;
     }

@@ -14,9 +14,9 @@ class MySink extends MySpecify
 {
     private $attack;
     private $cwe;
-    private $parameters;
-    private $hasParameters;
-    private $globalconditions;
+    private array $parameters;
+    private bool $hasParameters;
+    private array $globalconditions;
 
     public function __construct($name, $language, $attack, $cwe)
     {
@@ -29,12 +29,12 @@ class MySink extends MySpecify
         $this->globalconditions = [];
     }
 
-    public function addGlobalconditions($conditions)
+    public function addGlobalconditions($conditions): void
     {
         $this->globalconditions[] = $conditions;
     }
 
-    public function isGlobalcondition($condition)
+    public function isGlobalcondition($condition): bool
     {
         foreach ($this->globalconditions as $conditionsGlobal) {
             if ($condition === $conditionsGlobal) {
@@ -45,7 +45,7 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function addParameter($id, $conditions = null)
+    public function addParameter($id, $conditions = null): void
     {
         $parameter = [$id, $conditions];
         $this->parameters[] = $parameter;
@@ -56,7 +56,7 @@ class MySink extends MySpecify
         return $this->parameters;
     }
 
-    public function parameterHasconditions($i)
+    public function parameterHasconditions($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -70,7 +70,7 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function isParametercondition($i, $condition)
+    public function isParametercondition($i, $condition): bool
     {
         if (is_null($condition)) {
             return true;
@@ -108,7 +108,7 @@ class MySink extends MySpecify
         return null;
     }
 
-    public function isParameter($i)
+    public function isParameter($i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -125,7 +125,7 @@ class MySink extends MySpecify
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters)
+    public function setHasParameters($hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

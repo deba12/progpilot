@@ -21,13 +21,13 @@ class DFSVisitor
         $this->context = $context;
     }
 
-    public function initializeNode($node)
+    public function initializeNode($node): void
     {
         $node->setColor("white");
         $node->setNbViews(0);
     }
 
-    public function examineNode($node)
+    public function examineNode($node): void
     {
         $node->setNbViews($node->getNbViews() + 1);
 
@@ -70,7 +70,7 @@ class DFSVisitor
         }
     }
 
-    public function examineNodeTarget($node)
+    public function examineNodeTarget($node): void
     {
         if ($node->getNbViews() >= $node->getNbParents()) {
             $node->setColor("black");

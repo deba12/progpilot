@@ -154,7 +154,7 @@ class TaintAnalysis
         $myClass,
         $instruction,
         $virtualReturnDef
-    ) {
+    ): void {
         $funcName = $instruction->getProperty(MyInstruction::FUNCNAME);
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
 
@@ -283,7 +283,7 @@ class TaintAnalysis
         }
     }
 
-    public static function funccallSource($context, $myClass, $instruction, $virtualReturnDef)
+    public static function funccallSource($context, $myClass, $instruction, $virtualReturnDef): void
     {
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
 

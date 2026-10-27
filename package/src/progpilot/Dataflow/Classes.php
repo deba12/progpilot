@@ -12,7 +12,7 @@ namespace progpilot\Dataflow;
 
 class Classes
 {
-    private $listClasses;
+    private array $listClasses;
 
     public function __construct()
     {
@@ -24,7 +24,7 @@ class Classes
         return $this->listClasses;
     }
 
-    public function addMyclass($newMyClass)
+    public function addMyclass($newMyClass): void
     {
         if (!isset($this->listClasses[$newMyClass->getName()])) {
             $this->listClasses[$newMyClass->getName()] = $newMyClass;

@@ -12,7 +12,7 @@ namespace progpilot;
 
 class Context extends ContextInternalApi
 {
-    public function setPrettyPrint($bool)
+    public function setPrettyPrint($bool): void
     {
         $this->prettyPrint = $bool;
     }
@@ -22,7 +22,7 @@ class Context extends ContextInternalApi
         return $this->prettyPrint;
     }
 
-    public function setDebugMode($bool)
+    public function setDebugMode($bool): void
     {
         $this->debugMode = $bool;
     }
@@ -32,7 +32,7 @@ class Context extends ContextInternalApi
         return $this->debugMode;
     }
 
-    public function setMaxDefinitions($maxDefinitions)
+    public function setMaxDefinitions($maxDefinitions): void
     {
         $this->maxDefinitions = $maxDefinitions;
     }
@@ -42,7 +42,7 @@ class Context extends ContextInternalApi
         return $this->maxDefinitions;
     }
 
-    public function setMaxFileAnalysisDuration($maxFileAnalysisDuration)
+    public function setMaxFileAnalysisDuration($maxFileAnalysisDuration): void
     {
         $this->maxFileAnalysisDuration = $maxFileAnalysisDuration;
     }
@@ -52,7 +52,7 @@ class Context extends ContextInternalApi
         return $this->maxFileAnalysisDuration;
     }
 
-    public function setMaxFileSize($maxFileSize)
+    public function setMaxFileSize($maxFileSize): void
     {
         $this->maxFileSize = $maxFileSize;
     }
@@ -62,7 +62,7 @@ class Context extends ContextInternalApi
         return $this->maxFileSize;
     }
 
-    public function setMaxMemory($maxMemory)
+    public function setMaxMemory($maxMemory): void
     {
         $this->maxMemory = $maxMemory;
     }
@@ -77,12 +77,12 @@ class Context extends ContextInternalApi
         return $this->analyzeIncludes;
     }
 
-    public function setAnalyzeIncludes($analyzeIncludes)
+    public function setAnalyzeIncludes($analyzeIncludes): void
     {
         $this->analyzeIncludes = $analyzeIncludes;
     }
 
-    public function setConfiguration($file)
+    public function setConfiguration($file): void
     {
         $this->configurationFile = $file;
     }

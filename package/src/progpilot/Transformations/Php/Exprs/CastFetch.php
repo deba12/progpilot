@@ -18,7 +18,7 @@ use progpilot\Code\Opcodes;
 
 class CastFetch
 {
-    public static function castFetch($context, $op, $expr)
+    public static function castFetch($context, $op, $expr): void
     {
         if (isset($op)) {
             if (

@@ -17,7 +17,7 @@ use progpilot\Code\Opcodes;
 
 class DimFetch
 {
-    public static function dimFetch($context, $op)
+    public static function dimFetch($context, $op): void
     {
         if (
             isset($op)

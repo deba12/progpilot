@@ -41,7 +41,7 @@ class SarifOutput
             ]
         ];
 
-        return array_map(function ($rule) {
+        return array_map(function (array $rule): \Bartlett\Sarif\Definition\ReportingDescriptor {
             $reportingDescriptor = new ReportingDescriptor();
             $reportingDescriptor->setId($rule['id']);
             $message = new MultiformatMessageString();
