@@ -67,8 +67,7 @@ class Callgraph
             $myClassCallee
         );
 
-        if (
-            array_key_exists($NodeCGCaller->getId(), $this->nodes)
+        if (array_key_exists($NodeCGCaller->getId(), $this->nodes)
             && array_key_exists($NodeCGCallee->getId(), $this->nodes)
             && $NodeCGCaller->getId() !== $NodeCGCallee->getId()
         ) {
@@ -86,7 +85,7 @@ class Callgraph
 
     public function addFuncCall($myBlock, $myFunc, $myClass)
     {
-        if (!$this->blocks->contains($myBlock)) {
+        if (!$this->blocks->offsetExists($myBlock)) {
             $this->newBlock($myBlock);
         }
 
@@ -100,11 +99,11 @@ class Callgraph
     public function addChild($myBlockParent, $myBlockChild)
     {
         if ($myBlockParent !== $myBlockChild) {
-            if (!$this->blocks->contains($myBlockParent)) {
+            if (!$this->blocks->offsetExists($myBlockParent)) {
                 $this->newBlock($myBlockParent);
             }
 
-            if (!$this->blocks->contains($myBlockChild)) {
+            if (!$this->blocks->offsetExists($myBlockChild)) {
                 $this->newBlock($myBlockChild);
             }
 
@@ -118,7 +117,7 @@ class Callgraph
 
     public function getCalls($myBlock)
     {
-        if ($this->blocks->contains($myBlock)) {
+        if ($this->blocks->offsetExists($myBlock)) {
             return $this->blocks[$myBlock]->calls;
         }
 
@@ -149,8 +148,7 @@ class Callgraph
                             if (!in_array($child, $nullNodes, true)) {
                                 $nullNodes[] = $child;
                                 foreach ($this->blocks[$child]->children as $childFar) {
-                                    if (
-                                        !in_array($childFar, $newChildren, true)
+                                    if (!in_array($childFar, $newChildren, true)
                                         && $myBlock !== $childFar
                                         && $child !== $childFar
                                     ) {

@@ -291,7 +291,7 @@ class MyFunction extends MyOp
     public function getOpId($op)
     {
         if (is_object($op)) {
-            return spl_object_hash($op);
+            return spl_object_id($op);
         }
 
         return null;

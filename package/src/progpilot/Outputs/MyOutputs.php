@@ -21,7 +21,7 @@ class MyOutputs extends MyOutputsInternalApi
             $tmpAst = $this->ast[$myFunc->getId()];
 
             foreach ($tmpAst->getNodes() as $node) {
-                $hash = spl_object_hash($node);
+                $hash = spl_object_id($node);
 
                 $nodesjson[] = array('name' => get_class($node), 'id' => $hash);
             }
@@ -30,8 +30,8 @@ class MyOutputs extends MyOutputsInternalApi
                 $caller = $edge[0];
                 $callee = $edge[1];
 
-                $hashcaller = spl_object_hash($caller);
-                $hashcallee = spl_object_hash($callee);
+                $hashcaller = spl_object_id($caller);
+                $hashcallee = spl_object_id($callee);
 
                 if ($hashcaller !== $hashcallee) {
                     $linksjson[] = array('target' => $hashcallee, 'source' => $hashcaller);
@@ -60,8 +60,7 @@ class MyOutputs extends MyOutputsInternalApi
                 $callerId = $tmpCfg->getIdOfNode($edge[0]);
                 $calleeId = $tmpCfg->getIdOfNode($edge[1]);
 
-                if (
-                    $callerId !== $calleeId
+                if ($callerId !== $calleeId
                     && in_array($callerId, $realNodes, true)
                     && in_array($calleeId, $realNodes, true)
                 ) {
@@ -91,8 +90,7 @@ class MyOutputs extends MyOutputsInternalApi
             foreach ($nodes as $key => $nodeCaller) {
                 foreach ($nodeCaller->getChildren() as $key => $nodeCalleeId) {
                     $nodeCallee = $nodes[$nodeCalleeId];
-                    if (
-                        $nodeCaller->getId() !== $nodeCallee->getId()
+                    if ($nodeCaller->getId() !== $nodeCallee->getId()
                         && in_array($nodeCaller->getId(), $realNodes, true)
                         && in_array($nodeCallee->getId(), $realNodes, true)
                     ) {

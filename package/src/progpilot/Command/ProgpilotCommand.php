@@ -22,7 +22,7 @@ class ProgpilotCommand extends Command
     protected $input;
     protected $output;
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('progpilot')
@@ -40,7 +40,7 @@ class ProgpilotCommand extends Command
             );
     }
 
-    public function initialize(InputInterface $input, OutputInterface $output)
+    public function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->input = $input;
         $this->output = $output;

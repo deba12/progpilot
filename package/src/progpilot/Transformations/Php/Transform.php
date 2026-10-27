@@ -76,7 +76,7 @@ class Transform implements Visitor
 
         while (!empty($parentsBlocks)) {
             $blockP = array_pop($parentsBlocks);
-            if ($this->sBlocks->contains($blockP)) {
+            if ($this->sBlocks->offsetExists($blockP)) {
                 $myBlockP = $this->sBlocks[$blockP];
                 foreach ($blockP->parents as $block_parent) {
                     if ($block_parent !== $blockP) {
@@ -85,8 +85,7 @@ class Transform implements Visitor
                             return true;
                         }
 
-                        if (
-                            !in_array($block_parent, $parentsBlocks, true)
+                        if (!in_array($block_parent, $parentsBlocks, true)
                             && !in_array($block_parent, $allBlocks, true)
                         ) {
                             $parentsBlocks[] = $block_parent;
@@ -108,10 +107,9 @@ class Transform implements Visitor
             $blockIf = $blockResolved[2];
             $blockElse = $blockResolved[3];
 
-            if (
-                $this->sBlocks->contains($blockIf)
-                && $this->sBlocks->contains($blockElse)
-                && $this->sBlocks->contains($blockInit)
+            if ($this->sBlocks->offsetExists($blockIf)
+                && $this->sBlocks->offsetExists($blockElse)
+                && $this->sBlocks->offsetExists($blockInit)
             ) {
                 $myBlockIf = $this->sBlocks[$blockIf];
                 $myBlockElse = $this->sBlocks[$blockElse];
@@ -131,7 +129,7 @@ class Transform implements Visitor
         foreach ($this->sBlocks as $block) {
             $myBlock = $this->sBlocks[$block];
             foreach ($block->parents as $block_parent) {
-                if ($this->sBlocks->contains($block_parent)) {
+                if ($this->sBlocks->offsetExists($block_parent)) {
                     $myBlockParent = $this->sBlocks[$block_parent];
                     $myBlock->addParent($myBlockParent);
                     $myBlock->addVirtualParent($myBlockParent);
@@ -192,14 +190,18 @@ class Transform implements Visitor
         }
     }
 
-    public function skipBlock(Block $block, ?Block $prior = null) {}
+    public function skipBlock(Block $block, ?Block $prior = null)
+    {
+    }
 
-    public function leaveOp(Op $op, Block $block) {}
+    public function leaveOp(Op $op, Block $block)
+    {
+    }
 
     public function leaveBlock(Block $block, ?Block $prior = null)
     {
         if (!$this->insideInclude) {
-            if ($this->sBlocks->contains($block)) {
+            if ($this->sBlocks->offsetExists($block)) {
                 $myBlock = $this->sBlocks[$block];
 
                 $address_end_block = count($this->context->getCurrentMycode()->getCodes());
@@ -288,9 +290,8 @@ class Transform implements Visitor
 
         // we can have a block opened and we need to leave it
         if ($inst->getOpcode() !== Opcodes::LEAVE_BLOCK) {
-            if (
-                !is_null($this->context->getCurrentBlock())
-                && $this->sBlocks->contains($this->context->getCurrentBlock())
+            if (!is_null($this->context->getCurrentBlock())
+                && $this->sBlocks->offsetExists($this->context->getCurrentBlock())
             ) {
                 $myBlock = $this->sBlocks[$this->context->getCurrentBlock()];
                 $myBlock->setEndAddressBlock(count($this->context->getCurrentMycode()->getCodes()));
@@ -318,8 +319,7 @@ class Transform implements Visitor
         $this->context->setCurrentOp($op);
 
         // for theses objects getline et getcolumn methods exists except for assertion
-        if (
-            $op instanceof Op\Stmt ||
+        if ($op instanceof Op\Stmt ||
             ($op instanceof Op\Expr && !($op instanceof Op\Expr\Assertion)) ||
             $op instanceof Op\Terminal
         ) {
@@ -329,8 +329,7 @@ class Transform implements Visitor
             }
         }
 
-        if (
-            $op instanceof Op\Expr\BinaryOp
+        if ($op instanceof Op\Expr\BinaryOp
             && !($op instanceof Op\Expr\BinaryOp\Concat)
         ) {
             $instBinary = new MyInstruction(Opcodes::BINARYOP);
