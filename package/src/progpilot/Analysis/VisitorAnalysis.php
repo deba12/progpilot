@@ -328,7 +328,7 @@ class VisitorAnalysis
 
             if (
                 !is_null($firstMyBlockCalled)
-                && !is_null($blockOfCallee)
+                && $blockOfCallee instanceof MyBlock
             ) {
                 $firstMyBlockCalled->setVirtualParents([$blockOfCallee]);
                 $firstMyBlockCalled->setNeedUpdateOfState(true);
@@ -456,7 +456,7 @@ class VisitorAnalysis
     }
 
     /**
-     * @param list<int> $blockStack
+     * @param list<int|null> $blockStack
      */
     public function analyzecode(MyCode $myCode, array $blockStack, bool $fromParent = false): bool
     {

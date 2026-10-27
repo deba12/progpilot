@@ -21,7 +21,7 @@ use progpilot\Helpers\Analysis as HelpersAnalysis;
 class TaintAnalysis
 {
     /**
-     * @return array<string, array<mixed>|bool>|null
+     * @return array<string, mixed>|null
      */
     public static function funccallValidator(
         Context $context,

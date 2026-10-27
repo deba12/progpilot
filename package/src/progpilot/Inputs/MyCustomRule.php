@@ -39,7 +39,7 @@ class MyCustomRule
         $this->extra = null;
     }
 
-    public function getExtra(): string
+    public function getExtra(): ?string
     {
         return $this->extra;
     }
@@ -49,7 +49,7 @@ class MyCustomRule
         $this->extra = $extra;
     }
 
-    public function getAttack(): string
+    public function getAttack(): ?string
     {
         return $this->attack;
     }
@@ -59,7 +59,7 @@ class MyCustomRule
         $this->attack = $attack;
     }
 
-    public function getCwe(): string
+    public function getCwe(): ?string
     {
         return $this->cwe;
     }
@@ -79,7 +79,7 @@ class MyCustomRule
         $this->type = $type;
     }
 
-    public function getDefinition(): MySpecify
+    public function getDefinition(): ?MySpecify
     {
         return $this->definition;
     }
@@ -152,7 +152,7 @@ class MyCustomRule
         return $myCustomVariable;
     }
 
-    public function getAction(): string
+    public function getAction(): ?string
     {
         return $this->action;
     }

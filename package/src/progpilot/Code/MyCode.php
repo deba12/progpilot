@@ -67,8 +67,7 @@ class MyCode
 
     public function getLastCode(): MyInstruction
     {
-        $last_index = count($this->code);
-        return $this->code[$last_index - 1];
+        return $this->code[array_key_last($this->code)];
     }
 
     public function printStdout(): void

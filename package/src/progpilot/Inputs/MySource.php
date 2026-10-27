@@ -65,7 +65,7 @@ class MySource extends MySpecify
         $this->returnArrayValue = $arr;
     }
 
-    public function getReturnArrayValue(): string
+    public function getReturnArrayValue(): ?string
     {
         return $this->returnArrayValue;
     }

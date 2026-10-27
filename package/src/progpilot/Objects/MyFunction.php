@@ -231,7 +231,7 @@ class MyFunction extends MyOp
         $this->myClass = $myClass;
     }
 
-    public function getThisDef(): MyDefinition
+    public function getThisDef(): ?MyDefinition
     {
         return $this->thisDef;
     }
@@ -251,7 +251,7 @@ class MyFunction extends MyOp
         $this->instanceClassName = $instanceClassName;
     }
 
-    public function getNameInstance(): string
+    public function getNameInstance(): ?string
     {
         return $this->nameInstance;
     }

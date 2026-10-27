@@ -46,8 +46,8 @@ class VisitorDataflow
         $index = 0;
         $myFunc->getMyCode()->setEnd(count($code));
 
-        $blocks = null;
-        $blocksStack = null;
+        $blocks = [];
+        $blocksStack = [];
         $firstBlock = true;
         $alreadyWarned = false;
         $defs = null;

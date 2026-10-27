@@ -46,11 +46,13 @@ use progpilot\Transformations\Php\Common;
 class Transform implements Visitor
 {
     private array $blocksStack;
-    private SplObjectStorage|array $sBlocks;
+    /** @var SplObjectStorage<object, MyBlock> */
+    private SplObjectStorage $sBlocks;
     private ?Context $context = null;
     private array $blockIfToBeResolved;
     private ?bool $insideInclude = null;
-    private array|SplObjectStorage $varIds;
+    /** @var SplObjectStorage<Operand, int> */
+    private SplObjectStorage $varIds;
 
     protected function getVarId(Operand $var)
     {
@@ -301,7 +303,7 @@ class Transform implements Visitor
     {
         $myCodeCodes = $this->context->requireCurrentMycode()->getCodes();
 
-        $inst = $myCodeCodes[count($myCodeCodes) - 1];
+        $inst = $myCodeCodes[array_key_last($myCodeCodes)];
 
         // we can have a block opened and we need to leave it
         if ($inst->getOpcode() !== Opcodes::LEAVE_BLOCK) {

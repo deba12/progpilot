@@ -82,7 +82,7 @@ class MyOp
         $this->varId = $varId;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->varId;
     }

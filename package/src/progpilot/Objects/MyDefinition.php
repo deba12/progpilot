@@ -62,7 +62,7 @@ class MyDefinition extends MyOp
      */
     public MyDefOriginal $original;
     /**
-     * @var array<int, MyDefState>
+     * @var array<int|string, MyDefState>
      */
     public array $states;
 
@@ -149,7 +149,7 @@ class MyDefinition extends MyOp
     }
 
     /**
-     * @param array<int, MyDefState> $states
+     * @param array<int|string, MyDefState> $states
      */
     public function setStates(array $states): void
     {
@@ -222,7 +222,7 @@ class MyDefinition extends MyOp
     }
 
     /**
-     * @return array<int, MyDefState>
+     * @return array<int|string, MyDefState>
      */
     public function getStates(): array
     {

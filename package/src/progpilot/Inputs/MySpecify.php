@@ -45,7 +45,7 @@ class MySpecify
         return $this->isInstance;
     }
 
-    public function getInstanceOfName(): string
+    public function getInstanceOfName(): ?string
     {
         return $this->instanceOfName;
     }

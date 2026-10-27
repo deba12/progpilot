@@ -21,7 +21,7 @@ use progpilot\Analysis\AssertionAnalysis;
 class State
 {
     /**
-     * @param list<int> $defStack
+     * @param list<int|null> $defStack
      */
     public static function updateBlocksOfDef(Context $context, MyDefinition $def, array &$defStack): void
     {
@@ -59,7 +59,7 @@ class State
     }
 
     /**
-     * @param list<int> $defStack
+     * @param list<int|null> $defStack
      */
     public static function updateBlocksOfArrayElement(
         Context $context,
@@ -93,7 +93,7 @@ class State
     }
 
     /**
-     * @param list<int> $defStack
+     * @param list<int|null> $defStack
      */
     public static function updateBlocksOfArrayElements(Context $context, MyDefState $state, array &$defStack): void
     {
@@ -106,7 +106,7 @@ class State
     }
 
     /**
-     * @param list<int> $defStack
+     * @param list<int|null> $defStack
      */
     public static function updateBlocksOfProperty(Context $context, MyProperty $property, array &$defStack): void
     {
@@ -145,7 +145,7 @@ class State
     }
 
     /**
-     * @param list<int> $defStack
+     * @param list<int|null> $defStack
      */
     public static function updateBlocksOfProperties(Context $context, MyDefState $state, array &$defStack): void
     {

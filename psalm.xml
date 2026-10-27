@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <psalm
-    errorLevel="8"
+    errorLevel="5"
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
@@ -22,6 +22,20 @@
         <UnusedClass errorLevel="suppress" />
         <!-- #[Override] is not used anywhere in this PHP 8.4 codebase; not an established convention here -->
         <MissingOverrideAttribute errorLevel="suppress" />
+        <!-- PHPCfg operations are polymorphic: the opcode matched by the transformer guarantees the property exists -->
+        <UndefinedPropertyFetch>
+            <errorLevel type="suppress">
+                <file name="package/src/progpilot/Transformations/Php/Assign.php" />
+                <file name="package/src/progpilot/Transformations/Php/FuncCall.php" />
+                <file name="package/src/progpilot/Transformations/Php/Exprs/VariableFetch.php" />
+            </errorLevel>
+        </UndefinedPropertyFetch>
+        <NullPropertyFetch>
+            <errorLevel type="suppress">
+                <file name="package/src/progpilot/Transformations/Php/Assign.php" />
+                <file name="package/src/progpilot/Transformations/Php/FuncCall.php" />
+            </errorLevel>
+        </NullPropertyFetch>
         <!-- false positive: $blocksStack is pushed on ENTER_BLOCK and popped on LEAVE_BLOCK across loop iterations -->
         <NoValue>
             <errorLevel type="suppress">

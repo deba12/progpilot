@@ -126,7 +126,7 @@ abstract class ContextInternalApi
     /**
      * @return list<MyFunction|array<mixed>|Definitions|stdClass>
      */
-    public function popFromCallStack(): array
+    public function popFromCallStack(): ?array
     {
         return array_pop($this->callStack);
     }
@@ -345,12 +345,12 @@ abstract class ContextInternalApi
         return $this->currentBlock ?? throw new \LogicException('no block is being analyzed');
     }
 
-    public function getCurrentLine(): int
+    public function getCurrentLine(): ?int
     {
         return $this->currentLine;
     }
 
-    public function getCurrentColumn(): int
+    public function getCurrentColumn(): ?int
     {
         return $this->currentColumn;
     }
@@ -408,7 +408,7 @@ abstract class ContextInternalApi
         return $this->outputs;
     }
 
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
     }

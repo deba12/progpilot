@@ -558,7 +558,7 @@ class ResolveDefs
     {
         $callStack = $context->getCallStack();
 
-        for ($callNumber = count($callStack) - 1; $callNumber !== 0; $callNumber--) {
+        for ($callNumber = count($callStack) - 1; $callNumber > 0; $callNumber--) {
             $currentContextCall = $callStack[$callNumber][3];
             // ca peut arriver si on est dans le main() est qu'on appelle une globale
             if (!is_null($currentContextCall->func_called) && !is_null($currentContextCall->func_callee)) {
