@@ -19,8 +19,8 @@
         "phpunit/phpunit": "^13.4"
     },
     "autoload": {
-        "psr-0": {
-            "progpilot": "src"
+        "psr-4": {
+            "progpilot\\": "src/progpilot/"
         }
     }
 } 

@@ -25,8 +25,8 @@
         "projects/phar/progpilot"
     ],
     "autoload": {
-        "psr-0": {
-            "progpilot": "package/src"
+        "psr-4": {
+            "progpilot\\": "package/src/progpilot/"
         }
     },
     "config": {
