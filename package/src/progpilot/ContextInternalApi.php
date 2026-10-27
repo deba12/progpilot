@@ -534,7 +534,7 @@ abstract class ContextInternalApi
             try {
                 if (file_exists($this->configurationFile)) {
                     $yaml = new Parser();
-                    $value = $yaml->parse(file_get_contents($this->configurationFile));
+                    $value = $yaml->parse((string) file_get_contents($this->configurationFile));
 
                     if (is_array($value)) {
                         if (isset($value["inputs"])) {

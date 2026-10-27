@@ -75,9 +75,9 @@ class MyInputs extends MyInputsInternalApi
     }
 
     /**
-     * @param list<string>|null $files
+     * @param string|list<string>|null $files
      */
-    public function addSources(?array $files): void
+    public function addSources(string|array|null $files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -89,9 +89,9 @@ class MyInputs extends MyInputsInternalApi
     }
 
     /**
-     * @param list<string> $files
+     * @param string|list<string>|null $files
      */
-    public function setSources(array $files): void
+    public function setSources(string|array|null $files): void
     {
         $this->overwrittenSources = true;
         $this->sources = [];
@@ -246,7 +246,7 @@ class MyInputs extends MyInputsInternalApi
             );
         }
 
-            $outputJson = file_get_contents($resolvedIncludes);
+            $outputJson = (string) file_get_contents($resolvedIncludes);
             $parsedJson = json_decode($outputJson);
 
         if (isset($parsedJson->{'includes'})) {
@@ -264,7 +264,7 @@ class MyInputs extends MyInputsInternalApi
                 if (realpath($include->{'source_file'})) {
                     $line = $include->{'line'};
                     $column = $include->{'column'};
-                    $sourceFile = realpath($include->{'source_file'});
+                    $sourceFile = (string) realpath($include->{'source_file'});
                     $value = $include->{'value'};
 
                     $myInclude = new MyInclude($line, $column, $sourceFile, $value);

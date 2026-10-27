@@ -24,11 +24,24 @@ use progpilot\Objects\MyClass;
 
 class Analysis
 {
+    /**
+     * @param array<mixed> $params
+     */
+    private static function callCallback(string $name, array $params): void
+    {
+        $callable = __NAMESPACE__ . "\\" . $name;
+        if (!is_callable($callable)) {
+            throw new \LogicException("unknown callback " . $name);
+        }
+
+        call_user_func_array($callable, $params);
+    }
+
     public static function forAllobjects(Context $context, string $func, MyClass $myClass): void
     {
         foreach ($context->getObjects()->getObjects() as $id => $objectClass) {
             $params = array($context, $id, $objectClass, $myClass);
-            call_user_func_array(__NAMESPACE__ . "\\$func", $params);
+            Analysis::callCallback($func, $params);
         }
     }
 
@@ -39,7 +52,7 @@ class Analysis
                 foreach ($functionBlock->getDefs()->getDefs() as $defsBlocks) {
                     foreach ($defsBlocks as $defBlock) {
                         $params = array($context, $defBlock, $myClass);
-                        call_user_func_array(__NAMESPACE__ . "\\$func", $params);
+                        Analysis::callCallback($func, $params);
                     }
                 }
             }
@@ -53,7 +66,7 @@ class Analysis
             foreach ($defnames as $def) {
                 if (!in_array($def, $returnDefs, true)) {
                     $params = array($def, $myFunc->getDefs());
-                    call_user_func_array(__NAMESPACE__ . "\\$func", $params);
+                    Analysis::callCallback($func, $params);
                 }
             }
         }
@@ -67,7 +80,7 @@ class Analysis
         foreach ($returnDefs as $returnDef) {
             if (isset($initialReturnDefs[$i])) {
                 $params = array($returnDef, $initialReturnDefs[$i]);
-                call_user_func_array(__NAMESPACE__ . "\\$func", $params);
+                Analysis::callCallback($func, $params);
             }
 
             $i++;
@@ -79,7 +92,7 @@ class Analysis
         foreach ($myFunc->getDefs()->getDefs() as $defnames) {
             foreach ($defnames as $def) {
                 $params = array($def, $myFunc->getDefs());
-                call_user_func_array(__NAMESPACE__ . "\\$func", $params);
+                Analysis::callCallback($func, $params);
             }
         }
     }
@@ -92,7 +105,7 @@ class Analysis
             if ($instruction->isPropertyExist("argdef$i")) { // myfunccall
                 $defArg = $instruction->getProperty("argdef$i");
                 $params = array($myfunc, $i, $defArg);
-                call_user_func_array(__NAMESPACE__ . "\\$func", $params);
+                Analysis::callCallback($func, $params);
             }
         }
     }
@@ -164,7 +177,7 @@ class Analysis
                 $taintedState = $taintedByDef[1];
 
                 $params = array($taintedDef, $block);
-                call_user_func_array(__NAMESPACE__ . "\\$callback", $params);
+                Analysis::callCallback($callback, $params);
             }
         }
     }

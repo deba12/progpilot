@@ -164,18 +164,21 @@ class MyInputsInternalApi
 
     public function isExcludedFile(string|bool $name): bool
     {
-        $name = realpath($name);
+        $name = (string) realpath($name);
         $basename = basename($name);
         $folders = explode(DIRECTORY_SEPARATOR, $name);
 
         foreach ($this->excludesFilesAnalysis as $excludeFileName) {
+            // a path that does not exist was resolved to false, it is a "" string for the functions
+            $excludeString = (string) $excludeFileName;
+
             if (
-                strpos($excludeFileName, "/") === false
-                && strpos($excludeFileName, "\\") === false
+                strpos($excludeString, "/") === false
+                && strpos($excludeString, "\\") === false
             ) {
                 // it's not a path
                 // test if it's a file name
-                if (basename($excludeFileName) === $basename) {
+                if (basename($excludeString) === $basename) {
                     return true;
                 }
 
@@ -187,7 +190,7 @@ class MyInputsInternalApi
                 }
             } else {
                 // we found if
-                if (strpos($name, $excludeFileName) === 0) {
+                if (strpos($name, $excludeString) === 0) {
                     return true;
                 }
             }
@@ -198,18 +201,21 @@ class MyInputsInternalApi
 
     public function isIncludedFile(string $name): bool
     {
-        $name = realpath($name);
+        $name = (string) realpath($name);
         $basename = basename($name);
         $folders = explode(DIRECTORY_SEPARATOR, $name);
 
         foreach ($this->includesFilesAnalysis as $includedFileName) {
+            // a path that does not exist was resolved to false, it is a "" string for the functions
+            $includedString = (string) $includedFileName;
+
             if (
-                strpos($includedFileName, "/") === false
-                && strpos($includedFileName, "\\") === false
+                strpos($includedString, "/") === false
+                && strpos($includedString, "\\") === false
             ) {
                 // it's not a path
                 // test if it's a file name
-                if (basename($includedFileName) === $basename) {
+                if (basename($includedString) === $basename) {
                     return true;
                 }
 
@@ -221,7 +227,7 @@ class MyInputsInternalApi
                 }
             } else {
                 // we found if
-                if (strpos($name, $includedFileName) === 0) {
+                if (strpos($name, $includedString) === 0) {
                     return true;
                 }
             }
@@ -463,7 +469,7 @@ class MyInputsInternalApi
                 Utils::printError(Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($file) . ")");
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
 
             $parsedJson = json_decode($outputJson);
 
@@ -551,7 +557,7 @@ class MyInputsInternalApi
                 Utils::printError(Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($file) . ")");
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
             if (isset($parsedJson->{'sinks'})) {
@@ -621,7 +627,7 @@ class MyInputsInternalApi
                 Utils::printError(Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($file) . ")");
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
             if (isset($parsedJson->{'sources'})) {
@@ -734,7 +740,7 @@ class MyInputsInternalApi
                 Utils::printError(Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($file) . ")");
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
             if (isset($parsedJson->{'validators'})) {
@@ -824,7 +830,7 @@ class MyInputsInternalApi
                 );
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
             if (isset($parsedJson->{'custom_rules'})) {
@@ -1076,7 +1082,7 @@ class MyInputsInternalApi
             );
         }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
         if (isset($parsedJson->{'false_positives'})) {
@@ -1107,7 +1113,7 @@ class MyInputsInternalApi
                 );
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
             if (isset($parsedJson->{'exclusions'}) && is_array($parsedJson->{'exclusions'})) {
@@ -1129,7 +1135,7 @@ class MyInputsInternalApi
                 );
             }
 
-            $outputJson = file_get_contents($file);
+            $outputJson = (string) file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
             if (isset($parsedJson->{'inclusions'}) && is_array($parsedJson->{'inclusions'})) {

@@ -246,4 +246,27 @@ final class ApiTest extends TestCase
             unlink($file);
         }
     }
+
+    public function testAMissingExclusionDoesNotExcludeEveryFile(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'progpilot');
+        file_put_contents($file, "inputs:\n    inclusions:\n        - \"./nonexistent/folder/\"\n"
+            . "        - \"./tests/generic/alias1.php\"\n    exclusions:\n        - \"./nonexistent/other.php\"\n");
+
+        try {
+            $context = new Context();
+            $context->setConfiguration($file);
+            (new Analyzer())->run($context);
+
+            $this->assertNotEmpty($context->outputs->getResults());
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testSourcesAcceptAFileName(): void
+    {
+        $this->expectException(Exception::class);
+        (new Context())->inputs->setSources('/does/not/exist.json');
+    }
 }

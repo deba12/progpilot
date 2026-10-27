@@ -239,7 +239,7 @@ class Analyzer
     {
         try {
             if (@filesize($file) <= $context->getMaxFileSize()) {
-                $contents = @file_get_contents($file);
+                $contents = (string) @file_get_contents($file);
                 preg_match('/namespace (.*);/', $contents, $matches);
                 if (isset($matches[1])) {
                     $context->addFileandNamepace($file, $matches[1]);
