@@ -7,6 +7,7 @@
       <file>RunFlows.php</file>
       <file>RunExcludeFiles.php</file>
       <file>RunAllConfigurations.php</file>
+      <file>ApiTest.php</file>
     </testsuite>
   </testsuites>
 </phpunit>

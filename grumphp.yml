@@ -5,4 +5,6 @@ grumphp:
         standard: PSR12
         metadata:
           priority: 300
-        ignore_patterns: ["*/projects/tests/*"]
+        # only the library is linted, the fixtures of projects/tests are deliberately unclean
+        whitelist_patterns:
+          - /^package\/src\/(.*)/
