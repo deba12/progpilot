@@ -61,12 +61,12 @@ class ContextInternalApi
         $this->maxFileSize = 1000000;
         $this->maxMemory = 4000000000; // 4GB
 
-        $this->inputs = new \progpilot\Inputs\MyInputs;
-        $this->outputs = new \progpilot\Outputs\MyOutputs;
+        $this->inputs = new \progpilot\Inputs\MyInputs();
+        $this->outputs = new \progpilot\Outputs\MyOutputs();
 
-        $this->objects = new \progpilot\Dataflow\Objects;
-        $this->classes = new \progpilot\Dataflow\Classes;
-        $this->functions = new \progpilot\Dataflow\Functions;
+        $this->objects = new \progpilot\Dataflow\Objects();
+        $this->classes = new \progpilot\Dataflow\Classes();
+        $this->functions = new \progpilot\Dataflow\Functions();
 
         $this->resetInternalValues();
 
@@ -106,14 +106,16 @@ class ContextInternalApi
         foreach ($this->callStack as $call) {
             $callFunc = $call[0];
 
-            if ($callFunc->getName() === $curFunc->getName()
+            if (
+                $callFunc->getName() === $curFunc->getName()
                 && !$callFunc->isType(MyFunction::TYPE_FUNC_METHOD)
                 && !$curFunc->isType(MyFunction::TYPE_FUNC_METHOD)
             ) {
                 return true;
             }
 
-            if ($callFunc->getName() === $curFunc->getName()
+            if (
+                $callFunc->getName() === $curFunc->getName()
                 && $callFunc->isType(MyFunction::TYPE_FUNC_METHOD)
                 && $curFunc->isType(MyFunction::TYPE_FUNC_METHOD)
             ) {
@@ -127,7 +129,8 @@ class ContextInternalApi
                 $curClassExtends = $curClass->getExtendsOf();
                 $callClassExtends = $callClass->getExtendsOf();
 
-                if (isset($curClassExtends) && isset($callClassExtends)
+                if (
+                    isset($curClassExtends) && isset($callClassExtends)
                     && $curClassExtends === $callClassExtends
                 ) {
                     return true;
@@ -240,9 +243,9 @@ class ContextInternalApi
     public function resetDataflow()
     {
         $this->analyzedDataFiles = [];
-        $this->objects = new \progpilot\Dataflow\Objects;
-        $this->classes = new \progpilot\Dataflow\Classes;
-        $this->functions = new \progpilot\Dataflow\Functions;
+        $this->objects = new \progpilot\Dataflow\Objects();
+        $this->classes = new \progpilot\Dataflow\Classes();
+        $this->functions = new \progpilot\Dataflow\Functions();
     }
 
     public function setArrayIncludes($arrayIncludes)

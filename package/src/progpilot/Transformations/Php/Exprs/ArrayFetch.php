@@ -19,7 +19,8 @@ class ArrayFetch
 {
     public static function arrayFetch($context, $op)
     {
-        if (isset($op)
+        if (
+            isset($op)
             && $op instanceof Op\Expr\Array_
         ) {
             if (isset($op->values) && !empty($op->values)) {

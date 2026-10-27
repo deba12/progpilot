@@ -142,12 +142,13 @@ class State
     {
         $blockId = $block->getId();
 
-        $myState = new MyDefState;
+        $myState = new MyDefState();
 
         $oneStateNotSanitizer = false;
 
         foreach ($defs as $def) {
-            if ($def->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
+            if (
+                $def->isType(MyDefinition::TYPE_ARRAY_ELEMENT)
                 || $def->isType(MyDefinition::TYPE_PROPERTY)
                 || $def->isType(MyDefinition::TYPE_REFERENCE)
             ) {
@@ -233,7 +234,7 @@ class State
 
     public static function mergeDefStates($states)
     {
-        $myState = new MyDefState;
+        $myState = new MyDefState();
 
         $sanitizedTypes = [];
         foreach ($states as $state) {

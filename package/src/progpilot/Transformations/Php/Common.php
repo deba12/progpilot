@@ -12,7 +12,6 @@ namespace progpilot\Transformations\Php;
 
 use PHPCfg\Op;
 use PHPCfg\Operand;
-
 use progpilot\Objects\MyOp;
 
 class Common
@@ -32,7 +31,8 @@ class Common
 
     public static function isChainedKnownType($op)
     {
-        if ($op instanceof Op\Expr\PropertyFetch
+        if (
+            $op instanceof Op\Expr\PropertyFetch
             || $op instanceof Op\Expr\StaticPropertyFetch
             || $op instanceof Op\Expr\ArrayDimFetch
         ) {
@@ -49,7 +49,8 @@ class Common
         // this->foo
 
         if (isset($op->var->ops[0])) {
-            if (isset($op->var->ops[0]->var->ops[0])
+            if (
+                isset($op->var->ops[0]->var->ops[0])
                 && Common::isChainedKnownType($op->var->ops[0]->var->ops[0])
                 && $op->var->ops[0]->var->ops[0] !== $op->var->ops[0]
             ) {
@@ -81,7 +82,8 @@ class Common
         // foo = array()
         // foo = define("FOO")
         if (isset($op) && isset($op->name)) {
-            if ($op instanceof Op\Expr\FuncCall
+            if (
+                $op instanceof Op\Expr\FuncCall
                 && $op->name instanceof Operand\Literal
                 && $op->name->value === "define"
             ) {
@@ -101,7 +103,8 @@ class Common
     public static function getNameDefinition($ops, $lookingForProperty = false)
     {
         //  $this->property = property
-        if ($lookingForProperty
+        if (
+            $lookingForProperty
             && ($ops instanceof Op\Expr\PropertyFetch || $ops instanceof Op\Expr\StaticPropertyFetch)
             && isset($ops->name->value)
         ) {
@@ -184,14 +187,14 @@ class Common
     }
 
     /*
-         const FLAG_PUBLIC      = 0x01;
-         const FLAG_PROTECTED   = 0x02;
-         const FLAG_PRIVATE     = 0x04;
-         const FLAG_STATIC      = 0x08;
-         const FLAG_ABSTRACT    = 0x10;
-         const FLAG_FINAL       = 0x20;
-         const FLAG_RETURNS_REF = 0x40;
-         const FLAG_CLOSURE     = 0x80;
+         public const FLAG_PUBLIC      = 0x01;
+         public const FLAG_PROTECTED   = 0x02;
+         public const FLAG_PRIVATE     = 0x04;
+         public const FLAG_STATIC      = 0x08;
+         public const FLAG_ABSTRACT    = 0x10;
+         public const FLAG_FINAL       = 0x20;
+         public const FLAG_RETURNS_REF = 0x40;
+         public const FLAG_CLOSURE     = 0x80;
      */
 
     public static function getTypeVisibility($visibility)

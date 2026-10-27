@@ -16,16 +16,13 @@ use PHPCfg\Op;
 use PHPCfg\Script;
 use PHPCfg\Visitor;
 use PHPCfg\Operand;
-
 use progpilot\Objects\MyFunction;
 use progpilot\Objects\MyBlock;
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyProperty;
 use progpilot\Objects\MyClass;
-
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
-
 use progpilot\Transformations\Php\Expr;
 use progpilot\Transformations\Php\Assign;
 use progpilot\Transformations\Php\Common;
@@ -50,8 +47,8 @@ class Transform implements Visitor
 
     public function __construct()
     {
-        $this->varIds = new \SplObjectStorage;
-        $this->sBlocks = new \SplObjectStorage;
+        $this->varIds = new \SplObjectStorage();
+        $this->sBlocks = new \SplObjectStorage();
         $this->blockIfToBeResolved = [];
         $this->blocksStack = [];
     }
@@ -85,7 +82,8 @@ class Transform implements Visitor
                             return true;
                         }
 
-                        if (!in_array($block_parent, $parentsBlocks, true)
+                        if (
+                            !in_array($block_parent, $parentsBlocks, true)
                             && !in_array($block_parent, $allBlocks, true)
                         ) {
                             $parentsBlocks[] = $block_parent;
@@ -107,7 +105,8 @@ class Transform implements Visitor
             $blockIf = $blockResolved[2];
             $blockElse = $blockResolved[3];
 
-            if ($this->sBlocks->offsetExists($blockIf)
+            if (
+                $this->sBlocks->offsetExists($blockIf)
                 && $this->sBlocks->offsetExists($blockElse)
                 && $this->sBlocks->offsetExists($blockInit)
             ) {
@@ -290,7 +289,8 @@ class Transform implements Visitor
 
         // we can have a block opened and we need to leave it
         if ($inst->getOpcode() !== Opcodes::LEAVE_BLOCK) {
-            if (!is_null($this->context->getCurrentBlock())
+            if (
+                !is_null($this->context->getCurrentBlock())
                 && $this->sBlocks->offsetExists($this->context->getCurrentBlock())
             ) {
                 $myBlock = $this->sBlocks[$this->context->getCurrentBlock()];
@@ -319,7 +319,8 @@ class Transform implements Visitor
         $this->context->setCurrentOp($op);
 
         // for theses objects getline et getcolumn methods exists except for assertion
-        if ($op instanceof Op\Stmt ||
+        if (
+            $op instanceof Op\Stmt ||
             ($op instanceof Op\Expr && !($op instanceof Op\Expr\Assertion)) ||
             $op instanceof Op\Terminal
         ) {
@@ -329,7 +330,8 @@ class Transform implements Visitor
             }
         }
 
-        if ($op instanceof Op\Expr\BinaryOp
+        if (
+            $op instanceof Op\Expr\BinaryOp
             && !($op instanceof Op\Expr\BinaryOp\Concat)
         ) {
             $instBinary = new MyInstruction(Opcodes::BINARYOP);

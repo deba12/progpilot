@@ -48,8 +48,8 @@ class ProgpilotCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $context = new \progpilot\Context;
-        $analyzer = new \progpilot\Analyzer;
+        $context = new \progpilot\Context();
+        $analyzer = new \progpilot\Analyzer();
 
         try {
             if (!is_null($input->getOption('configuration'))) {

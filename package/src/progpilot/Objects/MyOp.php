@@ -22,18 +22,18 @@ class MyOp
 
     private $flags;
 
-    const TYPE_VARIABLE = "type_variable";
-    const TYPE_LITERAL = "type_literal";
-    const TYPE_ARRAY = "type_array";
-    const TYPE_ARRAY_EXPR = "type_array_expr";
-    const TYPE_ARRAY_ELEMENT = "type_array_element";
-    const TYPE_METHOD = "type_method";
-    const TYPE_INSTANCE = "type_instance";
-    const TYPE_PROPERTY = "type_property";
-    const TYPE_FUNCCALL = "type_funccall";
-    const TYPE_FUNCCALL_ARRAY = "type_funccall_array";
-    const TYPE_CONST = "type_const";
-    const TYPE_STATIC_PROPERTY = "type_static_property";
+    public const TYPE_VARIABLE = "type_variable";
+    public const TYPE_LITERAL = "type_literal";
+    public const TYPE_ARRAY = "type_array";
+    public const TYPE_ARRAY_EXPR = "type_array_expr";
+    public const TYPE_ARRAY_ELEMENT = "type_array_element";
+    public const TYPE_METHOD = "type_method";
+    public const TYPE_INSTANCE = "type_instance";
+    public const TYPE_PROPERTY = "type_property";
+    public const TYPE_FUNCCALL = "type_funccall";
+    public const TYPE_FUNCCALL_ARRAY = "type_funccall_array";
+    public const TYPE_CONST = "type_const";
+    public const TYPE_STATIC_PROPERTY = "type_static_property";
 
     public function __construct($varName, $varLine, $varColumn)
     {

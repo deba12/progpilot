@@ -18,7 +18,8 @@ class SecurityAnalysis
     public static function inArrayStateSource($temp, $ret)
     {
         for ($i = 0; $i < count($temp["source_name"]); $i++) {
-            if ($temp["source_name"][$i] === $ret["source_name"]
+            if (
+                $temp["source_name"][$i] === $ret["source_name"]
                 && $temp["source_line"][$i] === $ret["source_line"]
                 && $temp["source_column"][$i] === $ret["source_column"]
                 && $temp["source_file"][$i] === $ret["source_file"]
@@ -70,13 +71,15 @@ class SecurityAnalysis
                 $possibleConditions = ["QUOTES", "object_tainted", "array_tainted", "variable_tainted", null];
                 foreach ($possibleConditions as $condition) {
                     if ($mySink->isParameterCondition($indexParameter, $condition)) {
-                        if (!SecurityAnalysis::isSafeStateCondition(
-                            $context,
-                            $mySink,
-                            $fromTaintedState,
-                            $condition,
-                            true
-                        )) {
+                        if (
+                            !SecurityAnalysis::isSafeStateCondition(
+                                $context,
+                                $mySink,
+                                $fromTaintedState,
+                                $condition,
+                                true
+                            )
+                        ) {
                             $ret = SecurityAnalysis::getPrintableTaintedDef($mySink, $fromTaintedDef);
 
                             $oneTainted["flow_name"] = $ret["source_name"];
@@ -117,19 +120,22 @@ class SecurityAnalysis
 
     public static function isSafeStateCondition($context, $mySink, $state, $condition, $isFlow = false)
     {
-        if (($state->isTainted())
+        if (
+            ($state->isTainted())
             && $state->getCast() === MyDefinition::CAST_NOT_SAFE
             && $condition !== "object_tainted"
             && $condition !== "array_tainted"
         ) {
             if ($state->isSanitized()) {
-                if ($state->isTypeSanitized($mySink->getAttack())
+                if (
+                    $state->isTypeSanitized($mySink->getAttack())
                     || $state->isTypeSanitized("ALL")
                 ) {
                     // 1° the argument of sink must be quoted
                     if ($condition === "QUOTES" && !$state->isTypeSanitized("ALL")) {
                         // the def is embedded into quotes but quotes are not sanitized
-                        if (!$state->isTypeSanitized("QUOTES")
+                        if (
+                            !$state->isTypeSanitized("QUOTES")
                             && $state->getIsEmbeddedByChar("'")
                         ) {
                             return false;
@@ -141,16 +147,19 @@ class SecurityAnalysis
                         }
                     }
 
-                    if ($mySink->isGlobalCondition("QUOTES_HTML")
+                    if (
+                        $mySink->isGlobalCondition("QUOTES_HTML")
                         && !$state->isTypeSanitized("ALL")
                     ) {
-                        if (!$state->isTypeSanitized("QUOTES") && $state->getIsEmbeddedByChar("<")
+                        if (
+                            !$state->isTypeSanitized("QUOTES") && $state->getIsEmbeddedByChar("<")
                             && $state->getIsEmbeddedByChar("'")
                         ) {
                             return false;
                         }
 
-                        if ($state->getIsEmbeddedByChar("<")
+                        if (
+                            $state->getIsEmbeddedByChar("<")
                             && !$state->getIsEmbeddedByChar("'")
                         ) {
                             return false;
@@ -164,12 +173,14 @@ class SecurityAnalysis
             }
 
             return false;
-        } elseif (($condition === "object_tainted" || $isFlow)
+        } elseif (
+            ($condition === "object_tainted" || $isFlow)
             && $state->isType(MyDefinition::TYPE_INSTANCE)
             && $state->isType(MyDefinition::ALL_PROPERTIES_TAINTED)
         ) {
             return false;
-        } elseif (($condition === "array_tainted" || $isFlow)
+        } elseif (
+            ($condition === "array_tainted" || $isFlow)
             && $state->isType(MyDefinition::TYPE_ARRAY)
             && $state->isType(MyDefinition::ALL_ARRAY_ELEMENTS_TAINTED)
         ) {

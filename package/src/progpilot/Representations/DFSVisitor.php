@@ -33,7 +33,8 @@ class DFSVisitor
 
         foreach ($this->rules as $rule) {
             foreach ($rule->getSequence() as $sequence) {
-                if ($node->getName() === $sequence->getName()
+                if (
+                    $node->getName() === $sequence->getName()
                     && ((!$sequence->isInstance() && is_null($node->getMyClass()))
                         || (!is_null($node->getMyClass()) && $sequence->isInstance()
                             && $sequence->getInstanceOfName() === $node->getMyClass()->getName()))
@@ -41,7 +42,8 @@ class DFSVisitor
                     $mod = count($rule->getSequence());
                     $rule->setCurrentOrderNumber($rule->getCurrentOrderNumber() + 1);
 
-                    if (($rule->getCurrentOrderNumber() % $mod)
+                    if (
+                        ($rule->getCurrentOrderNumber() % $mod)
                         !== ($sequence->getOrderNumberExpected() % $mod)
                     ) {
                         $hashIdVuln = hash(

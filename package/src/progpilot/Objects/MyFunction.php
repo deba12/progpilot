@@ -14,9 +14,9 @@ use progpilot\Dataflow\Definitions;
 
 class MyFunction extends MyOp
 {
-    const TYPE_FUNC_PROPERTY = 0x0001;
-    const TYPE_FUNC_STATIC = 0x0002;
-    const TYPE_FUNC_METHOD = 0x0004;
+    public const TYPE_FUNC_PROPERTY = 0x0001;
+    public const TYPE_FUNC_STATIC = 0x0002;
+    public const TYPE_FUNC_METHOD = 0x0004;
 
     private $lastLine;
     private $lastColumn;
@@ -78,11 +78,11 @@ class MyFunction extends MyOp
         $this->isVisitedFromInclude = false;
         $this->hasGlobalVariables = false;
 
-        $this->defs = new Definitions;
+        $this->defs = new Definitions();
         $this->opInformations = [];
         $this->blocks = [];
 
-        $this->myCode = new \progpilot\Code\MyCode;
+        $this->myCode = new \progpilot\Code\MyCode();
     }
 
     public function reset()

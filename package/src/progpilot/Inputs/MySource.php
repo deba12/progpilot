@@ -27,7 +27,7 @@ class MySource extends MySpecify
     private $hasParameters;
     private $label;
 
-    const CONDITION_ARRAY = "condition_array";
+    public const CONDITION_ARRAY = "condition_array";
 
     public function __construct($name, $language)
     {

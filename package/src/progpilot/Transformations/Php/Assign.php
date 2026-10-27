@@ -11,10 +11,8 @@
 namespace progpilot\Transformations\Php;
 
 use PHPCfg\Op;
-
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyOp;
-
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
 use progpilot\Transformations\Php\Common;

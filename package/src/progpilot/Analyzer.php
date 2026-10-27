@@ -17,13 +17,13 @@ use function DeepCopy\deep_copy;
 
 class Analyzer
 {
-    const PHP = "php";
+    public const PHP = "php";
 
     private $parser;
 
     public function __construct()
     {
-        $astparser = (new \PhpParser\ParserFactory)->createForNewestSupportedVersion();
+        $astparser = (new \PhpParser\ParserFactory())->createForNewestSupportedVersion();
 
         $this->parser = new \PHPCfg\Parser($astparser);
     }
@@ -110,7 +110,7 @@ class Analyzer
             $myFunc->getMyCode()->setStart(0);
             $myFunc->getMyCode()->setEnd(count($myFunc->getMyCode()->getCodes()));
 
-            $visitoranalyzer = new \progpilot\Analysis\VisitorAnalysis;
+            $visitoranalyzer = new \progpilot\Analysis\VisitorAnalysis();
 
             if ($updatemyfile) {
                 $file = $myFunc->getSourceMyFile()->getName();
@@ -194,7 +194,8 @@ class Analyzer
         } elseif (is_null($filename) && is_null($context->inputs->getCode())) {
             Utils::printWarning($context, Lang::FILE_AND_CODE_ARE_NULL);
         } else {
-            if (is_null($context->inputs->getCode())
+            if (
+                is_null($context->inputs->getCode())
                 && @filesize($filename) > $context->getMaxFileSize()
             ) {
                 Utils::printWarning(
@@ -212,7 +213,8 @@ class Analyzer
     public static function getTypeOfLanguage($lookfor, $content)
     {
         if ($lookfor === Analyzer::PHP && !empty($content)) {
-            if (strpos($content, "<?") !== false
+            if (
+                strpos($content, "<?") !== false
                 || strpos($content, "<?php") !== false
             ) {
                 return true;
@@ -348,7 +350,8 @@ class Analyzer
                     $this->getFilesOfDir($context, $cmdFile, $cmdFile, $files);
                 } else {
                     $cmdFileA = new FileAnalysis($cmdFile, dirname($cmdFile));
-                    if (!in_array($cmdFileA, $files, true)
+                    if (
+                        !in_array($cmdFileA, $files, true)
                         && !$context->inputs->isExcludedFile($cmdFile)
                     ) {
                         $files[] = $cmdFileA;
@@ -364,7 +367,8 @@ class Analyzer
                 $this->getFilesOfDir($context, $includedFile, $includedFile, $files);
             } else {
                 $cmdFileA = new FileAnalysis($includedFile, dirname($includedFile));
-                if (!in_array($cmdFileA, $files, true)
+                if (
+                    !in_array($cmdFileA, $files, true)
                     && !$context->inputs->isExcludedFile($includedFile)
                 ) {
                     $files[] = $cmdFileA;
@@ -379,7 +383,8 @@ class Analyzer
             if ($context->inputs->getFile() !== null) {
                 $file = \progpilot\Inputs\MyInputsInternalApi::resolvePath($context->inputs->getFile());
                 $cmdFileA = new FileAnalysis($file, dirname($file));
-                if (!in_array($cmdFileA, $files, true)
+                if (
+                    !in_array($cmdFileA, $files, true)
                     && !$context->inputs->isExcludedFile($file)
                 ) {
                     $files[] = $cmdFileA;

@@ -11,10 +11,8 @@
 namespace progpilot\Transformations\Php;
 
 use PHPCfg\Op;
-
 use progpilot\Objects\MyFunction;
 use progpilot\Objects\MyDefinition;
-
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
 use progpilot\Transformations\Php\Expr;
@@ -137,7 +135,8 @@ class FuncCall
         $myFunctionCall->setColumn($context->getCurrentColumn());
         $myFunctionCall->setInstanceClassName($className);
 
-        if ($context->getCurrentOp() instanceof Op\Expr\StaticCall &&
+        if (
+            $context->getCurrentOp() instanceof Op\Expr\StaticCall &&
             isset($context->getCurrentOp()->class->value)
         ) {
             $nameClass = $context->getCurrentOp()->class->value;
@@ -152,7 +151,8 @@ class FuncCall
 
         $listArgs = [];
 
-        if ($context->getCurrentOp() instanceof Op\Expr\Include_
+        if (
+            $context->getCurrentOp() instanceof Op\Expr\Include_
             || $context->getCurrentOp() instanceof Op\Expr\Print_
             || $context->getCurrentOp() instanceof Op\Terminal\Echo_
             || $context->getCurrentOp() instanceof Op\Expr\Eval_

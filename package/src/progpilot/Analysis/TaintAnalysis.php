@@ -96,12 +96,14 @@ class TaintAnalysis
                             $validNotBoolean = $returnDef->getValidNotBoolean();
 
                             foreach ($returnDef->getCurrentState()->getLastKnownValues() as $lastKnownValue) {
-                                if ($lastKnownValue === "true"
+                                if (
+                                    $lastKnownValue === "true"
                                     || $lastKnownValue === "TRUE"
                                     || (is_numeric($lastKnownValue) && $lastKnownValue > 0)
                                 ) {
                                     $returnTrue = true;
-                                } elseif ($lastKnownValue === "false"
+                                } elseif (
+                                    $lastKnownValue === "false"
                                     || $lastKnownValue === "FALSE"
                                     || (is_numeric($lastKnownValue) && $lastKnownValue <= 0)
                                 ) {
@@ -205,7 +207,8 @@ class TaintAnalysis
                     if (!is_null($values)) {
                         foreach ($values as $value) {
                             foreach ($defArg->getCurrentState()->getLastKnownValues() as $lastKnownValue) {
-                                if (($value->value === $lastKnownValue && $conditions === "equals")
+                                if (
+                                    ($value->value === $lastKnownValue && $conditions === "equals")
                                     || ($value->value !== $lastKnownValue && $conditions === "notequals")
                                 ) {
                                     $conditionsRespected = true;
@@ -242,7 +245,8 @@ class TaintAnalysis
         // AND no defs are returned/defined
         // AND the func is not a sanitizer (with all conditions respected)
         // AND the func is not a source (will return already a def)
-        if (!$funcReturnDefs
+        if (
+            !$funcReturnDefs
             && is_null($mySource)
         ) {
             $virtualReturnDef->getCurrentState()->setTainted($paramsTainted);

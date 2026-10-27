@@ -18,7 +18,7 @@ class Callgraph
     public function __construct()
     {
         $this->nodes = [];
-        $this->blocks = new \SplObjectStorage;
+        $this->blocks = new \SplObjectStorage();
     }
 
     public function getNodes()
@@ -28,7 +28,7 @@ class Callgraph
 
     public function newBlock($myBlock)
     {
-        $obj = new \stdClass;
+        $obj = new \stdClass();
         $obj->calls = [];
         $obj->children = [];
 
@@ -67,7 +67,8 @@ class Callgraph
             $myClassCallee
         );
 
-        if (array_key_exists($NodeCGCaller->getId(), $this->nodes)
+        if (
+            array_key_exists($NodeCGCaller->getId(), $this->nodes)
             && array_key_exists($NodeCGCallee->getId(), $this->nodes)
             && $NodeCGCaller->getId() !== $NodeCGCallee->getId()
         ) {
@@ -148,7 +149,8 @@ class Callgraph
                             if (!in_array($child, $nullNodes, true)) {
                                 $nullNodes[] = $child;
                                 foreach ($this->blocks[$child]->children as $childFar) {
-                                    if (!in_array($childFar, $newChildren, true)
+                                    if (
+                                        !in_array($childFar, $newChildren, true)
                                         && $myBlock !== $childFar
                                         && $child !== $childFar
                                     ) {

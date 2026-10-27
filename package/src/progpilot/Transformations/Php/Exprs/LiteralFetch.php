@@ -11,7 +11,6 @@
 namespace progpilot\Transformations\Php\Exprs;
 
 use PHPCfg\Operand;
-
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
@@ -20,7 +19,8 @@ class LiteralFetch
 {
     public static function literalFetch($context, $op)
     {
-        if (isset($op)
+        if (
+            isset($op)
             && $op instanceof Operand\Literal
         ) {
             $myTemp = new MyDefinition(

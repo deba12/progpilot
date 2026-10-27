@@ -24,7 +24,8 @@ class CustomAnalysis
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
-            if ($customRule->getType() === MyCustomRule::TYPE_VARIABLE
+            if (
+                $customRule->getType() === MyCustomRule::TYPE_VARIABLE
                 && $customRule->getAction() === "ASSIGNMENT_DISCLOSE_HIGH_VALUE"
             ) {
                 $result = HelpersAnalysis::checkIfDefEqualDefRule($context, $defs, $customRule, $defassign);
@@ -57,7 +58,8 @@ class CustomAnalysis
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
-            if ($customRule->getType() === MyCustomRule::TYPE_VARIABLE
+            if (
+                $customRule->getType() === MyCustomRule::TYPE_VARIABLE
                 && $customRule->getAction() === "DEFINE_OBJECT"
                 && !is_null($customRule->getExtra())
             ) {
@@ -108,7 +110,8 @@ class CustomAnalysis
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
-            if ($customRule->getType() === MyCustomRule::TYPE_FUNCTION
+            if (
+                $customRule->getType() === MyCustomRule::TYPE_FUNCTION
                 && $customRule->getAction() === "DEFINE_OBJECT"
                 && !is_null($customRule->getExtra())
             ) {
@@ -137,7 +140,8 @@ class CustomAnalysis
     {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
-            if ($customRule->getType() === MyCustomRule::TYPE_FUNCTION
+            if (
+                $customRule->getType() === MyCustomRule::TYPE_FUNCTION
                 && ($customRule->getAction() === "MUST_VERIFY_DEFINITION"
                     || $customRule->getAction() === "MUST_NOT_VERIFY_DEFINITION")
             ) {
@@ -151,7 +155,8 @@ class CustomAnalysis
                         $myClass
                     );
                     if ($result) {
-                        if ($myFunc->getNbParams() < $functionDefinition->getMinNbArgs()
+                        if (
+                            $myFunc->getNbParams() < $functionDefinition->getMinNbArgs()
                             || $myFunc->getNbParams() > $functionDefinition->getMaxNbArgs()
                         ) {
                             $isValid = true;
@@ -182,7 +187,8 @@ class CustomAnalysis
                                     foreach ($valuesParameter as $valueParameter) {
                                         $defLastKnownValues = [];
 
-                                        if (isset($valueParameter->is_array)
+                                        if (
+                                            isset($valueParameter->is_array)
                                             && $valueParameter->is_array === true
                                             && isset($valueParameter->array_index)
                                         ) {
@@ -216,7 +222,8 @@ class CustomAnalysis
                                         $validForAllValues = false;
                                         foreach ($defLastKnownValues as $lastKnownValue) {
                                             // if it's valid we continue
-                                            if (($valueParameter->value === $lastKnownValue
+                                            if (
+                                                ($valueParameter->value === $lastKnownValue
                                                     && !$isParameterNotEquals)
                                                 || ($valueParameter->value !== $lastKnownValue
                                                     && $isParameterNotEquals)
@@ -258,7 +265,8 @@ class CustomAnalysis
                                     //      * it can be enough (if sufficient) to valid the rule (no issue)
 
                                     // one parameter is not valid and required
-                                    if (!$isValid
+                                    if (
+                                        !$isValid
                                         && $isParameterFixed
                                     ) {
                                         $isValid = true;
@@ -270,7 +278,8 @@ class CustomAnalysis
                                     }
 
                                     // one parameter is valid and enough
-                                    if ($isValid
+                                    if (
+                                        $isValid
                                         && $isParameterSufficient
                                     ) {
                                         $isValid = true;
@@ -278,7 +287,8 @@ class CustomAnalysis
                                     }
 
                                     // one parameter is not valid but should not fail and continue with other params
-                                    if (!$isValid
+                                    if (
+                                        !$isValid
                                         && !$isParameterFailIfNotVerifed
                                     ) {
                                         $isValid = true;
@@ -322,7 +332,8 @@ class CustomAnalysis
         $rulesVerifyCallFlow = [];
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
-            if ($customRule->getType() === MyCustomRule::TYPE_SEQUENCE
+            if (
+                $customRule->getType() === MyCustomRule::TYPE_SEQUENCE
                 && $customRule->getAction() === "MUST_VERIFY_CALL_FLOW"
             ) {
                 $sequence = $customRule->getSequence();

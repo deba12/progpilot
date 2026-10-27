@@ -14,26 +14,26 @@ use progpilot\Objects\MyOp;
 
 class MyDefinition extends MyOp
 {
-    const CAST_SAFE = 1;
-    const CAST_NOT_SAFE = 2;
+    public const CAST_SAFE = 1;
+    public const CAST_NOT_SAFE = 2;
 
-    const TYPE_PROPERTY = 0x0001;
-    const TYPE_ARRAY = 0x0002;
-    const TYPE_CONSTANTE = 0x0004;
-    const TYPE_REFERENCE = 0x0008;
-    const TYPE_ARRAY_REFERENCE = 0x0010;
-    const TYPE_ARRAY_ELEMENT = 0x0020;
-    const TYPE_INSTANCE = 0x0040;
-    const TYPE_GLOBAL = 0x0080;
-    const TYPE_STATIC_PROPERTY = 0x0100;
-    const ALL_PROPERTIES_TAINTED = 0x0200;
-    const ALL_ARRAY_ELEMENTS_TAINTED = 0x0400;
-    const TYPE_LITERAL = 0x0800;
-    const TYPE_ITERATOR = 0x1000;
-    const TYPE_ARRAY_ARRAY = 0x2000;
+    public const TYPE_PROPERTY = 0x0001;
+    public const TYPE_ARRAY = 0x0002;
+    public const TYPE_CONSTANTE = 0x0004;
+    public const TYPE_REFERENCE = 0x0008;
+    public const TYPE_ARRAY_REFERENCE = 0x0010;
+    public const TYPE_ARRAY_ELEMENT = 0x0020;
+    public const TYPE_INSTANCE = 0x0040;
+    public const TYPE_GLOBAL = 0x0080;
+    public const TYPE_STATIC_PROPERTY = 0x0100;
+    public const ALL_PROPERTIES_TAINTED = 0x0200;
+    public const ALL_ARRAY_ELEMENTS_TAINTED = 0x0400;
+    public const TYPE_LITERAL = 0x0800;
+    public const TYPE_ITERATOR = 0x1000;
+    public const TYPE_ARRAY_ARRAY = 0x2000;
 
-    const SECURITY_HIGH = 1;
-    const SECURITY_LOW = 2;
+    public const SECURITY_HIGH = 1;
+    public const SECURITY_LOW = 2;
 
     private $blockId;
     private $className;
@@ -67,7 +67,7 @@ class MyDefinition extends MyOp
         $this->refs = [];
         $this->iteratorValues = [];
 
-        $this->original = new MyDefOriginal;
+        $this->original = new MyDefOriginal();
         $this->states = [];
         $this->blocksIdsStates = [];
 
@@ -134,13 +134,15 @@ class MyDefinition extends MyOp
 
     public function assignStateToBlockId($stateId, $blockId)
     {
-        if (isset($this->blocksIdsStates[$blockId])
+        if (
+            isset($this->blocksIdsStates[$blockId])
             && $blockId !== $this->getBlockId()
         ) {
             $toRemove = true;
             $overWrittentStateId = $this->blocksIdsStates[$blockId];
             foreach ($this->blocksIdsStates as $keyBlockId => $valueStateId) {
-                if ($valueStateId === $overWrittentStateId
+                if (
+                    $valueStateId === $overWrittentStateId
                     && $keyBlockId !== $blockId
                 ) {
                     $toRemove = false;
@@ -158,7 +160,7 @@ class MyDefinition extends MyOp
 
     public function createState()
     {
-        $state = new MyDefState;
+        $state = new MyDefState();
         $this->states[$state->getId()] = $state;
 
         return $state;

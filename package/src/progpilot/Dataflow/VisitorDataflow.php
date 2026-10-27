@@ -12,7 +12,6 @@ namespace progpilot\Dataflow;
 
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyFunction;
-
 use progpilot\Dataflow\Definitions;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
@@ -266,7 +265,8 @@ class VisitorDataflow
                                     $context->getCurrentFunc()->getDefs()->addGen($myDef->getBlockId(), $myDef);
                                     $this->defineArray($myDef->getName());
                                 }
-                            } elseif (!$myDef->isType(MyDefinition::TYPE_PROPERTY)
+                            } elseif (
+                                !$myDef->isType(MyDefinition::TYPE_PROPERTY)
                                 && !$myDef->isType(MyDefinition::TYPE_STATIC_PROPERTY)
                             ) {
                                 $context->getCurrentFunc()->getDefs()->addDef($myDef->getName(), $myDef);

@@ -60,7 +60,8 @@ class MyOutputs extends MyOutputsInternalApi
                 $callerId = $tmpCfg->getIdOfNode($edge[0]);
                 $calleeId = $tmpCfg->getIdOfNode($edge[1]);
 
-                if ($callerId !== $calleeId
+                if (
+                    $callerId !== $calleeId
                     && in_array($callerId, $realNodes, true)
                     && in_array($calleeId, $realNodes, true)
                 ) {
@@ -90,7 +91,8 @@ class MyOutputs extends MyOutputsInternalApi
             foreach ($nodes as $key => $nodeCaller) {
                 foreach ($nodeCaller->getChildren() as $key => $nodeCalleeId) {
                     $nodeCallee = $nodes[$nodeCalleeId];
-                    if ($nodeCaller->getId() !== $nodeCallee->getId()
+                    if (
+                        $nodeCaller->getId() !== $nodeCallee->getId()
                         && in_array($nodeCaller->getId(), $realNodes, true)
                         && in_array($nodeCallee->getId(), $realNodes, true)
                     ) {

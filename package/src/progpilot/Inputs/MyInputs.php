@@ -202,7 +202,8 @@ class MyInputs extends MyInputsInternalApi
             if (isset($parsedJson->{'includes'})) {
                 $includes = $parsedJson->{'includes'};
                 foreach ($includes as $include) {
-                    if (!isset($include->{'line'})
+                    if (
+                        !isset($include->{'line'})
                         || !isset($include->{'column'})
                         || !isset($include->{'source_file'})
                         || !isset($include->{'value'})

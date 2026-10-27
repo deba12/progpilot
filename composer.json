@@ -35,8 +35,8 @@
         }
     },
     "scripts": {
-        "lint": "phpcs --standard=PSR2 --ignore=*/projects/tests/* package/src",
-        "lint:fix": "phpcbf --standard=PSR2 --ignore=*/projects/tests/* package/src",
+        "lint": "phpcs --standard=PSR12 --ignore=*/projects/tests/* package/src",
+        "lint:fix": "phpcbf --standard=PSR12 --ignore=*/projects/tests/* package/src",
         "test": "cd projects/tests && php vendor/bin/phpunit",
         "gate": [
             "@lint",

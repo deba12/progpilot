@@ -26,7 +26,7 @@ php vendor/bin/phpunit RunAll.php                       # one runner
 php vendor/bin/phpunit RunAll.php --filter 'testSecurity'   # filter by test name / dataset
 ```
 
-Lint (PSR2 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/tests` is ignored). Run `composer install` at the repo root first:
+Lint (PSR12 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/tests` is ignored). Run `composer install` at the repo root first:
 
 ```shell
 composer lint        # phpcs on package/src, must be clean (errors and warnings)
@@ -66,4 +66,4 @@ Entry: `Analyzer::run($context)` in `package/src/progpilot/Analyzer.php`, where 
 
 ## Conventions
 
-PSR2 code style (enforced by GrumPHP/phpcs). Dev docs note known unsupported cases (references, array pushes, chained calls) in `docs/DEV.md`; check there before assuming a false negative is a regression.
+PSR12 code style (enforced by GrumPHP/phpcs). Dev docs note known unsupported cases (references, array pushes, chained calls) in `docs/DEV.md`; check there before assuming a false negative is a regression.

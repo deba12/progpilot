@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * This file is part of ProgPilot, a static analyzer for security
  *

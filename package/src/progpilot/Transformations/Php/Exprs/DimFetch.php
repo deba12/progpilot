@@ -11,7 +11,6 @@
 namespace progpilot\Transformations\Php\Exprs;
 
 use PHPCfg\Op;
-
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
@@ -20,7 +19,8 @@ class DimFetch
 {
     public static function dimFetch($context, $op)
     {
-        if (isset($op)
+        if (
+            isset($op)
             && $op instanceof Op\Expr\ArrayDimFetch
         ) {
             $instDefChained = new MyInstruction(Opcodes::ARRAYDIM_FETCH);

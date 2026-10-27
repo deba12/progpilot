@@ -16,8 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Application extends BaseApplication
 {
-    const NAME = 'progpilot';
-    const VERSION = '1.3.0';
+    public const NAME = 'progpilot';
+    public const VERSION = '1.3.0';
 
     public function __construct()
     {

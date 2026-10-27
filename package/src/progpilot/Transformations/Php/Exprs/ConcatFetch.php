@@ -11,7 +11,6 @@
 namespace progpilot\Transformations\Php\Exprs;
 
 use PHPCfg\Op;
-
 use progpilot\Transformations\Php\Expr;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;

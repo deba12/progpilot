@@ -12,9 +12,9 @@ namespace progpilot\Inputs;
 
 class MyCustomRule
 {
-    const TYPE_FUNCTION = "function";
-    const TYPE_VARIABLE = "variable";
-    const TYPE_SEQUENCE = "sequence";
+    public const TYPE_FUNCTION = "function";
+    public const TYPE_VARIABLE = "variable";
+    public const TYPE_SEQUENCE = "sequence";
 
     private $action;
     private $type;

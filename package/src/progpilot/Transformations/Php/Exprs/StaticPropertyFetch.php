@@ -12,7 +12,6 @@ namespace progpilot\Transformations\Php\Exprs;
 
 use PHPCfg\Op;
 use PHPCfg\Operand;
-
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
@@ -21,7 +20,8 @@ class StaticPropertyFetch
 {
     public static function staticPropertyFetch($context, $op)
     {
-        if (isset($op)
+        if (
+            isset($op)
             && $op instanceof Op\Expr\StaticPropertyFetch
         ) {
             $instDefChained = new MyInstruction(Opcodes::STATIC_PROPERTY_FETCH);

@@ -55,9 +55,9 @@ class MyOutputsInternalApi
     public function createRepresentationsForFunction($myFunc)
     {
         if (!is_null($myFunc)) {
-            $this->cfg[$myFunc->getId()] = new ControlFlowGraph;
-            $this->callgraph[$myFunc->getId()] = new Callgraph;
-            $this->ast[$myFunc->getId()] = new AbstractSyntaxTree;
+            $this->cfg[$myFunc->getId()] = new ControlFlowGraph();
+            $this->callgraph[$myFunc->getId()] = new Callgraph();
+            $this->ast[$myFunc->getId()] = new AbstractSyntaxTree();
         }
     }
 
@@ -105,7 +105,8 @@ class MyOutputsInternalApi
 
     public function callgraphAddFuncCall($myFunc, $myBlock, $myFunccall, $myClass)
     {
-        if (!is_null($myFunc)
+        if (
+            !is_null($myFunc)
             && isset($this->callgraph[$myFunc->getId()])
         ) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
