@@ -890,6 +890,8 @@ class VisitorAnalysis
                                 // just for the flow
                                 $defFound->original->setDef($originalFlow);
                                 $opInformation["chained_results"][] = $defFound;
+                                // $opInformation is shared by all the cases of the loop and may hold a previous value
+                                /** @psalm-suppress InvalidArgument */
                                 $this->context->requireCurrentFunc()->storeOpInformation($resultid, $opInformation);
                             }
                         }

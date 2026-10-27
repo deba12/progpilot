@@ -3,6 +3,8 @@
 require_once './vendor/autoload.php';
 
 use PHPUnit\Framework\TestCase;
+use progpilot\Command\ProgpilotCommand;
+use Symfony\Component\Console\Tester\CommandTester;
 use progpilot\Analyzer;
 use progpilot\Code\MyInstruction;
 use progpilot\Analysis\CustomAnalysis;
@@ -158,5 +160,90 @@ final class ApiTest extends TestCase
         (new Analyzer())->run($context);
 
         $this->assertSame([], $context->outputs->getResults());
+    }
+
+    /**
+     * @param list<string> $files
+     * @return array{int, string}
+     */
+    private function runCommand(array $files, ?string $configuration = null): array
+    {
+        $tester = new CommandTester(new ProgpilotCommand());
+        $input = ['files' => $files];
+        if ($configuration !== null) {
+            $input['--configuration'] = $configuration;
+        }
+
+        ob_start();
+        $status = $tester->execute($input);
+
+        return [$status, (string) ob_get_clean()];
+    }
+
+    public function testCommandIgnoresPathsThatDoNotExist(): void
+    {
+        [$status, $output] = $this->runCommand(['/does/not/exist.php', '/does/not/exist/either']);
+
+        $this->assertSame(0, $status);
+        $this->assertSame([], json_decode($output, true));
+    }
+
+    public function testCommandReportsAVulnerabilityWithExitStatusOne(): void
+    {
+        [$status, $output] = $this->runCommand(['./tests/generic/alias1.php']);
+
+        $this->assertSame(1, $status);
+        $results = json_decode($output, true);
+        $this->assertNotEmpty($results);
+        $this->assertArrayHasKey('vuln_name', $results[0]);
+    }
+
+    public function testCommandMixesExistingAndMissingPaths(): void
+    {
+        [$status] = $this->runCommand(['/does/not/exist.php', './tests/generic/alias1.php']);
+
+        $this->assertSame(1, $status);
+    }
+
+    public function testCommandRejectsAMissingConfigurationFileWithoutCrashing(): void
+    {
+        [$status, $output] = $this->runCommand(['./tests/generic/alias1.php'], '/does/not/exist.yml');
+
+        $this->assertSame(0, $status);
+        $this->assertStringContainsString('exist', $output);
+    }
+
+    public function testAnalyzerIgnoresAMissingFileAndFolder(): void
+    {
+        $context = new Context();
+        $context->inputs->setFile('/does/not/exist.php');
+        (new Analyzer())->run($context);
+        $this->assertSame([], $context->outputs->getResults());
+
+        $context = new Context();
+        $context->inputs->setFolder('/does/not/exist');
+        (new Analyzer())->run($context);
+        $this->assertSame([], $context->outputs->getResults());
+    }
+
+    public function testConfigurationOptionsAcceptQuotedNumbers(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'progpilot');
+        file_put_contents($file, "options:\n    max_file_analysis_duration: \"10\"\n    max_definitions: \"100\"\n"
+            . "    max_file_size: \"500000\"\n    debug_mode: 1\n    pretty_print: 0\n");
+
+        try {
+            $context = new Context();
+            $context->setConfiguration($file);
+            (new Analyzer())->run($context);
+
+            $this->assertSame(10, $context->getMaxFileAnalysisDuration());
+            $this->assertSame(100, $context->getMaxDefinitions());
+            $this->assertSame(500000, $context->getMaxFileSize());
+            $this->assertTrue($context->isDebugMode());
+            $this->assertFalse($context->getPrettyPrint());
+        } finally {
+            unlink($file);
+        }
     }
 }

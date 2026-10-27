@@ -67,6 +67,7 @@ class ResolveDefs
 
             HelpersAnalysis::createObject($context, $myFakeInstance);
 
+            $opInformation = [];
             $opInformation["chained_results"][] = $myFakeInstance;
             $context->requireCurrentFunc()->storeOpInformation($resultid, $opInformation);
 

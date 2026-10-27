@@ -16,6 +16,20 @@ use progpilot\Code\MyCode;
 use PHPCfg\Operand;
 use progpilot\Dataflow\Definitions;
 
+/**
+ * What the analysis keeps about an operation while walking along a chain of operations.
+ *
+ * @phpstan-type OpInformation array{
+ *     chained_results?: list<MyDefinition|MyProperty|null>,
+ *     array_dim?: int|string|null,
+ *     original_def?: MyDefinition|null,
+ *     condition_defs?: list<MyDefinition>,
+ *     valid_when_returning?: bool,
+ *     concats_values?: list<string|null>,
+ *     iterator?: list<true>|bool,
+ *     not_boolean?: bool
+ * }
+ */
 class MyFunction extends MyOp
 {
     public const TYPE_FUNC_PROPERTY = 0x0001;
@@ -49,7 +63,7 @@ class MyFunction extends MyOp
     private array $initialReturnDefs;
     private Definitions $defs;
     /**
-     * @var array<int|string, array<string, mixed>|null>|null
+     * @var array<int|string, OpInformation|null>|null
      */
     private ?array $opInformations = null;
     /**
@@ -316,7 +330,7 @@ class MyFunction extends MyOp
     }
 
     /**
-     * @param array<int|string, array<string, mixed>|null>|null $opInformations
+     * @param array<int|string, OpInformation|null>|null $opInformations
      */
     public function setOpInformations(?array $opInformations): void
     {
@@ -324,7 +338,7 @@ class MyFunction extends MyOp
     }
 
     /**
-     * @return array<int|string, array<string, mixed>|null>|null
+     * @return array<int|string, OpInformation|null>|null
      */
     public function getOpInformations(): ?array
     {
@@ -375,7 +389,7 @@ class MyFunction extends MyOp
     }
 
     /**
-     * @return array<string, array<mixed>|null|MyDefinition|string|int|bool>|null
+     * @return OpInformation|null
      */
     public function getOpInformation(?int $id): ?array
     {
@@ -387,7 +401,7 @@ class MyFunction extends MyOp
     }
 
     /**
-     * @param array<string, array<mixed>|null|MyDefinition|string|int|bool>|null $infos
+     * @param OpInformation|null $infos
      */
     public function storeOpInformation(?int $id, ?array $infos): void
     {

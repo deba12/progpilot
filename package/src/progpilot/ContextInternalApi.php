@@ -640,31 +640,33 @@ abstract class ContextInternalApi
 
                         if (isset($value["options"])) {
                             if (isset($value["options"]["analyze_includes"])) {
-                                $this->setAnalyzeIncludes($value["options"]["analyze_includes"]);
+                                $this->setAnalyzeIncludes((bool) $value["options"]["analyze_includes"]);
                             }
 
                             if (isset($value["options"]["max_file_analysis_duration"])) {
-                                $this->setMaxFileAnalysisDuration($value["options"]["max_file_analysis_duration"]);
+                                $this->setMaxFileAnalysisDuration(
+                                    (int) $value["options"]["max_file_analysis_duration"]
+                                );
                             }
 
                             if (isset($value["options"]["max_definitions"])) {
-                                $this->setMaxDefinitions($value["options"]["max_definitions"]);
+                                $this->setMaxDefinitions((int) $value["options"]["max_definitions"]);
                             }
 
                             if (isset($value["options"]["max_file_size"])) {
-                                $this->setMaxFileSize($value["options"]["max_file_size"]);
+                                $this->setMaxFileSize((int) $value["options"]["max_file_size"]);
                             }
 
                             if (isset($value["options"]["max_memory"])) {
-                                $this->setMaxMemory($value["options"]["max_memory"]);
+                                $this->setMaxMemory((int) $value["options"]["max_memory"]);
                             }
 
                             if (isset($value["options"]["debug_mode"])) {
-                                $this->setDebugMode($value["options"]["debug_mode"]);
+                                $this->setDebugMode((bool) $value["options"]["debug_mode"]);
                             }
 
                             if (isset($value["options"]["pretty_print"])) {
-                                $this->setPrettyPrint($value["options"]["pretty_print"]);
+                                $this->setPrettyPrint((bool) $value["options"]["pretty_print"]);
                             }
                         }
                     }

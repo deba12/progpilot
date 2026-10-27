@@ -360,6 +360,11 @@ class Analyzer
         if ($cmdFiles !== null) {
             $cmdFiles = MyInputsInternalApi::resolvePaths($cmdFiles);
             foreach ($cmdFiles as $cmdFile) {
+                // a path that does not exist was resolved to false, there is nothing to analyze
+                if (!is_string($cmdFile)) {
+                    continue;
+                }
+
                 if (is_dir($cmdFile)) {
                     $this->getFilesOfDir($context, $cmdFile, $cmdFile, $files);
                 } else {
@@ -397,13 +402,16 @@ class Analyzer
 
         if (!is_null($context->inputs->getFolder())) {
             $folder = MyInputsInternalApi::resolvePath($context->inputs->getFolder());
-            $this->getFilesOfDir($context, $folder, $folder, $files);
+            if (is_string($folder)) {
+                $this->getFilesOfDir($context, $folder, $folder, $files);
+            }
         } else {
             if ($context->inputs->getFile() !== null) {
                 $file = MyInputsInternalApi::resolvePath($context->inputs->getFile());
-                $cmdFileA = new FileAnalysis($file, dirname($file));
+                $cmdFileA = is_string($file) ? new FileAnalysis($file, dirname($file)) : null;
                 if (
-                    !in_array($cmdFileA, $files, true)
+                    $cmdFileA !== null
+                    && !in_array($cmdFileA, $files, true)
                     && !$context->inputs->isExcludedFile($file)
                 ) {
                     $files[] = $cmdFileA;

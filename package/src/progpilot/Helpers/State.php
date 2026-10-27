@@ -163,8 +163,8 @@ class State
     }
 
     /**
-     * @param list<MyDefinition|MyProperty> $defs
-     * @param list<string> $concatValues
+     * @param list<MyDefinition|MyProperty|null> $defs
+     * @param list<string|null> $concatValues
      */
     public static function mergeDefsBlockIdStates(array $defs, array $concatValues, MyBlock $block): MyDefState
     {
