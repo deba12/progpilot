@@ -78,10 +78,10 @@ class MyInputsInternalApi
         ) {
             // there is a slash, the dev likely wants a path
             if (
-                str_starts_with("./", $file) === 0
-                && str_starts_with(".\\", $file) === 0
-                && str_starts_with("/", $file) === 0
-                && preg_match("/^[a-bA-B]*:/", $file) === 0
+                !str_starts_with($file, "./")
+                && !str_starts_with($file, ".\\")
+                && !str_starts_with($file, "/")
+                && preg_match("/^[a-zA-Z]:/", $file) === 0
             ) {
                 // it's not a relative or absolute path
                 $file = "." . DIRECTORY_SEPARATOR . $file;
@@ -142,11 +142,9 @@ class MyInputsInternalApi
                 }
 
                 // test if it's a folder name
-                if (!empty($folders)) {
-                    foreach ($folders as $folder) {
-                        if ($folder === $excludeFileName) {
-                            return true;
-                        }
+                foreach ($folders as $folder) {
+                    if ($folder === $excludeFileName) {
+                        return true;
                     }
                 }
             } else {
@@ -178,11 +176,9 @@ class MyInputsInternalApi
                 }
 
                 // test if it's a folder name
-                if (!empty($folders)) {
-                    foreach ($folders as $folder) {
-                        if ($folder === $includedFileName) {
-                            return true;
-                        }
+                foreach ($folders as $folder) {
+                    if ($folder === $includedFileName) {
+                        return true;
                     }
                 }
             } else {

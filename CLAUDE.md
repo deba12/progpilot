@@ -31,7 +31,7 @@ Lint (PSR-12 via phpcs 4, also run by GrumPHP as the pre-commit hook; `projects/
 ```shell
 composer lint        # phpcs on package/src, must be clean (errors and warnings)
 composer lint:fix    # phpcbf, whitespace-only autofix
-composer phpstan     # level 5 on package/src; pre-existing findings are in phpstan-baseline.neon
+composer phpstan     # level 5 on package/src;
 composer psalm       # errorLevel 8 on package/src (psalm.xml)
 composer gate        # lint + phpstan + psalm + tests + composer audit
 ```
@@ -41,7 +41,7 @@ Quality gate: run once right before committing, scoped to what changed.
 | Changed paths | Run |
 | --- | --- |
 | `package/src/**/*.php`, `projects/phar/progpilot` | `composer lint`, `composer phpstan`, `composer psalm` and the PHPUnit suite |
-| `phpstan.neon.dist`, `phpstan-baseline.neon`, `psalm.xml` | that tool at full scope |
+| `phpstan.neon.dist`, `psalm.xml` | that tool at full scope |
 | `projects/tests/**` | PHPUnit suite |
 | `composer.json` (any) | `composer audit` plus the PHPUnit suite on PHP 8.4, 8.5 and 8.6 |
 | docs / yaml / Docker only | nothing |

@@ -257,7 +257,7 @@ class IncludeAnalysis
                                                 );
                                             }
 
-                                            if (!is_null($defsOutputIncluded)) {
+                                            if (!empty($defsOutputIncluded)) {
                                                 foreach ($defsOutputIncluded as $defOutputIncludedId) {
                                                     if (
                                                         !in_array(

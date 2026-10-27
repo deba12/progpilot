@@ -126,7 +126,7 @@ class Analyzer
             }
 
             $visitoranalyzer->setContext($context);
-            $visitoranalyzer->analyzeFunc($myFunc, null, true);
+            $visitoranalyzer->analyzeFunc($myFunc, null);
 
             foreach ($myFunc->getReturnDefs() as $returnDef) {
                 $returnDefCopy = deep_copy($returnDef);

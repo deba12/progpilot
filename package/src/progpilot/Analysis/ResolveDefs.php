@@ -156,10 +156,9 @@ class ResolveDefs
         }
 
         /* same thing but for def2 */
+        $def2IncludedByDef1 = false;
+        $def2IncludedToDef1 = false;
         if (!$def1IncludedToDef2 && !$def1IncludedByDef2) {
-            $def2IncludedByDef1 = false;
-            $def2IncludedToDef1 = false;
-
             $myFilef = $def2->getSourceMyFile();
             while (!is_null($myFilef)) {
                 $myFileFrom = $myFilef->getIncludedFromMyfile();
@@ -397,10 +396,7 @@ class ResolveDefs
         }
 
         // si on a trouvé des defs dans le même bloc que la ou on cherche elles killent les autres
-        if (
-            isset($defsFound[$searchedDed->getBlockId()])
-            && count($defsFound[$searchedDed->getBlockId()]) > 0
-        ) {
+        if (isset($defsFound[$searchedDed->getBlockId()])) {
             $defsFoundGood[$searchedDed->getBlockId()] = $defsFound[$searchedDed->getBlockId()];
         } else {
             $defsFoundGood = $defsFound;

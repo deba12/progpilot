@@ -38,6 +38,7 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
 
     public function beforeTraverse(array $nodes)
     {
+        return null;
     }
 
     public function enterNode(Node $node)
@@ -49,13 +50,17 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
                 $this->addEdge($node, $subNode);
             }
         }
+
+        return null;
     }
 
     public function leaveNode(Node $node)
     {
+        return null;
     }
 
     public function afterTraverse(array $nodes)
     {
+        return null;
     }
 }

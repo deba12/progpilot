@@ -15,8 +15,22 @@ use Symfony\Component\Yaml\Parser;
 use progpilot\Utils;
 use progpilot\Objects\MyFunction;
 
-class ContextInternalApi
+abstract class ContextInternalApi
 {
+    abstract public function setAnalyzeIncludes($analyzeIncludes);
+
+    abstract public function setMaxFileAnalysisDuration($maxFileAnalysisDuration);
+
+    abstract public function setMaxDefinitions($maxDefinitions);
+
+    abstract public function setMaxFileSize($maxFileSize);
+
+    abstract public function setMaxMemory($maxMemory);
+
+    abstract public function setDebugMode($bool);
+
+    abstract public function setPrettyPrint($bool);
+
     protected $arrayIncludes;
     protected $arrayRequires;
 
@@ -544,7 +558,7 @@ class ContextInternalApi
                             }
 
                             if (isset($value["options"]["max_memory"])) {
-                                $this->setMaxFileSize($value["options"]["max_memory"]);
+                                $this->setMaxMemory($value["options"]["max_memory"]);
                             }
 
                             if (isset($value["options"]["debug_mode"])) {

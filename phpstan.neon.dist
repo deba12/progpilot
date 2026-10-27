@@ -1,8 +1,4 @@
-includes:
-    - phpstan-baseline.neon
-
 parameters:
-    # level 5: the codebase is largely untyped, higher levels report thousands of missing-type findings
     level: 5
     paths:
         - package/src

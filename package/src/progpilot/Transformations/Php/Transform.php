@@ -228,8 +228,8 @@ class Transform implements Visitor
         $instFunc->addProperty(MyInstruction::MYFUNC, $myFunction);
         $this->context->getCurrentMycode()->addCode($instFunc);
 
-        if (!is_null($func->class)) {
-            $className = $func->class->value;
+        $className = Common::literalValue($func->class);
+        if (!is_null($className)) {
             // at this moment class is defined
             $myClass = $this->context->getClasses()->getMyClass($className);
 
@@ -260,7 +260,7 @@ class Transform implements Visitor
         }
 
         foreach ($func->params as $param) {
-            $paramName = $param->name->value;
+            $paramName = Common::literalValue($param->name);
             $byref = $param->byRef;
 
             $myDef = new MyDefinition(
@@ -365,7 +365,7 @@ class Transform implements Visitor
                 $this->context->getCurrentMyFile(),
                 $this->context->getCurrentLine(),
                 $this->context->getCurrentColumn(),
-                $op->var->value
+                Common::literalValue($op->var)
             );
             $myDefGlobal->setType(MyDefinition::TYPE_GLOBAL);
 
@@ -403,7 +403,7 @@ class Transform implements Visitor
             );
 
             if (!is_null($op->extends)) {
-                $myClass->setExtendsOf($op->extends->value);
+                $myClass->setExtendsOf(Common::literalValue($op->extends));
             }
 
             $this->context->getClasses()->addMyclass($myClass);

@@ -218,7 +218,7 @@ class State
                     $myState->addType(MyDefinition::TYPE_ARRAY_ARRAY);
                 }
 
-                $myState->setIsEmbeddedByChars($state->getIsEmbeddedByChars(), true);
+                $myState->setIsEmbeddedByChars($state->getIsEmbeddedByChars());
                 $myState->setCast($state->getCast());
                 $myState->setLabel($state->getLabel());
 
@@ -289,7 +289,7 @@ class State
                 $myState->addLastKnownValue($value);
             }
 
-            $myState->setIsEmbeddedByChars($state->getIsEmbeddedByChars(), true);
+            $myState->setIsEmbeddedByChars($state->getIsEmbeddedByChars());
             $myState->setCast($state->getCast());
             $myState->setLabel($state->getLabel());
         }

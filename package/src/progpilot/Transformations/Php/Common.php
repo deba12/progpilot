@@ -16,6 +16,14 @@ use progpilot\Objects\MyOp;
 
 class Common
 {
+    /**
+     * Returns the value of a literal operand, null for any other kind of operand.
+     */
+    public static function literalValue(?Operand $operand): mixed
+    {
+        return $operand instanceof Operand\Literal ? $operand->value : null;
+    }
+
     public static function validLastKnownValue($value)
     {
         if ($value === null) {

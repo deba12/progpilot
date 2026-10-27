@@ -15,6 +15,7 @@ use PHPCfg\Operand;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
+use progpilot\Transformations\Php\Common;
 
 class StaticPropertyFetch
 {
@@ -25,16 +26,16 @@ class StaticPropertyFetch
             && $op instanceof Op\Expr\StaticPropertyFetch
         ) {
             $instDefChained = new MyInstruction(Opcodes::STATIC_PROPERTY_FETCH);
-            $instDefChained->addProperty(MyInstruction::PROPERTY_NAME, $op->name->value);
+            $instDefChained->addProperty(MyInstruction::PROPERTY_NAME, Common::literalValue($op->name));
 
             // static property
-            if (isset($op->class->value)) {
+            if (!is_null(Common::literalValue($op->class))) {
                 $originalDef = new MyDefinition(
                     $context->getCurrentBlock()->getId(),
                     $context->getCurrentMyFile(),
                     $context->getCurrentLine(),
                     $context->getCurrentColumn(),
-                    $op->class->value
+                    Common::literalValue($op->class)
                 );
                 $originalDef->addType(MyDefinition::TYPE_STATIC_PROPERTY);
 

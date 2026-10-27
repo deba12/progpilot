@@ -159,6 +159,7 @@ class TaintAnalysis
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
 
         $conditionsSanitize = false;
+        $exprsTaintedconditionsSanitize = [];
 
         $paramsTainted = false;
         $paramsSanitized = false;

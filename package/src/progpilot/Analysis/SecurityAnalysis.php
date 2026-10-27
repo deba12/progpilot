@@ -41,7 +41,7 @@ class SecurityAnalysis
             for ($i = 0; $i < $nbParams; $i++) {
                 $myDefArg = $instruction->getProperty("argdef$i");
 
-                if (!$mySink->hasParameters() || ($mySink->hasParameters() && $mySink->isParameter($i + 1))) {
+                if (!$mySink->hasParameters() || $mySink->isParameter($i + 1)) {
                     SecurityAnalysis::callbis(
                         $i + 1,
                         $myFuncCall,
