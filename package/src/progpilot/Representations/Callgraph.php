@@ -18,6 +18,9 @@ use progpilot\Objects\MyClass;
 
 class Callgraph
 {
+    /**
+     * @var array<mixed>
+     */
     private array $nodes;
     /** @var SplObjectStorage<MyBlock, stdClass> */
     private SplObjectStorage $blocks;

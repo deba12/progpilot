@@ -21,10 +21,25 @@ class MyInputsInternalApi
 {
     protected bool $dev;
 
+    /**
+     * @var list<MyCustomRule>
+     */
     protected array $customRules;
+    /**
+     * @var list<MySanitizer>
+     */
     protected array $sanitizers;
+    /**
+     * @var list<MySink>
+     */
     protected array $sinks;
+    /**
+     * @var list<MySource>
+     */
     protected array $sources;
+    /**
+     * @var list<MyValidator>
+     */
     protected array $validators;
 
     protected bool $overwrittenCustomRules;
@@ -33,18 +48,30 @@ class MyInputsInternalApi
     protected bool $overwrittenSources;
     protected bool $overwrittenValidators;
 
+    /**
+     * @var list<MyVuln>
+     */
     protected array $falsePositivesAnalysis;
     /**
      * @var list<string>
      */
     protected array $excludesFilesAnalysis;
+    /**
+     * @var list<string|bool>
+     */
     protected array $includesFilesAnalysis;
+    /**
+     * @var list<MyInclude>
+     */
     protected array $resolvedIncludesAnalysis;
 
     protected ?string $file = null;
     protected ?string $code = null;
     protected ?string $folder = null;
 
+    /**
+     * @var string|list<array<string, mixed>>|null
+     */
     protected string|array|null $falsePositives = null;
 
     public function __construct()
@@ -100,7 +127,7 @@ class MyInputsInternalApi
 
     /**
      * @return mixed[]
-     * @param list<string> $files
+     * @param list<string|bool> $files
      */
     public static function resolvePaths(array $files): array
     {

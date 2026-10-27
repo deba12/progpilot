@@ -150,6 +150,9 @@ class Analysis
         return false;
     }
 
+    /**
+     * @param MyBlock|array<mixed> $block
+     */
     public static function forEachTaintedByDefs(MyDefinition $def, MyBlock|array $block, string $callback): void
     {
         foreach ($def->getStates() as $state) {
@@ -165,7 +168,7 @@ class Analysis
     }
 
     /**
-     * @param array<string, int> $nbChars
+     * @param array<string, int|bool> $nbChars
      * @param list<string> $arrayChars
      */
     public static function updateNbChars(array &$nbChars, ?string $string, array $arrayChars): void

@@ -333,6 +333,9 @@ class ResolveDefs
         return false;
     }
 
+    /**
+     * @param list<MyDefinition> $data
+     */
     public static function getVisibilityFromInstances(Context $context, array $data, MyDefinition $defAssign): bool
     {
         $visibilityFinal = true;

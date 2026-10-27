@@ -20,6 +20,9 @@ use progpilot\Representations\AbstractSyntaxTree;
 
 class MyOutputsInternalApi
 {
+    /**
+     * @var list<array<string, mixed>>
+     */
     protected array $results;
     protected bool $writeIncludeFailures;
     protected ?string $includeFailuresFile = null;
@@ -33,8 +36,17 @@ class MyOutputsInternalApi
      * @var list<MyFile>
      */
     public array $currentIncludesFile;
+    /**
+     * @var array<int|string, ControlFlowGraph>
+     */
     public array $cfg;
+    /**
+     * @var array<int|string, Callgraph>
+     */
     public array $callgraph;
+    /**
+     * @var array<int|string, AbstractSyntaxTree>
+     */
     public array $ast;
 
     public function __construct()

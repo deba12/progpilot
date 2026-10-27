@@ -445,6 +445,9 @@ class VisitorAnalysis
     }
 
 
+    /**
+     * @param list<int|null> $blockStack
+     */
     public function analyzeblock(MyFunction $myFunc, MyBlock $myBlock, array $blockStack = []): bool
     {
         $myBlock->setHasBeenAnalyzed(false);

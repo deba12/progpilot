@@ -14,6 +14,9 @@ use progpilot\Objects\MyFunction;
 
 class MyOutputs extends MyOutputsInternalApi
 {
+    /**
+     * @return array<mixed>
+     */
     public function getAst(?MyFunction $myFunc): array
     {
         $nodesjson = [];
@@ -44,6 +47,9 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getCfg(?MyFunction $myFunc): array
     {
         $nodesjson = [];
@@ -75,6 +81,9 @@ class MyOutputs extends MyOutputsInternalApi
         return array('nodes' => $nodesjson, 'links' => $linksjson);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getCallGraph(?MyFunction $myFunc): array
     {
         $nodesjson = [];

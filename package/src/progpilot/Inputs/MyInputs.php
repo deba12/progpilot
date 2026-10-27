@@ -96,11 +96,17 @@ class MyInputs extends MyInputsInternalApi
         $this->addSources($files);
     }
 
+    /**
+     * @return list<MySource>
+     */
     public function getSources(): array
     {
         return $this->sources;
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function addSinks(string|array|null $files): void
     {
         if (is_array($files)) {
@@ -112,11 +118,17 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
+    /**
+     * @return list<MySink>
+     */
     public function getSinks(): array
     {
         return $this->sinks;
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function setSinks(string|array|null $files): void
     {
         $this->overwrittenSinks = true;
@@ -124,6 +136,9 @@ class MyInputs extends MyInputsInternalApi
         $this->addSinks($files);
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function addValidators(string|array|null $files): void
     {
         if (is_array($files)) {
@@ -135,6 +150,9 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function setValidators(string|array|null $files): void
     {
         $this->overwrittenValidators = true;
@@ -142,11 +160,17 @@ class MyInputs extends MyInputsInternalApi
         $this->addValidators($files);
     }
 
+    /**
+     * @return list<MyValidator>
+     */
     public function getValidators(): array
     {
         return $this->validators;
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function addSanitizers(string|array|null $files): void
     {
         if (is_array($files)) {
@@ -158,6 +182,9 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function setSanitizers(string|array|null $files): void
     {
         $this->overwrittenSanitizers = true;
@@ -165,11 +192,17 @@ class MyInputs extends MyInputsInternalApi
         $this->addSanitizers($files);
     }
 
+    /**
+     * @return list<MySanitizer>
+     */
     public function getSanitizers(): array
     {
         return $this->sanitizers;
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function addCustomRules(string|array|null $files): void
     {
         if (is_array($files)) {
@@ -181,6 +214,9 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
+    /**
+     * @param string|list<string>|null $files
+     */
     public function setCustomRules(string|array|null $files): void
     {
         $this->overwrittenCustomRules = true;
@@ -240,6 +276,9 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
+    /**
+     * @return list<MyVuln>
+     */
     public function getFalsePositives(): array
     {
         return $this->falsePositivesAnalysis;
@@ -261,6 +300,9 @@ class MyInputs extends MyInputsInternalApi
         return $this->includesFilesAnalysis;
     }
 
+    /**
+     * @return list<string|bool>
+     */
     public function getExclusions(): array
     {
         return $this->excludesFilesAnalysis;

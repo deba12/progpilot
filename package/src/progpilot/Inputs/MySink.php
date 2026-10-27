@@ -14,8 +14,14 @@ class MySink extends MySpecify
 {
     private string $attack;
     private string $cwe;
+    /**
+     * @var array<mixed>
+     */
     private array $parameters;
     private bool $hasParameters;
+    /**
+     * @var array<mixed>
+     */
     private array $globalconditions;
 
     public function __construct(string $name, string $language, string $attack, string $cwe)
@@ -45,12 +51,18 @@ class MySink extends MySpecify
         return false;
     }
 
+    /**
+     * @param array<mixed> $conditions
+     */
     public function addParameter(int $id, array|string|null $conditions = null): void
     {
         $parameter = [$id, $conditions];
         $this->parameters[] = $parameter;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getParameters(): array
     {
         return $this->parameters;
@@ -94,6 +106,9 @@ class MySink extends MySpecify
         return false;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getParameterConditions(int $i): ?array
     {
         foreach ($this->parameters as $parameter) {

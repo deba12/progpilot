@@ -14,6 +14,9 @@ use progpilot\Objects\MyFunction;
 
 class Functions
 {
+    /**
+     * @var array<mixed>
+     */
     private array $functions;
 
     public function __construct()

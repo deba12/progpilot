@@ -14,6 +14,9 @@ use progpilot\Objects\MyClass;
 
 class Classes
 {
+    /**
+     * @var array<string, MyClass>
+     */
     private array $listClasses;
 
     public function __construct()

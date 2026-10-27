@@ -21,12 +21,24 @@ class MyDefState extends MyOp
      */
     private array $taintedByDefs;
     private bool $isSanitized;
+    /**
+     * @var list<string>
+     */
     private array $typeSanitized;
+    /**
+     * @var list<string|null>
+     */
     private array $lastKnownValue;
     private int $cast;
+    /**
+     * @var array<string, int|bool>
+     */
     private array $isEmbeddedByChar;
     private int $label;
     private int $objectId;
+    /**
+     * @var list<stdClass>
+     */
     private array $arrayIndexes;
 
     public function __construct()
@@ -108,7 +120,7 @@ class MyDefState extends MyOp
     }
 
     /**
-     * @param array<string, int> $chars
+     * @param array<string, int|bool> $chars
      */
     public function updateIsEmbeddedByChars(array $chars): void
     {
@@ -119,7 +131,7 @@ class MyDefState extends MyOp
     }
 
     /**
-     * @param array<string, int> $chars
+     * @param array<string, int|bool> $chars
      */
     public function setIsEmbeddedByChars(array $chars): void
     {
@@ -129,13 +141,16 @@ class MyDefState extends MyOp
     }
 
     /**
-     * @return array<string, int>
+     * @return array<string, int|bool>
      */
     public function getIsEmbeddedByChars(): array
     {
         return $this->isEmbeddedByChar;
     }
 
+    /**
+     * @param array<mixed> $value
+     */
     public function setEmbeddedByChar(array $value): void
     {
         $this->isEmbeddedByChar = $value;
@@ -208,6 +223,9 @@ class MyDefState extends MyOp
         return $this->isSanitized;
     }
 
+    /**
+     * @param list<string> $typeSanitized
+     */
     public function setTypeSanitized(array $typeSanitized): void
     {
         $this->typeSanitized = $typeSanitized;
@@ -338,6 +356,9 @@ class MyDefState extends MyOp
         }
     }
 
+    /**
+     * @param list<stdClass> $arrayIndexes
+     */
     public function setArrayIndexes(array $arrayIndexes): void
     {
         $this->arrayIndexes = $arrayIndexes;

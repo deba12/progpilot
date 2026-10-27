@@ -42,6 +42,9 @@ class MyInstruction
     public const RIGHTID = 26;
     public const REFERENCE = 27;
 
+    /**
+     * @var array<int|string, mixed>
+     */
     private array $properties;
     private int $opcode;
 

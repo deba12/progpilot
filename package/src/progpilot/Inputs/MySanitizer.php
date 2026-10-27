@@ -18,9 +18,15 @@ class MySanitizer extends MySpecify
      * @var list<string>
      */
     private array $prevent;
+    /**
+     * @var array<mixed>
+     */
     private array $parameters;
     private bool $hasParameters;
 
+    /**
+     * @param list<string> $prevent
+     */
     public function __construct(string $name, string $language, array $prevent)
     {
         parent::__construct($name, $language);
@@ -46,6 +52,9 @@ class MySanitizer extends MySpecify
         $this->parameters[] = [$parameter, $conditions, $values];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getParameters(): array
     {
         return $this->parameters;

@@ -14,8 +14,17 @@ use progpilot\Objects\MyBlock;
 
 class ControlFlowGraph
 {
+    /**
+     * @var array<mixed>
+     */
     private array $nodes;
+    /**
+     * @var array<mixed>
+     */
     private array $edges;
+    /**
+     * @var array<string, string>
+     */
     private array $myBlockText;
 
     public function __construct()
@@ -43,11 +52,17 @@ class ControlFlowGraph
         }
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getNodes(): array
     {
         return $this->nodes;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getEdges(): array
     {
         return $this->edges;

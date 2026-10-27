@@ -14,6 +14,9 @@ use progpilot\Objects\MyClass;
 
 class Objects
 {
+    /**
+     * @var list<MyClass|null>
+     */
     private array $objects;
 
     public function __construct()

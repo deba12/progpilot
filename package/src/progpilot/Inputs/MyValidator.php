@@ -14,6 +14,9 @@ use stdClass;
 
 class MyValidator extends MySpecify
 {
+    /**
+     * @var array<mixed>
+     */
     private array $parameters;
     private bool $hasParameters;
     private bool $validWhenReturning;
@@ -45,6 +48,9 @@ class MyValidator extends MySpecify
         $this->parameters[] = [$parameter, $conditions, $values];
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getParameters(): array
     {
         return $this->parameters;

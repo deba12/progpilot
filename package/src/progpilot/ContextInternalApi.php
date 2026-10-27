@@ -43,7 +43,13 @@ abstract class ContextInternalApi
 
     abstract public function setPrettyPrint(bool $bool): void;
 
+    /**
+     * @var array<mixed>
+     */
     protected array $arrayIncludes;
+    /**
+     * @var array<mixed>
+     */
     protected array $arrayRequires;
 
     protected ?MyCode $currentMyCode = null;
@@ -65,7 +71,13 @@ abstract class ContextInternalApi
     protected int $maxDefinitions;
     protected int $maxFileSize;
     protected int $maxMemory;
+    /**
+     * @var array<mixed>
+     */
     protected array $defsMain;
+    /**
+     * @var list<MyFunction>
+     */
     protected array $tmpfunctions;
     /**
      * @var list<array<mixed>>
@@ -76,6 +88,9 @@ abstract class ContextInternalApi
     /** @var array<string, string> */
     protected array $namespaces = [];
 
+    /**
+     * @var array<int|string, mixed>
+     */
     protected array $analyzedDataFiles;
 
     /**
@@ -220,11 +235,17 @@ abstract class ContextInternalApi
         return in_array($file, $this->analyzedDataFiles);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getDefsMain(): array
     {
         return $this->defsMain;
     }
 
+    /**
+     * @param array<mixed> $defsMain
+     */
     public function setDefsMain(array $defsMain): void
     {
         $this->defsMain = $defsMain;
@@ -303,21 +324,33 @@ abstract class ContextInternalApi
         $this->functions = new Functions();
     }
 
+    /**
+     * @param array<mixed> $arrayIncludes
+     */
     public function setArrayIncludes(array $arrayIncludes): void
     {
         $this->arrayIncludes = $arrayIncludes;
     }
 
+    /**
+     * @param array<mixed> $arrayRequires
+     */
     public function setArrayRequires(array $arrayRequires): void
     {
         $this->arrayRequires = $arrayRequires;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function &getArrayIncludes(): array
     {
         return $this->arrayIncludes;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function &getArrayRequires(): array
     {
         return $this->arrayRequires;

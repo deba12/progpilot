@@ -14,6 +14,9 @@ use stdClass;
 
 class MyCustomFunction extends MySpecify
 {
+    /**
+     * @var array<mixed>
+     */
     private array $parameters;
     private bool $hasParameters;
 
@@ -121,6 +124,9 @@ class MyCustomFunction extends MySpecify
         return false;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getParameterValues(int $i): ?array
     {
         foreach ($this->parameters as $parameter) {

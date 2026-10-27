@@ -24,11 +24,17 @@ class SarifOutput
     /** @var list<array<string, mixed>> */
     private array $progpilotResults;
 
+    /**
+     * @param list<array<string, mixed>> $progpilotResults
+     */
     public function __construct(array $progpilotResults)
     {
         $this->progpilotResults = $progpilotResults;
     }
 
+    /**
+     * @return array<mixed>
+     */
     private function createRules(): array
     {
         $rules = [
@@ -64,6 +70,9 @@ class SarifOutput
         return $tool;
     }
 
+    /**
+     * @param array<string, mixed> $progpilotResult
+     */
     private function createResult(array $progpilotResult): Result
     {
         $result = new Result();

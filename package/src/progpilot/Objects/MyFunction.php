@@ -29,11 +29,26 @@ class MyFunction extends MyOp
     private array $lastBlockIds;
 
     private int $nbParams;
+    /**
+     * @var array<int, list<MyDefState|null>>
+     */
     private array $args;
+    /**
+     * @var list<MyDefinition>
+     */
     private array $params;
+    /**
+     * @var list<MyDefinition>
+     */
     private array $returnDefs;
+    /**
+     * @var list<MyDefinition>
+     */
     private array $initialReturnDefs;
     private Definitions $defs;
+    /**
+     * @var array<int|string, array<string, mixed>|null>|null
+     */
     private ?array $opInformations = null;
     /**
      * @var list<MyBlock>
@@ -298,11 +313,17 @@ class MyFunction extends MyOp
         return null;
     }
 
+    /**
+     * @param array<int|string, array<string, mixed>|null>|null $opInformations
+     */
     public function setOpInformations(?array $opInformations): void
     {
         $this->opInformations = $opInformations;
     }
 
+    /**
+     * @return array<int|string, array<string, mixed>|null>|null
+     */
     public function getOpInformations(): ?array
     {
         return $this->opInformations;
@@ -384,7 +405,7 @@ class MyFunction extends MyOp
     }
 
     /**
-     * @return list<array<mixed>>
+     * @return array<int, list<MyDefState|null>>
      */
     public function getStatePastArguments(): array
     {
@@ -441,6 +462,9 @@ class MyFunction extends MyOp
         $this->returnDefs[] = $return_def;
     }
 
+    /**
+     * @param list<MyDefinition> $returndefs
+     */
     public function setReturnDefs(array $returndefs): void
     {
         $this->returnDefs = $returndefs;
@@ -459,6 +483,9 @@ class MyFunction extends MyOp
         $this->initialReturnDefs[] = $returnDef;
     }
 
+    /**
+     * @param list<MyDefinition> $returndefs
+     */
     public function setInitialReturnDefs(array $returndefs): void
     {
         $this->initialReturnDefs = $returndefs;

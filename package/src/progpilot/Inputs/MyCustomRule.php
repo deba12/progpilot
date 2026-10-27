@@ -22,6 +22,9 @@ class MyCustomRule
     private ?string $attack = null;
     private ?string $cwe = null;
     private string $descriptionRule;
+    /**
+     * @var list<MyCustomFunction>
+     */
     private array $sequenceRule;
     private int $currentOrderNumber;
     private ?string $extra = null;

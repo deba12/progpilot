@@ -14,7 +14,13 @@ use progpilot\Context;
 
 class MyClass extends MyOp
 {
+    /**
+     * @var list<MyFunction>
+     */
     private array $methods;
+    /**
+     * @var list<MyProperty>
+     */
     private array $properties;
     private ?string $extendsof = null;
 

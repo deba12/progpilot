@@ -45,10 +45,16 @@ use progpilot\Transformations\Php\Common;
 
 class Transform implements Visitor
 {
+    /**
+     * @var list<MyBlock>
+     */
     private array $blocksStack;
     /** @var SplObjectStorage<object, MyBlock> */
     private SplObjectStorage $sBlocks;
     private ?Context $context = null;
+    /**
+     * @var array<mixed>
+     */
     private array $blockIfToBeResolved;
     private ?bool $insideInclude = null;
     /** @var SplObjectStorage<Operand, int> */

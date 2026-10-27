@@ -16,15 +16,30 @@ use progpilot\Objects\MyFunction;
 
 class Definitions
 {
+    /**
+     * @var array<int, list<MyDefinition>>
+     */
     private ?array $in = null;
+    /**
+     * @var array<int, list<MyDefinition>>
+     */
     private ?array $out = null;
+    /**
+     * @var array<int, list<MyDefinition>>
+     */
     private ?array $outminuskill = null;
     /** @var array<int, list<MyDefinition>> */
     private array $gen = [];
     /** @var array<int, list<MyDefinition>> */
     private array $kill = [];
+    /**
+     * @var array<int|string, MyDefinition>
+     */
     private ?array $originalDefs = null;
 
+    /**
+     * @var array<string, list<MyDefinition>>
+     */
     private array $defs;
     private ?MyFunction $currentFunc = null;
     private int $nbDefs;
@@ -69,6 +84,9 @@ class Definitions
         echo "\n";
     }
 
+    /**
+     * @param array<int|string, mixed>|null $defsParam
+     */
     public static function printBlock(?array $defsParam): void
     {
         if (!is_null($defsParam)) {
@@ -78,6 +96,9 @@ class Definitions
         }
     }
 
+    /**
+     * @param array<int|string, mixed>|null $defsParam
+     */
     public static function printStdout(?array $defsParam): void
     {
         if (!is_null($defsParam)) {
@@ -238,11 +259,17 @@ class Definitions
         return null;
     }
 
+    /**
+     * @param list<MyDefinition> $kill
+     */
     public function setKill(int $block, array $kill): void
     {
         $this->kill[$block] = $kill;
     }
 
+    /**
+     * @param list<MyDefinition> $gen
+     */
     public function setGen(int $block, array $gen): void
     {
         $this->gen[$block] = $gen;

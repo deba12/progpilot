@@ -12,19 +12,34 @@ namespace progpilot\Objects;
 
 class MyBlock extends MyOp
 {
+    /**
+     * @var list<MyDefinition>
+     */
     private array $returnDefs;
     private int $startAddressBlock;
     private int $endAddressBlock;
     private bool $needUpdateOfState;
     private bool $hasBeenAnalyzed;
+    /**
+     * @var list<MyBlock>
+     */
     private array $loopParents;
 
+    /**
+     * @var list<MyBlock>
+     */
     public array $children;
+    /**
+     * @var list<MyBlock>
+     */
     public array $parents;
     /**
      * @var list<MyBlock>
      */
     public array $virtualParents;
+    /**
+     * @var list<MyAssertion>
+     */
     public array $assertions;
 
     public function __construct(int $startLine, int $startColumn)
@@ -120,6 +135,9 @@ class MyBlock extends MyOp
         }
     }
 
+    /**
+     * @return list<MyBlock>
+     */
     public function getChildren(): array
     {
         return $this->children;

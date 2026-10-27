@@ -7,7 +7,13 @@ use PhpParser\NodeVisitorAbstract;
 
 class AbstractSyntaxTree extends NodeVisitorAbstract
 {
+    /**
+     * @var list<object>
+     */
     private array $nodes;
+    /**
+     * @var list<array{object, object}>
+     */
     private array $edges;
 
     public function __construct()
@@ -16,11 +22,17 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         $this->edges = [];
     }
 
+    /**
+     * @return list<object>
+     */
     public function getNodes(): array
     {
         return $this->nodes;
     }
 
+    /**
+     * @return list<array{object, object}>
+     */
     public function getEdges(): array
     {
         return $this->edges;

@@ -25,7 +25,13 @@ class MySource extends MySpecify
     private array $arrayValue;
     private ?string $returnArrayValue = null;
     private bool $isReturnArray;
+    /**
+     * @var array<mixed>
+     */
     private array $parameters;
+    /**
+     * @var array<mixed>
+     */
     private array $conditionsParameters;
     private bool $hasParameters;
     private int $label;
@@ -176,6 +182,9 @@ class MySource extends MySpecify
         $this->parameters[] = $parameter;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getParameters(): array
     {
         return $this->parameters;

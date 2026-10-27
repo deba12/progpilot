@@ -22,6 +22,9 @@ use progpilot\Lang;
 
 class VisitorDataflow
 {
+    /**
+     * @var array<mixed>
+     */
     private ?array $blocksArrays = null;
 
     protected function isArrayAlreadyDefined(string $nameArray): bool
