@@ -9,6 +9,16 @@
 
 namespace progpilot;
 
+use PHPCfg\Parser;
+use PhpParser\ParserFactory;
+use PHPCfg\Script;
+use Exception;
+use PHPCfg\Traverser;
+use progpilot\Transformations\Php\Transform;
+use progpilot\Objects\MyFunction;
+use progpilot\Analysis\VisitorAnalysis;
+use progpilot\Dataflow\VisitorDataflow;
+use progpilot\Inputs\MyInputsInternalApi;
 use progpilot\Utils;
 use progpilot\Objects\MyFile;
 use progpilot\Helpers\Analysis as HelpersAnalysis;
@@ -19,16 +29,19 @@ class Analyzer
 {
     public const PHP = "php";
 
-    private \PHPCfg\Parser $parser;
+    private Parser $parser;
 
     public function __construct()
     {
-        $astparser = (new \PhpParser\ParserFactory())->createForNewestSupportedVersion();
+        $astparser = (new ParserFactory())->createForNewestSupportedVersion();
 
-        $this->parser = new \PHPCfg\Parser($astparser);
+        $this->parser = new Parser($astparser);
     }
 
-    public function getFilesOfDir($context, $dir, $initialDir, &$files): void
+    /**
+     * @param list<FileAnalysis> $files
+     */
+    public function getFilesOfDir(Context $context, string $dir, string $initialDir, array &$files): void
     {
         if (is_dir($dir) && !$context->inputs->isExcludedFile($dir)) {
             $filesanddirs = @scandir($dir);
@@ -55,7 +68,7 @@ class Analyzer
         }
     }
 
-    public function parsePhp($context)
+    public function parsePhp(Context $context): ?Script
     {
         $script = null;
 
@@ -74,7 +87,7 @@ class Analyzer
                         $script = $this->parser->parse($context->inputs->getCode(), "");
                     }
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Utils::printWarning($context, Lang::PARSER_ERROR . $e->getMessage());
             }
         }
@@ -82,12 +95,12 @@ class Analyzer
         return $script;
     }
 
-    public function transformPhp($context, $script): void
+    public function transformPhp(Context $context, ?Script $script): void
     {
         // transform
         if (!is_null($script)) {
-            $traverser = new \PHPCfg\Traverser();
-            $transformvisitor = new \progpilot\Transformations\Php\Transform();
+            $traverser = new Traverser();
+            $transformvisitor = new Transform();
             $transformvisitor->setContext($context);
             $traverser->addVisitor($transformvisitor);
             $traverser->traverse($script);
@@ -102,15 +115,15 @@ class Analyzer
         }
     }
 
-    public function runFunctionAnalysis($context, $myFunc, $updatemyfile = true): void
+    public function runFunctionAnalysis(Context $context, MyFunction $myFunc, bool $updatemyfile = true): void
     {
-        if (!is_null($myFunc) && !$myFunc->isVisited()) {
+        if (!$myFunc->isVisited()) {
             $myFunc->setIsVisited(true);
 
             $myFunc->getMyCode()->setStart(0);
             $myFunc->getMyCode()->setEnd(count($myFunc->getMyCode()->getCodes()));
 
-            $visitoranalyzer = new \progpilot\Analysis\VisitorAnalysis();
+            $visitoranalyzer = new VisitorAnalysis();
 
             if ($updatemyfile) {
                 $file = $myFunc->getSourceMyFile()->getName();
@@ -140,31 +153,27 @@ class Analyzer
         }
     }
 
-    public function visitDataFlow($context): void
+    public function visitDataFlow(Context $context): void
     {
         // analyze
-        if (!is_null($context)) {
-            $visitordataflow = new \progpilot\Dataflow\VisitorDataflow();
+            $visitordataflow = new VisitorDataflow();
 
-            $fileNameHash = hash("sha256", $context->getCurrentMyfile()->getName());
-            foreach ($context->getTmpFunctions() as $myFunc) {
-                if (!is_null($myFunc)) {
-                    $visitordataflow->analyze($context, $myFunc);
+            $fileNameHash = hash("sha256", $context->requireCurrentMyfile()->getName());
+        foreach ($context->getTmpFunctions() as $myFunc) {
+                $visitordataflow->analyze($context, $myFunc);
 
-                    $className = "function";
-                    if (!is_null($myFunc->getMyclass())) {
-                        $className = $myFunc->getMyclass()->getName();
-                    }
-
-                    $context->getFunctions()->addFunction($fileNameHash, $className, $myFunc->getName(), $myFunc);
-                }
+                $className = "function";
+            if (!is_null($myFunc->getMyclass())) {
+                $className = $myFunc->getMyclass()->getName();
             }
 
-            $context->clearTmpFunctions();
+                $context->getFunctions()->addFunction($fileNameHash, $className, $myFunc->getName(), $myFunc);
         }
+
+            $context->clearTmpFunctions();
     }
 
-    public function computeDataFlowPhp($context): void
+    public function computeDataFlowPhp(Context $context): void
     {
         // free memory
         if (function_exists('gc_mem_caches')) {
@@ -182,7 +191,7 @@ class Analyzer
         $this->visitDataFlow($context);
     }
 
-    public function computeDataFlow($context): void
+    public function computeDataFlow(Context $context): void
     {
         $filename = $context->inputs->getFile();
 
@@ -210,7 +219,7 @@ class Analyzer
         }
     }
 
-    public static function getTypeOfLanguage($lookfor, $content): bool
+    public static function getTypeOfLanguage(string $lookfor, string $content): bool
     {
         if ($lookfor === Analyzer::PHP && !empty($content)) {
             if (
@@ -224,7 +233,7 @@ class Analyzer
         return false;
     }
 
-    public function getNamespace($context, $file): void
+    public function getNamespace(Context $context, string $file): void
     {
         try {
             if (@filesize($file) <= $context->getMaxFileSize()) {
@@ -236,18 +245,18 @@ class Analyzer
 
                 $script = $this->parser->parse($contents, $file);
 
-                $traverser = new \PHPCfg\Traverser();
-                $callvisitor = new \progpilot\CallVisitor();
+                $traverser = new Traverser();
+                $callvisitor = new CallVisitor();
                 $callvisitor->setContext($context);
                 $traverser->addVisitor($callvisitor);
                 $traverser->traverse($script);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Utils::printWarning($context, Lang::PARSER_ERROR . $e->getMessage());
         }
     }
 
-    public function computeDataFlowOfNamespaces($context, $file): void
+    public function computeDataFlowOfNamespaces(Context $context, string $file): void
     {
         $nsCalls = $context->getCallsToNamespace($file);
         if (!is_null($nsCalls)) {
@@ -269,10 +278,10 @@ class Analyzer
         }
     }
 
-    public function runAnalysisOfCurrentMyFile($context): void
+    public function runAnalysisOfCurrentMyFile(Context $context): void
     {
         $functions = $context->getFunctions()->getFunctions();
-        $fileNameHash = hash("sha256", $context->getCurrentMyfile()->getName());
+        $fileNameHash = hash("sha256", $context->requireCurrentMyfile()->getName());
 
         $myFuncsOfFileDiscarded = [];
         $myFuncsOfFile = [];
@@ -312,7 +321,7 @@ class Analyzer
         }
     }
 
-    public function run($context, $cmdFiles = null): void
+    public function run(Context $context, $cmdFiles = null): void
     {
         $currentMemoryLimit = ini_get("memory_limit");
         if (!$currentMemoryLimit) {
@@ -344,7 +353,7 @@ class Analyzer
         $context->inputs->readDefaultCustomRules();
 
         if ($cmdFiles !== null) {
-            $cmdFiles = \progpilot\Inputs\MyInputsInternalApi::resolvePaths($cmdFiles);
+            $cmdFiles = MyInputsInternalApi::resolvePaths($cmdFiles);
             foreach ($cmdFiles as $cmdFile) {
                 if (is_dir($cmdFile)) {
                     $this->getFilesOfDir($context, $cmdFile, $cmdFile, $files);
@@ -377,11 +386,11 @@ class Analyzer
         }
 
         if (!is_null($context->inputs->getFolder())) {
-            $folder = \progpilot\Inputs\MyInputsInternalApi::resolvePath($context->inputs->getFolder());
+            $folder = MyInputsInternalApi::resolvePath($context->inputs->getFolder());
             $this->getFilesOfDir($context, $folder, $folder, $files);
         } else {
             if ($context->inputs->getFile() !== null) {
-                $file = \progpilot\Inputs\MyInputsInternalApi::resolvePath($context->inputs->getFile());
+                $file = MyInputsInternalApi::resolvePath($context->inputs->getFile());
                 $cmdFileA = new FileAnalysis($file, dirname($file));
                 if (
                     !in_array($cmdFileA, $files, true)

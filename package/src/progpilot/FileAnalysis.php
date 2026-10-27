@@ -11,10 +11,16 @@ namespace progpilot;
 
 class FileAnalysis
 {
-    public $fullpath;
-    public $basedir;
+    /**
+     * @var string|bool
+     */
+    public string|bool $fullpath;
+    /**
+     * @var string
+     */
+    public string $basedir;
 
-    public function __construct($fullpath, $basedir)
+    public function __construct(string|bool $fullpath, string $basedir)
     {
         $this->fullpath = $fullpath;
         $this->basedir = $basedir;

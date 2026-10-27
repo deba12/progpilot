@@ -16,12 +16,12 @@ class AbstractSyntaxTree extends NodeVisitorAbstract
         $this->edges = [];
     }
 
-    public function getNodes()
+    public function getNodes(): array
     {
         return $this->nodes;
     }
 
-    public function getEdges()
+    public function getEdges(): array
     {
         return $this->edges;
     }

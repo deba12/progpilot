@@ -19,8 +19,11 @@ class MySource extends MySpecify
     private bool $isArrayOfArrays;
     private bool $isArray;
     private bool $isFunction;
+    /**
+     * @var list<string>
+     */
     private array $arrayValue;
-    private $returnArrayValue;
+    private ?string $returnArrayValue = null;
     private bool $isReturnArray;
     private array $parameters;
     private array $conditionsParameters;
@@ -47,77 +50,77 @@ class MySource extends MySpecify
         $this->label = MyDefinition::SECURITY_LOW;
     }
 
-    public function getIsReturnArray()
+    public function getIsReturnArray(): bool
     {
         return $this->isReturnArray;
     }
 
-    public function setReturnArray($arr): void
+    public function setReturnArray(bool $arr): void
     {
         $this->isReturnArray = $arr;
     }
 
-    public function setReturnArrayValue($arr): void
+    public function setReturnArrayValue(string $arr): void
     {
         $this->returnArrayValue = $arr;
     }
 
-    public function getReturnArrayValue()
+    public function getReturnArrayValue(): string
     {
         return $this->returnArrayValue;
     }
 
-    public function getLabel()
+    public function getLabel(): int
     {
         return $this->label;
     }
 
-    public function setLabel($label): void
+    public function setLabel(int $label): void
     {
         $this->label = $label;
     }
 
-    public function getIsObject()
+    public function getIsObject(): bool
     {
         return $this->isObject;
     }
 
-    public function setIsObject($isObject): void
+    public function setIsObject(bool $isObject): void
     {
         $this->isObject = $isObject;
     }
 
-    public function getIsArrayOfObjects()
+    public function getIsArrayOfObjects(): bool
     {
         return $this->isArrayOfObjects;
     }
 
-    public function setIsArrayOfObjects($isArrayOfObjects): void
+    public function setIsArrayOfObjects(bool $isArrayOfObjects): void
     {
         $this->isArrayOfObjects = $isArrayOfObjects;
     }
 
-    public function getIsArrayOfArrays()
+    public function getIsArrayOfArrays(): bool
     {
         return $this->isArrayOfArrays;
     }
 
-    public function setIsArrayOfArrays($isArrayOfArrays): void
+    public function setIsArrayOfArrays(bool $isArrayOfArrays): void
     {
         $this->isArrayOfArrays = $isArrayOfArrays;
     }
 
-    public function getIsArray()
+    public function getIsArray(): bool
     {
         return $this->isArray;
     }
 
-    public function setIsArray($isArray): void
+    public function setIsArray(bool $isArray): void
     {
         $this->isArray = $isArray;
     }
 
-    public function isAnArrayValue($arr): bool
+    public function isAnArrayValue(string $arr): bool
     {
         if (in_array($arr, $this->arrayValue, true)) {
             return true;
@@ -126,32 +129,38 @@ class MySource extends MySpecify
         return false;
     }
 
-    public function getArrayValue()
+    /**
+     * @return list<string>
+     */
+    public function getArrayValue(): array
     {
         return $this->arrayValue;
     }
 
-    public function setArrayValue($arrayValue): void
+    /**
+     * @param list<string> $arrayValue
+     */
+    public function setArrayValue(array $arrayValue): void
     {
         $this->arrayValue = $arrayValue;
     }
 
-    public function isFunction()
+    public function isFunction(): bool
     {
         return $this->isFunction;
     }
 
-    public function setIsFunction($isFunction): void
+    public function setIsFunction(bool $isFunction): void
     {
         $this->isFunction = $isFunction;
     }
 
-    public function addconditionsParameter(mixed $parameter, $conditions, $value): void
+    public function addconditionsParameter(mixed $parameter, string $conditions, int $value): void
     {
         $this->conditionsParameters[$parameter][] = [$conditions, $value];
     }
 
-    public function getconditionsParameter(mixed $parameter, $conditions)
+    public function getconditionsParameter(mixed $parameter, string $conditions): ?int
     {
         foreach ($this->conditionsParameters[$parameter] as $conditionsParam) {
             if ($conditionsParam[0] === $conditions) {
@@ -162,17 +171,17 @@ class MySource extends MySpecify
         return null;
     }
 
-    public function addParameter($parameter): void
+    public function addParameter(int $parameter): void
     {
         $this->parameters[] = $parameter;
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function isParameter($i): bool
+    public function isParameter(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             if ($parameter === $i) {
@@ -183,12 +192,12 @@ class MySource extends MySpecify
         return false;
     }
 
-    public function hasParameters()
+    public function hasParameters(): bool
     {
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters): void
+    public function setHasParameters(bool $hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

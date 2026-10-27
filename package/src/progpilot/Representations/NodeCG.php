@@ -10,19 +10,24 @@
 
 namespace progpilot\Representations;
 
+use progpilot\Objects\MyClass;
+
 class NodeCG
 {
-    private $myclass;
-    private $name;
-    private $line;
-    private $column;
-    private $file;
+    private ?MyClass $myclass;
+    private string $name;
+    private int $line;
+    private int $column;
+    private string $file;
     private int $nbParents;
     private int $nbViews;
+    /**
+     * @var list<string>
+     */
     private array $children;
     private string $color;
 
-    public function __construct($name, $line, $column, $file, $myClass)
+    public function __construct(string $name, int $line, int $column, string $file, ?MyClass $myClass)
     {
         $this->myclass = $myClass;
         $this->name = $name;
@@ -36,92 +41,98 @@ class NodeCG
         $this->color = "white";
     }
 
-    public function getMyClass()
+    public function getMyClass(): ?MyClass
     {
         return $this->myclass;
     }
 
-    public function setMyClass($myClass): void
+    public function setMyClass(?MyClass $myClass): void
     {
         $this->myclass = $myClass;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    public function getColumn()
+    public function getColumn(): int
     {
         return $this->column;
     }
 
-    public function getFile()
+    public function getFile(): string
     {
         return $this->file;
     }
 
-    public function getNbParents()
+    public function getNbParents(): int
     {
         return $this->nbParents;
     }
 
-    public function getNbViews()
+    public function getNbViews(): int
     {
         return $this->nbViews;
     }
 
-    public function getChildren()
+    /**
+     * @return list<string>
+     */
+    public function getChildren(): array
     {
         return $this->children;
     }
 
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
 
-    public function setColor($color): void
+    public function setColor(string $color): void
     {
         $this->color = $color;
     }
 
-    public function setChildren($children): void
+    /**
+     * @param list<string> $children
+     */
+    public function setChildren(array $children): void
     {
         $this->children = $children;
     }
 
-    public function setNbViews($nbViews): void
+    public function setNbViews(int $nbViews): void
     {
         $this->nbViews = $nbViews;
     }
 
-    public function setNbParents($nbParents): void
+    public function setNbParents(int $nbParents): void
     {
         $this->nbParents = $nbParents;
     }
 
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    public function setLine($line): void
+    public function setLine(int $line): void
     {
         $this->line = $line;
     }
 
-    public function setColumn($column): void
+    public function setColumn(int $column): void
     {
         $this->column = $column;
     }
 
-    public function setFile($file): void
+    public function setFile(string $file): void
     {
         $this->file = $file;
     }

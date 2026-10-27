@@ -10,23 +10,26 @@
 
 namespace progpilot\Analysis;
 
+use progpilot\Objects\MyFunction;
+use progpilot\Context;
+use progpilot\Objects\MyClass;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 
 class FuncAnalysis
 {
     public static function funccallAfter(
-        $myFunc,
-        $context,
-        $myClass,
-        $myFuncCall,
-        $instruction
+        ?MyFunction $myFunc,
+        Context $context,
+        ?MyClass $myClass,
+        MyFunction $myFuncCall,
+        MyInstruction $instruction
     ): void {
         $resultid = $instruction->getProperty(MyInstruction::RESULTID);
-        $opInformation = $context->getCurrentFunc()->getOpInformation($resultid);
+        $opInformation = $context->requireCurrentFunc()->getOpInformation($resultid);
 
         $myFuncReturn = new MyDefinition(
-            $context->getCurrentBlock()->getId(),
+            $context->requireCurrentBlock()->getId(),
             $context->getCurrentMyFile(),
             $myFuncCall->getLine(),
             $myFuncCall->getColumn(),
@@ -35,7 +38,7 @@ class FuncAnalysis
 
         $opInformation["chained_results"][] = $myFuncReturn;
 
-        \progpilot\Analysis\CustomAnalysis::defineObject(
+        CustomAnalysis::defineObject(
             $context,
             $instruction,
             $myFuncCall,
@@ -43,7 +46,7 @@ class FuncAnalysis
             $myFuncReturn
         );
 
-        \progpilot\Analysis\CustomAnalysis::returnObject(
+        CustomAnalysis::returnObject(
             $context,
             $myFuncCall,
             $myClass,
@@ -87,10 +90,10 @@ class FuncAnalysis
             }
         }
 
-        $context->getCurrentFunc()->storeOpInformation($resultid, $opInformation);
+        $context->requireCurrentFunc()->storeOpInformation($resultid, $opInformation);
     }
 
-    public static function funccallBefore($myFunc, $instruction): void
+    public static function funccallBefore(MyFunction $myFunc, MyInstruction $instruction): void
     {
         $nbParams = 0;
         $params = $myFunc->getParams();

@@ -15,42 +15,42 @@ use progpilot\Utils;
 
 class MyInputs extends MyInputsInternalApi
 {
-    public function getFolder()
+    public function getFolder(): ?string
     {
         return $this->folder;
     }
 
-    public function getFile()
+    public function getFile(): ?string
     {
         return $this->file;
     }
 
-    public function getCode()
+    public function getCode(): ?string
     {
         return $this->code;
     }
 
-    public function setFolder($folder): void
+    public function setFolder(string $folder): void
     {
         $this->folder = $folder;
     }
 
-    public function setFile($file): void
+    public function setFile(string $file): void
     {
         $this->file = $file;
     }
 
-    public function setCode($code): void
+    public function setCode(?string $code): void
     {
         $this->code = $code;
     }
 
-    public function getDev()
+    public function getDev(): bool
     {
         return $this->dev;
     }
 
-    public function setDev($dev): void
+    public function setDev(bool $dev): void
     {
         $this->dev = $dev;
 
@@ -72,7 +72,10 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function addSources($files): void
+    /**
+     * @param list<string>|null $files
+     */
+    public function addSources(?array $files): void
     {
         if (is_array($files)) {
             foreach ($files as $file) {
@@ -83,14 +86,17 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function setSources($files): void
+    /**
+     * @param list<string> $files
+     */
+    public function setSources(array $files): void
     {
         $this->overwrittenSources = true;
         $this->sources = [];
         $this->addSources($files);
     }
 
-    public function getSources()
+    public function getSources(): array
     {
         return $this->sources;
     }
@@ -106,7 +112,7 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function getSinks()
+    public function getSinks(): array
     {
         return $this->sinks;
     }
@@ -136,7 +142,7 @@ class MyInputs extends MyInputsInternalApi
         $this->addValidators($files);
     }
 
-    public function getValidators()
+    public function getValidators(): array
     {
         return $this->validators;
     }
@@ -159,7 +165,7 @@ class MyInputs extends MyInputsInternalApi
         $this->addSanitizers($files);
     }
 
-    public function getSanitizers()
+    public function getSanitizers(): array
     {
         return $this->sanitizers;
     }
@@ -182,91 +188,111 @@ class MyInputs extends MyInputsInternalApi
         $this->addCustomRules($files);
     }
 
-    public function getCustomRules()
+    /**
+     * @return list<MyCustomRule>
+     */
+    public function getCustomRules(): array
     {
         return $this->customRules;
     }
 
-    public function setResolvedIncludes($resolvedIncludes): void
+    public function setResolvedIncludes(?string $resolvedIncludes): void
     {
-        if (!is_null($resolvedIncludes)) {
-            if (!file_exists($resolvedIncludes)) {
-                Utils::printError(
-                    Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($resolvedIncludes) . ")"
-                );
-            }
+        if (is_null($resolvedIncludes)) {
+            return;
+        }
+
+        if (!file_exists($resolvedIncludes)) {
+            Utils::printError(
+                Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($resolvedIncludes) . ")"
+            );
+        }
 
             $outputJson = file_get_contents($resolvedIncludes);
             $parsedJson = json_decode($outputJson);
 
-            if (isset($parsedJson->{'includes'})) {
-                $includes = $parsedJson->{'includes'};
-                foreach ($includes as $include) {
-                    if (
-                        !isset($include->{'line'})
-                        || !isset($include->{'column'})
-                        || !isset($include->{'source_file'})
-                        || !isset($include->{'value'})
-                    ) {
-                        Utils::printError(Lang::FORMAT_INCLUDES);
-                    }
+        if (isset($parsedJson->{'includes'})) {
+            $includes = $parsedJson->{'includes'};
+            foreach ($includes as $include) {
+                if (
+                    !isset($include->{'line'})
+                    || !isset($include->{'column'})
+                    || !isset($include->{'source_file'})
+                    || !isset($include->{'value'})
+                ) {
+                    Utils::printError(Lang::FORMAT_INCLUDES);
+                }
 
-                    if (realpath($include->{'source_file'})) {
-                        $line = $include->{'line'};
-                        $column = $include->{'column'};
-                        $sourceFile = realpath($include->{'source_file'});
-                        $value = $include->{'value'};
+                if (realpath($include->{'source_file'})) {
+                    $line = $include->{'line'};
+                    $column = $include->{'column'};
+                    $sourceFile = realpath($include->{'source_file'});
+                    $value = $include->{'value'};
 
-                        $myInclude = new MyInclude($line, $column, $sourceFile, $value);
-                        if (!in_array($myInclude, $this->resolvedIncludesAnalysis, true)) {
-                            $this->resolvedIncludesAnalysis[] = $myInclude;
-                        }
+                    $myInclude = new MyInclude($line, $column, $sourceFile, $value);
+                    if (!in_array($myInclude, $this->resolvedIncludesAnalysis, true)) {
+                        $this->resolvedIncludesAnalysis[] = $myInclude;
                     }
                 }
-            } else {
-                Utils::printError(Lang::FORMAT_INCLUDES);
             }
+        } else {
+            Utils::printError(Lang::FORMAT_INCLUDES);
         }
     }
 
-    public function getFalsePositives()
+    public function getFalsePositives(): array
     {
         return $this->falsePositivesAnalysis;
     }
 
-    public function setFalsePositives($falsePositives): void
+    /**
+     * @param string|list<array<string, mixed>>|null $falsePositives
+     */
+    public function setFalsePositives(string|array|null $falsePositives): void
     {
         $this->readFalsePositives($falsePositives);
     }
 
-    public function getInclusions()
+    /**
+     * @return list<string|bool>
+     */
+    public function getInclusions(): array
     {
         return $this->includesFilesAnalysis;
     }
 
-    public function getExclusions()
+    public function getExclusions(): array
     {
         return $this->excludesFilesAnalysis;
     }
 
-    public function setExclusions($exclusions): void
+    /**
+     * @param string|array<mixed>|null $exclusions a file name containing the exclusions or the exclusions themselves
+     */
+    public function setExclusions(string|array|null $exclusions): void
     {
         $this->excludesFilesAnalysis = [];
         $this->addExclusions($exclusions);
     }
 
-    public function setInclusions($inclusions): void
+    /**
+     * @param string|array<mixed>|null $inclusions a file name containing the inclusions or the inclusions themselves
+     */
+    public function setInclusions(string|array|null $inclusions): void
     {
         $this->includesFilesAnalysis = [];
         $this->addInclusions($inclusions);
     }
 
-    public function addExclusions($exclusions): void
+    /**
+     * @param string|array<mixed>|null $exclusions a file name containing the exclusions or the exclusions themselves
+     */
+    public function addExclusions(string|array|null $exclusions): void
     {
         if (!is_null($exclusions)) {
             if (is_string($exclusions)) {
                 $this->readExcludesFile($exclusions);
-            } elseif (is_array($exclusions)) {
+            } else {
                 foreach ($exclusions as $excludeFile) {
                     if (is_string($excludeFile) && !in_array($excludeFile, $this->excludesFilesAnalysis, true)) {
                         $this->excludesFilesAnalysis[] = $excludeFile;
@@ -276,12 +302,15 @@ class MyInputs extends MyInputsInternalApi
         }
     }
 
-    public function addInclusions($inclusions): void
+    /**
+     * @param string|array<mixed>|null $inclusions a file name containing the inclusions or the inclusions themselves
+     */
+    public function addInclusions(string|array|null $inclusions): void
     {
         if (!is_null($inclusions)) {
             if (is_string($inclusions)) {
                 $this->readIncludesFile($inclusions);
-            } elseif (is_array($inclusions)) {
+            } else {
                 foreach ($inclusions as $includeFile) {
                     if (is_string($includeFile) && !in_array($includeFile, $this->includesFilesAnalysis, true)) {
                         $this->includesFilesAnalysis[] = $includeFile;

@@ -10,24 +10,30 @@
 
 namespace progpilot\Outputs;
 
+use progpilot\Objects\MyFunction;
+use progpilot\Objects\MyBlock;
+use progpilot\Objects\MyClass;
 use progpilot\Representations\Callgraph;
 use progpilot\Representations\ControlFlowGraph;
 use progpilot\Representations\AbstractSyntaxTree;
 
 class MyOutputsInternalApi
 {
-    protected $results;
-    protected $writeIncludeFailures;
-    protected $includeFailuresFile;
+    protected array $results;
+    protected bool $writeIncludeFailures;
+    protected ?string $includeFailuresFile = null;
     protected $onAddResult;
-    protected $taintedFlow;
-    protected $sarifOutput;
-    protected $countfilesanalyzed;
+    protected bool $taintedFlow;
+    protected bool $sarifOutput;
+    protected int $countfilesanalyzed;
 
-    public $currentIncludesFile;
-    public $cfg;
-    public $callgraph;
-    public $ast;
+    /**
+     * @var list<\progpilot\Objects\MyFile>
+     */
+    public array $currentIncludesFile;
+    public array $cfg;
+    public array $callgraph;
+    public array $ast;
 
     public function __construct()
     {
@@ -52,17 +58,19 @@ class MyOutputsInternalApi
         $this->ast = [];
     }
 
-    public function createRepresentationsForFunction($myFunc): void
+    public function createRepresentationsForFunction(?MyFunction $myFunc): void
     {
-        if (!is_null($myFunc)) {
+        if (is_null($myFunc)) {
+            return;
+        }
+
             $this->cfg[$myFunc->getId()] = new ControlFlowGraph();
             $this->callgraph[$myFunc->getId()] = new Callgraph();
             $this->ast[$myFunc->getId()] = new AbstractSyntaxTree();
-        }
     }
 
     // cfg accessors
-    public function cfgAddTextOfMyBlock($myFunc, $id, $text): void
+    public function cfgAddTextOfMyBlock(?MyFunction $myFunc, string $id, string $text): void
     {
         if (!is_null($myFunc) && isset($this->cfg[$myFunc->getId()])) {
             $tmpCfg = $this->cfg[$myFunc->getId()];
@@ -70,7 +78,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function cfgAddNode($myFunc, $id, $block): void
+    public function cfgAddNode(?MyFunction $myFunc, string $id, MyBlock $block): void
     {
         if (!is_null($myFunc) && isset($this->cfg[$myFunc->getId()])) {
             $tmpCfg = $this->cfg[$myFunc->getId()];
@@ -78,7 +86,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function cfgAddEdge($myFunc, $caller, $callee): void
+    public function cfgAddEdge(?MyFunction $myFunc, MyBlock $caller, MyBlock $callee): void
     {
         if (!is_null($myFunc) && isset($this->cfg[$myFunc->getId()])) {
             $tmpCfg = $this->cfg[$myFunc->getId()];
@@ -103,8 +111,12 @@ class MyOutputsInternalApi
         }
     }
 
-    public function callgraphAddFuncCall($myFunc, $myBlock, $myFunccall, $myClass): void
-    {
+    public function callgraphAddFuncCall(
+        ?MyFunction $myFunc,
+        MyBlock $myBlock,
+        MyFunction $myFunccall,
+        ?MyClass $myClass
+    ): void {
         if (
             !is_null($myFunc)
             && isset($this->callgraph[$myFunc->getId()])
@@ -114,7 +126,7 @@ class MyOutputsInternalApi
         }
     }
 
-    public function callgraphAddChild($myFunc, $myBlockParent, $myBlockChild): void
+    public function callgraphAddChild(?MyFunction $myFunc, MyBlock $myBlockParent, MyBlock $myBlockChild): void
     {
         if (!is_null($myFunc) && isset($this->callgraph[$myFunc->getId()])) {
             $tmpCallgraph = $this->callgraph[$myFunc->getId()];
@@ -122,7 +134,10 @@ class MyOutputsInternalApi
         }
     }
 
-    public function addResult($temp): void
+    /**
+     * @param array<string, array<mixed>|string|int> $temp
+     */
+    public function addResult(array $temp): void
     {
         if (!in_array($temp, $this->results, true)) {
             if (!is_null($this->onAddResult)) {
@@ -134,27 +149,30 @@ class MyOutputsInternalApi
         }
     }
 
-    public function setResults(&$results): void
+    /**
+     * @param list<array<mixed>> $results
+     */
+    public function setResults(array &$results): void
     {
         $this->results = &$results;
     }
 
-    public function getCountAnalyzedFiles()
+    public function getCountAnalyzedFiles(): int
     {
         return $this->countfilesanalyzed;
     }
 
-    public function setCountAnalyzedFiles($nb): void
+    public function setCountAnalyzedFiles(int $nb): void
     {
         $this->countfilesanalyzed = $nb;
     }
 
-    public function getWriteIncludeFailures()
+    public function getWriteIncludeFailures(): bool
     {
         return $this->writeIncludeFailures;
     }
 
-    public function setWriteIncludeFailures($writeIncludeFailures): void
+    public function setWriteIncludeFailures(bool $writeIncludeFailures): void
     {
         $this->writeIncludeFailures = $writeIncludeFailures;
     }

@@ -12,13 +12,13 @@ namespace progpilot\Objects;
 
 class MyFile extends MyOp
 {
-    private $includedFromMyFile;
-    private $includedToMyFile;
-    public $baseDir;
+    private ?MyFile $includedFromMyFile = null;
+    private ?MyFile $includedToMyFile = null;
+    public string $baseDir;
     /**
      * @var string
      */
-    public $fileName;
+    public string $fileName;
 
     public function __construct($fullPathFileName, $baseDir, $fakeLine, $fakeColumn)
     {
@@ -27,22 +27,22 @@ class MyFile extends MyOp
         $this->fileName = substr($fullPathFileName, strlen($baseDir) + 1);
     }
 
-    public function setIncludedToMyfile($myFileTo): void
+    public function setIncludedToMyfile(MyFile $myFileTo): void
     {
         $this->includedToMyFile = $myFileTo;
     }
 
-    public function getIncludedToMyfile()
+    public function getIncludedToMyfile(): ?MyFile
     {
         return $this->includedToMyFile;
     }
 
-    public function setIncludedFromMyfile($myFileFrom): void
+    public function setIncludedFromMyfile(MyFile $myFileFrom): void
     {
         $this->includedFromMyFile = $myFileFrom;
     }
 
-    public function getIncludedFromMyfile()
+    public function getIncludedFromMyfile(): ?MyFile
     {
         return $this->includedFromMyFile;
     }

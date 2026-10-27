@@ -10,6 +10,8 @@
 
 namespace progpilot\Inputs;
 
+use progpilot\Objects\MyClass;
+use progpilot\Objects\MyOp;
 use progpilot\Lang;
 use progpilot\Utils;
 use progpilot\Objects\MyFunction;
@@ -17,28 +19,31 @@ use progpilot\Objects\MyDefinition;
 
 class MyInputsInternalApi
 {
-    protected $dev;
+    protected bool $dev;
 
-    protected $customRules;
-    protected $sanitizers;
-    protected $sinks;
-    protected $sources;
-    protected $validators;
+    protected array $customRules;
+    protected array $sanitizers;
+    protected array $sinks;
+    protected array $sources;
+    protected array $validators;
 
-    protected $overwrittenCustomRules;
-    protected $overwrittenSanitizers;
-    protected $overwrittenSinks;
-    protected $overwrittenSources;
-    protected $overwrittenValidators;
+    protected bool $overwrittenCustomRules;
+    protected bool $overwrittenSanitizers;
+    protected bool $overwrittenSinks;
+    protected bool $overwrittenSources;
+    protected bool $overwrittenValidators;
 
-    protected $falsePositivesAnalysis;
-    protected $excludesFilesAnalysis;
-    protected $includesFilesAnalysis;
-    protected $resolvedIncludesAnalysis;
+    protected array $falsePositivesAnalysis;
+    /**
+     * @var list<string>
+     */
+    protected array $excludesFilesAnalysis;
+    protected array $includesFilesAnalysis;
+    protected array $resolvedIncludesAnalysis;
 
-    protected $file;
-    protected $code;
-    protected $folder;
+    protected ?string $file = null;
+    protected ?string $code = null;
+    protected ?string $folder = null;
 
     protected $falsePositives;
 
@@ -70,7 +75,7 @@ class MyInputsInternalApi
         $this->falsePositives = null;
     }
 
-    public static function resolvePath($file)
+    public static function resolvePath(string $file): string|bool
     {
         if (
             strpos($file, "/") !== false
@@ -95,8 +100,9 @@ class MyInputsInternalApi
 
     /**
      * @return mixed[]
+     * @param list<string> $files
      */
-    public static function resolvePaths($files): array
+    public static function resolvePaths(array $files): array
     {
         $resolvePaths = [];
         foreach ($files as $file) {
@@ -127,7 +133,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function isExcludedFile($name): bool
+    public function isExcludedFile(string|bool $name): bool
     {
         $name = realpath($name);
         $basename = basename($name);
@@ -195,7 +201,7 @@ class MyInputsInternalApi
         return false;
     }
 
-    public function getIncludeByLocation($line, $column, $sourceFile)
+    public function getIncludeByLocation(int $line, int $column, string $sourceFile): ?MyInclude
     {
         foreach ($this->resolvedIncludesAnalysis as $myInclude) {
             if (
@@ -210,7 +216,7 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function getValidatorByName($myFunc, $myClass)
+    public function getValidatorByName(MyFunction $myFunc, ?MyClass $myClass): ?MyValidator
     {
         foreach ($this->validators as $myValidator) {
             if ($myValidator->getName() === $myFunc->getName()) {
@@ -233,7 +239,7 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function getSanitizerByName($myFunc, $myClass)
+    public function getSanitizerByName(MyFunction $myFunc, ?MyClass $myClass): ?MySanitizer
     {
         foreach ($this->sanitizers as $mySanitizer) {
             if ($mySanitizer->getName() === $myFunc->getName()) {
@@ -256,7 +262,7 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function getSinkByName($myFunc, $myClass)
+    public function getSinkByName(MyFunction $myFunc, ?MyClass $myClass): ?MySink
     {
         foreach ($this->sinks as $mySink) {
             if ($mySink->getName() === $myFunc->getName()) {
@@ -296,7 +302,7 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function getSourceByName($myFuncOrDef, $myClass, $dimArray = null)
+    public function getSourceByName(MyOp $myFuncOrDef, ?MyClass $myClass, string|int|null $dimArray = null): ?MySource
     {
         foreach ($this->sources as $mySource) {
             if ($mySource->getName() === $myFuncOrDef->getName()) {
@@ -338,7 +344,7 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function getFalsePositiveById($id)
+    public function getFalsePositiveById(string $id): ?MyVuln
     {
         foreach ($this->falsePositivesAnalysis as $falsePositive) {
             if ($falsePositive->getId() === $id) {
@@ -349,7 +355,10 @@ class MyInputsInternalApi
         return null;
     }
 
-    public function readDir($dir, &$files): void
+    /**
+     * @param list<string> $files
+     */
+    public function readDir(string $dir, array &$files): void
     {
         if (is_dir($dir)) {
             $filesanddirs = @scandir($dir);
@@ -418,7 +427,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readSanitizersFile($file): void
+    public function readSanitizersFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -506,7 +515,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readSinksFile($file): void
+    public function readSinksFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -576,7 +585,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readSourcesFile($file): void
+    public function readSourcesFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -689,7 +698,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readValidatorsFile($file): void
+    public function readValidatorsFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -777,7 +786,7 @@ class MyInputsInternalApi
         }
     }
 
-    public function readCustomFile($file): void
+    public function readCustomFile(?string $file): void
     {
         if (!is_null($file)) {
             if (!file_exists($file)) {
@@ -1004,12 +1013,15 @@ class MyInputsInternalApi
         }
     }
 
-    public function readFalsePositives($falsePositives): void
+    /**
+     * @param string|list<array<string, mixed>>|null $falsePositives a file name or the false positives themselves
+     */
+    public function readFalsePositives(string|array|null $falsePositives): void
     {
         if (!is_null($falsePositives)) {
             if (is_string($falsePositives)) {
                 $this->readFalsePositivesFile($falsePositives);
-            } elseif (is_array($falsePositives)) {
+            } else {
                 foreach ($falsePositives as $falsePositive) {
                     if (!isset($falsePositive["vuln_id"])) {
                         Utils::printError(Lang::FORMAT_FALSE_POSITIVES);
@@ -1023,41 +1035,37 @@ class MyInputsInternalApi
                         $this->falsePositivesAnalysis[] = $myVuln;
                     }
                 }
-            } else {
-                Utils::printError(Lang::FORMAT_FALSE_POSITIVES);
             }
         }
     }
 
-    public function readFalsePositivesFile($file): void
+    public function readFalsePositivesFile(string $file): void
     {
-        if (!is_null($file)) {
-            if (!file_exists($file)) {
-                Utils::printError(
-                    Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($file) . ")"
-                );
-            }
+        if (!file_exists($file)) {
+            Utils::printError(
+                Lang::FILE_DOESNT_EXIST . " (" . Utils::encodeCharacters($file) . ")"
+            );
+        }
 
             $outputJson = file_get_contents($file);
             $parsedJson = json_decode($outputJson);
 
-            if (isset($parsedJson->{'false_positives'})) {
-                $falsePositives = $parsedJson->{'false_positives'};
-                foreach ($falsePositives as $falsePositive) {
-                    if (!isset($falsePositive->{'vuln_id'})) {
-                        Utils::printError(Lang::FORMAT_FALSE_POSITIVES);
-                    }
-
-                    $vulnId = $falsePositive->{'vuln_id'};
-
-                    $myVuln = new MyVuln($vulnId);
-                    if (!in_array($myVuln, $this->falsePositivesAnalysis, true)) {
-                        $this->falsePositivesAnalysis[] = $myVuln;
-                    }
+        if (isset($parsedJson->{'false_positives'})) {
+            $falsePositives = $parsedJson->{'false_positives'};
+            foreach ($falsePositives as $falsePositive) {
+                if (!isset($falsePositive->{'vuln_id'})) {
+                    Utils::printError(Lang::FORMAT_FALSE_POSITIVES);
                 }
-            } else {
-                Utils::printError(Lang::FORMAT_FALSE_POSITIVES);
+
+                $vulnId = $falsePositive->{'vuln_id'};
+
+                $myVuln = new MyVuln($vulnId);
+                if (!in_array($myVuln, $this->falsePositivesAnalysis, true)) {
+                    $this->falsePositivesAnalysis[] = $myVuln;
+                }
             }
+        } else {
+            Utils::printError(Lang::FORMAT_FALSE_POSITIVES);
         }
     }
 

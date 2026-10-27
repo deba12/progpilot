@@ -10,9 +10,16 @@
 
 namespace progpilot\Analysis;
 
+use progpilot\Context;
+use progpilot\Code\MyInstruction;
+use progpilot\Objects\MyOp;
+use progpilot\Objects\MyClass;
+use progpilot\Objects\MyFunction;
+use progpilot\Representations\Callgraph;
 use progpilot\Representations\DepthFirstSearch;
 use progpilot\Representations\DFSVisitor;
 use progpilot\Representations\NodeCG;
+use progpilot\Inputs\MyCustomFunction;
 use progpilot\Inputs\MyCustomRule;
 use progpilot\Objects\MyDefinition;
 use progpilot\Utils;
@@ -54,14 +61,18 @@ class CustomAnalysis
         return null;
     }
 
-    public static function defineObject($context, $instruction, $myFuncorDef, $myClassFound, $virtualReturnDef)
-    {
+    public static function defineObject(
+        Context $context,
+        MyInstruction $instruction,
+        MyOp $myFuncorDef,
+        ?MyClass $myClassFound,
+        ?MyDefinition $virtualReturnDef
+    ): ?MyDefinition {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
             if (
                 $customRule->getType() === MyCustomRule::TYPE_VARIABLE
                 && $customRule->getAction() === "DEFINE_OBJECT"
-                && !is_null($customRule->getExtra())
             ) {
                 $result = HelpersAnalysis::checkIfDefEqualDefRule(
                     $context,
@@ -85,12 +96,16 @@ class CustomAnalysis
         return null;
     }
 
-    public static function returnObjectCreateObject($context, $customRule, $myFuncorDef, $virtualReturnDef)
-    {
+    public static function returnObjectCreateObject(
+        Context $context,
+        MyCustomRule $customRule,
+        MyOp $myFuncorDef,
+        ?MyDefinition $virtualReturnDef
+    ): ?MyDefinition {
         $myFakeInstance = null;
 
         // $this->foo->bar (we want to define an object on bar)
-        if ($myFuncorDef->isType(MyDefinition::TYPE_PROPERTY)) {
+        if ($myFuncorDef instanceof MyDefinition && $myFuncorDef->isType(MyDefinition::TYPE_PROPERTY)) {
             $myFakeInstance = $myFuncorDef;
             $myFakeInstance->addType(MyDefinition::TYPE_INSTANCE);
             $myFakeInstance->setClassName($customRule->getExtra());
@@ -104,16 +119,22 @@ class CustomAnalysis
             HelpersAnalysis::createObject($context, $myFakeInstance);
             return $myFakeInstance;
         }
+
+        return null;
     }
 
-    public static function returnObject($context, $myFuncorDef, $myClass, $instruction, $virtualReturnDef)
-    {
+    public static function returnObject(
+        Context $context,
+        MyFunction $myFuncorDef,
+        ?MyClass $myClass,
+        MyInstruction $instruction,
+        MyDefinition $virtualReturnDef
+    ): ?MyDefinition {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
             if (
                 $customRule->getType() === MyCustomRule::TYPE_FUNCTION
                 && $customRule->getAction() === "DEFINE_OBJECT"
-                && !is_null($customRule->getExtra())
             ) {
                 $result = HelpersAnalysis::checkIfDefEqualDefRule(
                     $context,
@@ -136,8 +157,12 @@ class CustomAnalysis
         return null;
     }
 
-    public static function mustVerifyDefinition($context, $instruction, $myFunc, $myClass = null): void
-    {
+    public static function mustVerifyDefinition(
+        Context $context,
+        MyInstruction $instruction,
+        MyFunction $myFunc,
+        ?MyClass $myClass = null
+    ): void {
         $customRules = $context->inputs->getCustomRules();
         foreach ($customRules as $customRule) {
             if (
@@ -146,179 +171,180 @@ class CustomAnalysis
                     || $customRule->getAction() === "MUST_NOT_VERIFY_DEFINITION")
             ) {
                 $functionDefinition = $customRule->getDefinition();
+                if (!$functionDefinition instanceof MyCustomFunction) {
+                    continue;
+                }
 
-                if (!is_null($functionDefinition)) {
                     $result = HelpersAnalysis::checkIfFuncEqualMySpecify(
                         $context,
                         $functionDefinition,
                         $myFunc,
                         $myClass
                     );
-                    if ($result) {
-                        if (
-                            $myFunc->getNbParams() < $functionDefinition->getMinNbArgs()
-                            || $myFunc->getNbParams() > $functionDefinition->getMaxNbArgs()
-                        ) {
-                            $isValid = true;
-                        } else {
+                if ($result) {
+                    if (
+                        $myFunc->getNbParams() < $functionDefinition->getMinNbArgs()
+                        || $myFunc->getNbParams() > $functionDefinition->getMaxNbArgs()
+                    ) {
+                        $isValid = true;
+                    } else {
+                        $isValid = false;
+                        $params = $functionDefinition->getParameters();
+
+                        // if one parameter is not valid all the rule is not valid
+                        foreach ($params as $param) {
                             $isValid = false;
-                            $params = $functionDefinition->getParameters();
 
-                            // if one parameter is not valid all the rule is not valid
-                            foreach ($params as $param) {
-                                $isValid = false;
+                            $idParam = $param[0] - 1;
+                            $valuesParameter = $param[1];
+                            $validbydefault = $param[2];
+                            $isParameterFixed = $param[3];
+                            $isParameterSufficient = $param[4];
+                            $isParameterFailIfNotVerifed = $param[5];
+                            $isParameterNotEquals = $param[6];
 
-                                $idParam = $param[0] - 1;
-                                $valuesParameter = $param[1];
-                                $validbydefault = $param[2];
-                                $isParameterFixed = $param[3];
-                                $isParameterSufficient = $param[4];
-                                $isParameterFailIfNotVerifed = $param[5];
-                                $isParameterNotEquals = $param[6];
+                            if (!is_null($valuesParameter)) {
+                                if (!$instruction->isPropertyExist("argdef$idParam")) {
+                                    $isValid = $validbydefault;
+                                    break;
+                                }
 
-                                if (!is_null($valuesParameter)) {
-                                    if (!$instruction->isPropertyExist("argdef$idParam")) {
-                                        $isValid = $validbydefault;
-                                        break;
-                                    }
+                                $defArg = $instruction->getProperty("argdef$idParam");
 
-                                    $defArg = $instruction->getProperty("argdef$idParam");
+                                foreach ($valuesParameter as $valueParameter) {
+                                    $defLastKnownValues = [];
 
-                                    foreach ($valuesParameter as $valueParameter) {
-                                        $defLastKnownValues = [];
+                                    if (
+                                        isset($valueParameter->is_array)
+                                        && $valueParameter->is_array === true
+                                        && isset($valueParameter->array_index)
+                                    ) {
+                                        $arrayfound = false;
 
-                                        if (
-                                            isset($valueParameter->is_array)
-                                            && $valueParameter->is_array === true
-                                            && isset($valueParameter->array_index)
-                                        ) {
-                                            $arrayfound = false;
+                                        if ($defArg->requireCurrentState()->isType(MyDefinition::TYPE_ARRAY)) {
+                                            foreach ($defArg->requireCurrentState()->getArrayIndexes() as $arrayIndex) {
+                                                if ($arrayIndex->index === $valueParameter->array_index) {
+                                                    $defLastKnownValues =
+                                                        $arrayIndex->def->requireCurrentState()->getLastKnownValues();
+                                                    $arrayfound = true;
 
-                                            if ($defArg->getCurrentState()->isType(MyDefinition::TYPE_ARRAY)) {
-                                                foreach ($defArg->getCurrentState()->getArrayIndexes() as $arrayIndex) {
-                                                    if ($arrayIndex->index === $valueParameter->array_index) {
-                                                        $defLastKnownValues =
-                                                            $arrayIndex->def->getCurrentState()->getLastKnownValues();
-                                                        $arrayfound = true;
-
-                                                        break;
-                                                    }
-                                                }
-                                            }
-
-                                            if (!$arrayfound) {
-                                                $isValid = $validbydefault;
-                                                break 2;
-                                            }
-                                        } else {
-                                            $defLastKnownValues = $defArg->getCurrentState()->getLastKnownValues();
-                                        }
-
-                                        if (count($defLastKnownValues) === 0) {
-                                            $isValid = false;
-                                        }
-
-                                        // we check all the values of a param
-                                        $validForAllValues = false;
-                                        foreach ($defLastKnownValues as $lastKnownValue) {
-                                            // if it's valid we continue
-                                            if (
-                                                ($valueParameter->value === $lastKnownValue
-                                                    && !$isParameterNotEquals)
-                                                || ($valueParameter->value !== $lastKnownValue
-                                                    && $isParameterNotEquals)
-                                            ) {
-                                                $validForAllValues = true;
-                                            } else {
-                                                // it's not valid we can break
-                                                $validForAllValues = false;
-
-                                                // we just need to found one parameter that is equals
-                                                if ($isParameterNotEquals) {
-                                                    break 2;
-                                                } else {
                                                     break;
                                                 }
                                             }
                                         }
 
-                                        $isValid = $validForAllValues;
-                                        // we found a value of the param valid, we don't need to continue on
-                                        // other possible values of the rule
-                                        if ($isValid) {
-                                            break;
+                                        if (!$arrayfound) {
+                                            $isValid = $validbydefault;
+                                            break 2;
+                                        }
+                                    } else {
+                                        $defLastKnownValues = $defArg->requireCurrentState()->getLastKnownValues();
+                                    }
+
+                                    if (count($defLastKnownValues) === 0) {
+                                        $isValid = false;
+                                    }
+
+                                    // we check all the values of a param
+                                    $validForAllValues = false;
+                                    foreach ($defLastKnownValues as $lastKnownValue) {
+                                        // if it's valid we continue
+                                        if (
+                                            ($valueParameter->value === $lastKnownValue
+                                                && !$isParameterNotEquals)
+                                            || ($valueParameter->value !== $lastKnownValue
+                                                && $isParameterNotEquals)
+                                        ) {
+                                            $validForAllValues = true;
+                                        } else {
+                                            // it's not valid we can break
+                                            $validForAllValues = false;
+
+                                            // we just need to found one parameter that is equals
+                                            if ($isParameterNotEquals) {
+                                                break 2;
+                                            } else {
+                                                break;
+                                            }
                                         }
                                     }
 
-                                    // for must_verify definition
-                                    //   * if one parameter is valid (respect conditions):
-                                    //      * it can be enough (if sufficient) to valid the rule (no issue)
-                                    //   * if one parameter is not valid:
-                                    //      * the rule is not valid except if raise_if_not_verified set to false
-                                    //      * the rule is valid if fixed (required) option is set
-
-                                    // for must_not_verify definition
-                                    //   * if one parameter is valid (respect conditions):
-                                    //      * the rule is not valid  except if raise_if_not_verified set to false
-                                    //      * the rule is vali  except if fixed (required) option is set
-                                    //   * if one parameter is not valid (doesn't respect conditions):
-                                    //      * it can be enough (if sufficient) to valid the rule (no issue)
-
-                                    // one parameter is not valid and required
-                                    if (
-                                        !$isValid
-                                        && $isParameterFixed
-                                    ) {
-                                        $isValid = true;
-                                        break;
-                                    }
-
-                                    if ($customRule->getAction() === "MUST_NOT_VERIFY_DEFINITION") {
-                                        $isValid = !$isValid;
-                                    }
-
-                                    // one parameter is valid and enough
-                                    if (
-                                        $isValid
-                                        && $isParameterSufficient
-                                    ) {
-                                        $isValid = true;
-                                        break;
-                                    }
-
-                                    // one parameter is not valid but should not fail and continue with other params
-                                    if (
-                                        !$isValid
-                                        && !$isParameterFailIfNotVerifed
-                                    ) {
-                                        $isValid = true;
-                                    }
-
-                                    // one parameter is not valid
-                                    if (!$isValid) {
+                                    $isValid = $validForAllValues;
+                                    // we found a value of the param valid, we don't need to continue on
+                                    // other possible values of the rule
+                                    if ($isValid) {
                                         break;
                                     }
                                 }
+
+                                // for must_verify definition
+                                //   * if one parameter is valid (respect conditions):
+                                //      * it can be enough (if sufficient) to valid the rule (no issue)
+                                //   * if one parameter is not valid:
+                                //      * the rule is not valid except if raise_if_not_verified set to false
+                                //      * the rule is valid if fixed (required) option is set
+
+                                // for must_not_verify definition
+                                //   * if one parameter is valid (respect conditions):
+                                //      * the rule is not valid  except if raise_if_not_verified set to false
+                                //      * the rule is vali  except if fixed (required) option is set
+                                //   * if one parameter is not valid (doesn't respect conditions):
+                                //      * it can be enough (if sufficient) to valid the rule (no issue)
+
+                                // one parameter is not valid and required
+                                if (
+                                    !$isValid
+                                    && $isParameterFixed
+                                ) {
+                                    $isValid = true;
+                                    break;
+                                }
+
+                                if ($customRule->getAction() === "MUST_NOT_VERIFY_DEFINITION") {
+                                    $isValid = !$isValid;
+                                }
+
+                                // one parameter is valid and enough
+                                if (
+                                    $isValid
+                                    && $isParameterSufficient
+                                ) {
+                                    $isValid = true;
+                                    break;
+                                }
+
+                                // one parameter is not valid but should not fail and continue with other params
+                                if (
+                                    !$isValid
+                                    && !$isParameterFailIfNotVerifed
+                                ) {
+                                    $isValid = true;
+                                }
+
+                                // one parameter is not valid
+                                if (!$isValid) {
+                                    break;
+                                }
                             }
                         }
+                    }
 
-                        if (!$isValid) {
-                            $hashedValue = $myFunc->getLine();
-                            $hashedValue .= "-" . $customRule->getAction() . "-" . $myFunc->getSourceMyFile()->fileName;
-                            $idVuln = hash("sha256", $hashedValue);
+                    if (!$isValid) {
+                        $hashedValue = $myFunc->getLine();
+                        $hashedValue .= "-" . $customRule->getAction() . "-" . $myFunc->getSourceMyFile()->fileName;
+                        $idVuln = hash("sha256", $hashedValue);
 
-                            if (is_null($context->inputs->getFalsePositiveById($idVuln))) {
-                                $temp["vuln_rule"] = Utils::encodeCharacters($customRule->getAction());
-                                $temp["vuln_name"] = Utils::encodeCharacters($customRule->getAttack());
-                                $temp["vuln_line"] = $myFunc->getLine();
-                                $temp["vuln_column"] = $myFunc->getColumn();
-                                $temp["vuln_file"] = Utils::encodeCharacters($myFunc->getSourceMyFile()->getName());
-                                $temp["vuln_description"] = Utils::encodeCharacters($customRule->getDescription());
-                                $temp["vuln_cwe"] = Utils::encodeCharacters($customRule->getCwe());
-                                $temp["vuln_id"] = $idVuln;
-                                $temp["vuln_type"] = "custom";
-                                $context->outputs->addResult($temp);
-                            }
+                        if (is_null($context->inputs->getFalsePositiveById($idVuln))) {
+                            $temp["vuln_rule"] = Utils::encodeCharacters($customRule->getAction());
+                            $temp["vuln_name"] = Utils::encodeCharacters($customRule->getAttack());
+                            $temp["vuln_line"] = $myFunc->getLine();
+                            $temp["vuln_column"] = $myFunc->getColumn();
+                            $temp["vuln_file"] = Utils::encodeCharacters($myFunc->getSourceMyFile()->getName());
+                            $temp["vuln_description"] = Utils::encodeCharacters($customRule->getDescription());
+                            $temp["vuln_cwe"] = Utils::encodeCharacters($customRule->getCwe());
+                            $temp["vuln_id"] = $idVuln;
+                            $temp["vuln_type"] = "custom";
+                            $context->outputs->addResult($temp);
                         }
                     }
                 }
@@ -326,7 +352,7 @@ class CustomAnalysis
         }
     }
 
-    public static function mustVerifyCallFlow($context, $callgraph): void
+    public static function mustVerifyCallFlow(Context $context, Callgraph $callgraph): void
     {
         $firstCustomFunctions = [];
         $rulesVerifyCallFlow = [];
@@ -341,7 +367,7 @@ class CustomAnalysis
                 $customRule->setCurrentOrderNumber(0);
                 $rulesVerifyCallFlow[] = $customRule;
 
-                if (is_array($sequence) && !empty($sequence)) {
+                if (!empty($sequence)) {
                     $firstCustomFunctions[] = $sequence[0];
                     foreach ($sequence as $customFunction) {
                         $customFunction->setOrderNumberReal(-1);

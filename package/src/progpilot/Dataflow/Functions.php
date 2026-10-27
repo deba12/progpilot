@@ -10,6 +10,8 @@
 
 namespace progpilot\Dataflow;
 
+use progpilot\Objects\MyFunction;
+
 class Functions
 {
     private array $functions;
@@ -22,7 +24,7 @@ class Functions
     /**
      * @return mixed[]
      */
-    public function getAllFunctions($funcname, $className = "function"): array
+    public function getAllFunctions(string $funcname, string $className = "function"): array
     {
         $functionsTmp = [];
 
@@ -36,7 +38,7 @@ class Functions
     }
 
 
-    public function getFunction($funcname, $className = null, $specificFile = null)
+    public function getFunction(string $funcname, ?string $className = null, ?string $specificFile = null): ?MyFunction
     {
         if (is_null($className)) {
             $className = "function";
@@ -57,12 +59,15 @@ class Functions
         return null;
     }
 
-    public function getFunctions()
+    /**
+     * @return array<string, array<mixed>>
+     */
+    public function getFunctions(): array
     {
         return $this->functions;
     }
 
-    public function addFunction(mixed $filenamehash, $classname, $funcname, $myFunc): void
+    public function addFunction(mixed $filenamehash, string $classname, string $funcname, MyFunction $myFunc): void
     {
         $this->functions[$filenamehash][$classname][$funcname] = $myFunc;
     }

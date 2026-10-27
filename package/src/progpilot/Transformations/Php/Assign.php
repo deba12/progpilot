@@ -10,6 +10,10 @@
 
 namespace progpilot\Transformations\Php;
 
+use progpilot\Context;
+use PHPCfg\Operand;
+use PHPCfg\Operand\Temporary;
+use PHPCfg\Op\Expr\AssignRef;
 use PHPCfg\Op;
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyOp;
@@ -20,12 +24,12 @@ use progpilot\Transformations\Php\Common;
 class Assign
 {
     public static function instruction(
-        $context,
-        $op,
-        $expr,
-        $var,
-        $isReturnDef = false,
-        $isDefine = false
+        Context $context,
+        Op $op,
+        ?Operand $expr,
+        ?Operand $var,
+        bool $isReturnDef = false,
+        bool $isDefine = false
     ) {
         $backDef = null;
 
@@ -48,7 +52,7 @@ class Assign
 
         // name of function return
         if ($isReturnDef) {
-            $name = $context->getCurrentFunc()->getName() . "_return";
+            $name = $context->requireCurrentFunc()->getName() . "_return";
         }
 
         $instAssign = new MyInstruction(Opcodes::END_ASSIGN);
@@ -66,7 +70,7 @@ class Assign
         $instDefinition = new MyInstruction(Opcodes::DEFINITION);
 
         $myDef = new MyDefinition(
-            $context->getCurrentBlock()->getId(),
+            $context->requireCurrentBlock()->getId(),
             $context->getCurrentMyFile(),
             $context->getCurrentLine(),
             $context->getCurrentColumn(),
@@ -76,7 +80,7 @@ class Assign
         switch (Common::getTypeDef($op)) {
             case MyOp::TYPE_ARRAY:
                 $myDef->addType(MyDefinition::TYPE_ARRAY);
-                $myDef->getCurrentState()->addType(MyDefinition::TYPE_ARRAY);
+                $myDef->requireCurrentState()->addType(MyDefinition::TYPE_ARRAY);
                 break;
             case MyOp::TYPE_PROPERTY:
                 $myDef->addType(MyDefinition::TYPE_PROPERTY);
@@ -94,40 +98,40 @@ class Assign
         }
 
         $instDefinition->addProperty(MyInstruction::DEF, $myDef);
-        $context->getCurrentMycode()->addCode($instDefinition);
+        $context->requireCurrentMycode()->addCode($instDefinition);
 
         $instAssign->addProperty(MyInstruction::DEF, $myDef);
 
-        if ($op instanceof Op\Expr\AssignRef) {
+        if ($op instanceof AssignRef) {
             $instAssign->addProperty(MyInstruction::REFERENCE, true);
         }
 
         if ($isReturnDef) {
-            $context->getCurrentFunc()->addReturnDef($myDef);
-            $context->getCurrentBlock()->addReturnDef($myDef);
+            $context->requireCurrentFunc()->addReturnDef($myDef);
+            $context->requireCurrentBlock()->addReturnDef($myDef);
             $myDef->setReturnDef(true);
         }
 
         $instAssign->addProperty(
             MyInstruction::EXPRID,
-            $context->getCurrentFunc()->getOpId($expr)
+            $context->requireCurrentFunc()->getOpId($expr)
         );
 
         if (!$isReturnDef) {
             $instAssign->addProperty(
                 MyInstruction::VARID,
-                $context->getCurrentFunc()->getOpId($var)
+                $context->requireCurrentFunc()->getOpId($var)
             );
         }
 
         if (isset($op->result)) {
             $instAssign->addProperty(
                 MyInstruction::RESULTID,
-                $context->getCurrentFunc()->getOpId($op->result)
+                $context->requireCurrentFunc()->getOpId($op->result)
             );
         }
 
-        $context->getCurrentMycode()->addCode($instAssign);
+        $context->requireCurrentMycode()->addCode($instAssign);
 
         return $backDef;
     }

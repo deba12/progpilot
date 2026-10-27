@@ -35,24 +35,36 @@ class MyDefinition extends MyOp
     public const SECURITY_HIGH = 1;
     public const SECURITY_LOW = 2;
 
-    private $blockId;
+    private int $blockId;
     private string $className;
     private bool $returnedFromValidator;
     private bool $validWhenReturning;
     private bool $validNotBoolean;
-    private $paramToArg;
-    private $argToParam;
+    private ?MyDefinition $paramToArg = null;
+    private ?MyDefinition $argToParam = null;
     private $isReturnDef;
+    /**
+     * @var list<MyDefinition>
+     */
     private array $refs;
+    /**
+     * @var list<MyDefinition>
+     */
     private array $iteratorValues;
+    /**
+     * @var array<int, int>
+     */
     private array $blocksIdsStates;
-    private $returnDef;
+    private ?bool $returnDef = null;
 
     /**
-     * @var \progpilot\Objects\MyDefOriginal
+     * @var MyDefOriginal
      */
-    public $original;
-    public $states;
+    public MyDefOriginal $original;
+    /**
+     * @var array<int, MyDefState>
+     */
+    public array $states;
 
     public function __construct($blockId, $myFile, $varLine, $varColumn, $varName)
     {
@@ -120,22 +132,31 @@ class MyDefinition extends MyOp
         unset($this->blocksIdsStates[$blockId]);
     }
 
-    public function setStatesToBlocksIds($statesToBlocksIds): void
+    /**
+     * @param array<int, int> $statesToBlocksIds
+     */
+    public function setStatesToBlocksIds(array $statesToBlocksIds): void
     {
         $this->blocksIdsStates = $statesToBlocksIds;
     }
 
-    public function getStatesToBlocksIds()
+    /**
+     * @return array<int, int>
+     */
+    public function getStatesToBlocksIds(): array
     {
         return $this->blocksIdsStates;
     }
 
-    public function setStates($states): void
+    /**
+     * @param array<int, MyDefState> $states
+     */
+    public function setStates(array $states): void
     {
         $this->states = $states;
     }
 
-    public function assignStateToBlockId($stateId, $blockId): void
+    public function assignStateToBlockId(int $stateId, int $blockId): void
     {
         if (
             isset($this->blocksIdsStates[$blockId])
@@ -161,7 +182,7 @@ class MyDefinition extends MyOp
         $this->blocksIdsStates[$blockId] = $stateId;
     }
 
-    public function createState(): \progpilot\Objects\MyDefState
+    public function createState(): MyDefState
     {
         $state = new MyDefState();
         $this->states[$state->getId()] = $state;
@@ -169,12 +190,12 @@ class MyDefinition extends MyOp
         return $state;
     }
 
-    public function addState($newstate): void
+    public function addState(MyDefState $newstate): void
     {
         $this->states[$newstate->getId()] = $newstate;
     }
 
-    public function getCurrentState()
+    public function getCurrentState(): ?MyDefState
     {
         if (isset($this->blocksIdsStates[$this->blockId])) {
             $stateId = $this->blocksIdsStates[$this->blockId];
@@ -186,17 +207,29 @@ class MyDefinition extends MyOp
         return null;
     }
 
+    /**
+     * @throws \LogicException when no state has been assigned to the current block
+     */
+    public function requireCurrentState(): MyDefState
+    {
+        return $this->getCurrentState()
+            ?? throw new \LogicException('the definition has no state for the current block');
+    }
+
     public function getNbStates(): int
     {
         return count($this->states);
     }
 
-    public function getStates()
+    /**
+     * @return array<int, MyDefState>
+     */
+    public function getStates(): array
     {
         return $this->states;
     }
 
-    public function getState($blockId)
+    public function getState(int $blockId): ?MyDefState
     {
         if (isset($this->blocksIdsStates[$blockId])) {
             $stateId = $this->blocksIdsStates[$blockId];
@@ -208,102 +241,114 @@ class MyDefinition extends MyOp
         return null;
     }
 
-    public function setArgToParam($def): void
+    public function setArgToParam(MyDefinition $def): void
     {
         $this->argToParam = $def;
     }
 
-    public function getArgToParam()
+    public function getArgToParam(): ?MyDefinition
     {
         return $this->argToParam;
     }
 
-    public function setParamToArg($def): void
+    public function setParamToArg(?MyDefinition $def): void
     {
         $this->paramToArg = $def;
     }
 
-    public function getParamToArg()
+    public function getParamToArg(): ?MyDefinition
     {
         return $this->paramToArg;
     }
 
-    public function setValidWhenReturning($value): void
+    public function setValidWhenReturning(bool $value): void
     {
         $this->validWhenReturning = $value;
     }
 
-    public function getValidWhenReturning()
+    public function getValidWhenReturning(): bool
     {
         return $this->validWhenReturning;
     }
 
-    public function setValidNotBoolean($value): void
+    public function setValidNotBoolean(bool $value): void
     {
         $this->validNotBoolean = $value;
     }
 
-    public function getValidNotBoolean()
+    public function getValidNotBoolean(): bool
     {
         return $this->validNotBoolean;
     }
 
-    public function setReturnedFromValidator($value): void
+    public function setReturnedFromValidator(bool $value): void
     {
         $this->returnedFromValidator = $value;
     }
 
-    public function getReturnedFromValidator()
+    public function getReturnedFromValidator(): bool
     {
         return $this->returnedFromValidator;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         return $this->className;
     }
 
-    public function setClassName($className): void
+    public function setClassName(string $className): void
     {
         $this->className = $className;
     }
 
-    public function getRefs()
+    /**
+     * @return list<MyDefinition>
+     */
+    public function getRefs(): array
     {
         return $this->refs;
     }
 
-    public function setRefs($refs): void
+    /**
+     * @param list<MyDefinition> $refs
+     */
+    public function setRefs(array $refs): void
     {
         $this->refs = $refs;
     }
 
-    public function getIteratorValues()
+    /**
+     * @return list<MyDefinition>
+     */
+    public function getIteratorValues(): array
     {
         return $this->iteratorValues;
     }
 
-    public function setIteratorValues($iteratorValues): void
+    /**
+     * @param list<MyDefinition> $iteratorValues
+     */
+    public function setIteratorValues(array $iteratorValues): void
     {
         $this->iteratorValues = $iteratorValues;
     }
 
-    public function getBlockId()
+    public function getBlockId(): int
     {
         return $this->blockId;
     }
 
-    public function setBlockId($blockId): void
+    public function setBlockId(int $blockId): void
     {
         $this->blockId = $blockId;
     }
 
-    public function isReturnDef()
+    public function isReturnDef(): ?bool
     {
         return $this->returnDef;
     }
 
-    public function setReturnDef($returnDef): void
+    public function setReturnDef(bool $returnDef): void
     {
         $this->returnDef = $returnDef;
     }

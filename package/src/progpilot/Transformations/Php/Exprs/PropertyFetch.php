@@ -10,19 +10,19 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Operand\BoundVariable;
 use PHPCfg\Op;
-use PHPCfg\Operand;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
 
 class PropertyFetch
 {
-    public static function propertyFetch($context, $op): void
+    public static function propertyFetch(Context $context, Op $op): void
     {
         if (
-            isset($op)
-            && $op instanceof Op\Expr\PropertyFetch
+            $op instanceof Op\Expr\PropertyFetch
             && isset($op->name->value)
         ) {
             $instDefChained = new MyInstruction(Opcodes::PROPERTY_FETCH);
@@ -31,7 +31,7 @@ class PropertyFetch
             // beginning of the chain
             if (isset($op->var->original)) {
                 $originalDef = new MyDefinition(
-                    $context->getCurrentBlock()->getId(),
+                    $context->requireCurrentBlock()->getId(),
                     $context->getCurrentMyFile(),
                     $context->getCurrentLine(),
                     $context->getCurrentColumn(),
@@ -42,9 +42,9 @@ class PropertyFetch
                 $instDefChained->addProperty(MyInstruction::ORIGINAL_DEF, $originalDef);
             }
 
-            if (isset($op->var) && $op->var instanceof Operand\BoundVariable) {
+            if (isset($op->var) && $op->var instanceof BoundVariable) {
                 $originalDef = new MyDefinition(
-                    $context->getCurrentBlock()->getId(),
+                    $context->requireCurrentBlock()->getId(),
                     $context->getCurrentMyFile(),
                     $context->getCurrentLine(),
                     $context->getCurrentColumn(),
@@ -56,17 +56,17 @@ class PropertyFetch
             if (isset($op->result)) {
                 $instDefChained->addProperty(
                     MyInstruction::RESULTID,
-                    $context->getCurrentFunc()->getOpId($op->result)
+                    $context->requireCurrentFunc()->getOpId($op->result)
                 );
             }
             if (isset($op->var)) {
                 $instDefChained->addProperty(
                     MyInstruction::VARID,
-                    $context->getCurrentFunc()->getOpId($op->var)
+                    $context->requireCurrentFunc()->getOpId($op->var)
                 );
             }
 
-            $context->getCurrentMycode()->addCode($instDefChained);
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

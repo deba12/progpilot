@@ -10,11 +10,14 @@
 
 namespace progpilot\Dataflow;
 
+use progpilot\Objects\MyBlock;
+use progpilot\Objects\MyDefinition;
+
 class Definitions
 {
-    private $in;
-    private $out;
-    private $outminuskill;
+    private ?array $in = null;
+    private ?array $out = null;
+    private ?array $outminuskill = null;
     private $gen;
     private $kill;
     private ?array $originalDefs = null;
@@ -30,12 +33,12 @@ class Definitions
         $this->defs = [];
     }
 
-    public function setNbDefs($nbDefs): void
+    public function setNbDefs(int $nbDefs): void
     {
         $this->nbDefs = $nbDefs;
     }
 
-    public function getNbDefs()
+    public function getNbDefs(): int
     {
         return $this->nbDefs;
     }
@@ -87,7 +90,7 @@ class Definitions
         }
     }
 
-    public function createBlock($id): void
+    public function createBlock(int $id): void
     {
         $this->in[$id] = [];
         $this->out[$id] = [];
@@ -97,12 +100,15 @@ class Definitions
     }
 
     /* getters and setters */
-    public function getDefs()
+    /**
+     * @return array<string, array<mixed>>
+     */
+    public function getDefs(): array
     {
         return $this->defs;
     }
 
-    public function getOriginalDef($id)
+    public function getOriginalDef(int $id): ?MyDefinition
     {
         if (isset($this->originalDefs[$id])) {
             return $this->originalDefs[$id];
@@ -111,7 +117,7 @@ class Definitions
         return null;
     }
 
-    public function addDef($name, $def): void
+    public function addDef(string $name, MyDefinition $def): void
     {
         $continue = true;
 
@@ -149,7 +155,7 @@ class Definitions
         return false;
     }
 
-    public function addGen($block, $def): bool
+    public function addGen(int $block, MyDefinition $def): bool
     {
         if (isset($this->gen[$block]) && !in_array($def, $this->gen[$block], true)) {
             $this->gen[$block][] = $def;
@@ -169,7 +175,10 @@ class Definitions
         return false;
     }
 
-    public function getKill($block)
+    /**
+     * @return list<MyDefinition>|null
+     */
+    public function getKill(int $block): ?array
     {
         if (isset($this->kill[$block])) {
             return $this->kill[$block];
@@ -178,7 +187,10 @@ class Definitions
         return null;
     }
 
-    public function getGen($block)
+    /**
+     * @return list<MyDefinition>|null
+     */
+    public function getGen(int $block): ?array
     {
         if (isset($this->gen[$block])) {
             return $this->gen[$block];
@@ -187,7 +199,10 @@ class Definitions
         return null;
     }
 
-    public function getOut($block)
+    /**
+     * @return list<MyDefinition>|null
+     */
+    public function getOut(int $block): ?array
     {
         if (isset($this->out[$block])) {
             return $this->out[$block];
@@ -196,7 +211,10 @@ class Definitions
         return null;
     }
 
-    public function getOutMinusKill($block)
+    /**
+     * @return list<MyDefinition>|null
+     */
+    public function getOutMinusKill(int $block): ?array
     {
         if (isset($this->outminuskill[$block])) {
             return $this->outminuskill[$block];
@@ -205,7 +223,10 @@ class Definitions
         return null;
     }
 
-    public function getIn($block)
+    /**
+     * @return list<MyDefinition>|null
+     */
+    public function getIn(int $block): ?array
     {
         if (isset($this->in[$block])) {
             return $this->in[$block];
@@ -224,17 +245,26 @@ class Definitions
         $this->gen[$block] = $gen;
     }
 
-    public function setOut($block, $out): void
+    /**
+     * @param list<MyDefinition> $out
+     */
+    public function setOut(int $block, array $out): void
     {
         $this->out[$block] = $out;
     }
 
-    public function setOutMinusKill($block, $outminuskill): void
+    /**
+     * @param list<MyDefinition> $outminuskill
+     */
+    public function setOutMinusKill(int $block, array $outminuskill): void
     {
         $this->outminuskill[$block] = $outminuskill;
     }
 
-    public function setIn($block, $in): void
+    /**
+     * @param list<MyDefinition> $in
+     */
+    public function setIn(int $block, array $in): void
     {
         $this->in[$block] = $in;
     }
@@ -249,7 +279,10 @@ class Definitions
         $this->currentFunc = $currentFunc;
     }
 
-    public function getDefRefByName($name)
+    /**
+     * @return list<MyDefinition>|null
+     */
+    public function getDefRefByName(string $name): ?array
     {
         if (isset($this->defs[$name])) {
             return $this->defs[$name];
@@ -259,7 +292,7 @@ class Definitions
     }
 
     // def1 = def, def2 = defsearch inside ResolveDefs function
-    public static function defEquality($def1, $def2): bool
+    public static function defEquality(MyDefinition $def1, MyDefinition $def2): bool
     {
         if ($def1->getName() === $def2->getName()) {
             return true;
@@ -269,7 +302,7 @@ class Definitions
     }
 
     // $this->data["gen"][$blockId]
-    public function computeKill($blockId): void
+    public function computeKill(int $blockId): void
     {
         foreach ($this->gen[$blockId] as $gen) {
             $tmpdefs = $this->getDefRefByName($gen->getName());
@@ -285,7 +318,10 @@ class Definitions
         }
     }
 
-    public function reachingDefs($myBlocks): void
+    /**
+     * @param list<MyBlock> $myBlocks
+     */
+    public function reachingDefs(array $myBlocks): void
     {
         foreach ($myBlocks as $block) {
             $blockId = $block->getId();

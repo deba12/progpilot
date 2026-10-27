@@ -10,6 +10,13 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Op\Expr\Cast\Int_;
+use PHPCfg\Op\Expr\Cast\Array_;
+use PHPCfg\Op\Expr\Cast\Bool_;
+use PHPCfg\Op\Expr\Cast\Double;
+use PHPCfg\Op\Expr\Cast\Object_;
+use PHPCfg\Op\Expr\Cast\String_;
 use PHPCfg\Op;
 use progpilot\Transformations\Php\Expr;
 use progpilot\Objects\MyDefinition;
@@ -18,30 +25,28 @@ use progpilot\Code\Opcodes;
 
 class CastFetch
 {
-    public static function castFetch($context, $op, $expr): void
+    public static function castFetch(Context $context, Op $op, $expr): void
     {
-        if (isset($op)) {
-            if (
-                $op instanceof Op\Expr\Cast\Int_
-                || $op instanceof Op\Expr\Cast\Array_
-                || $op instanceof Op\Expr\Cast\Bool_
-                || $op instanceof Op\Expr\Cast\Double
-                || $op instanceof Op\Expr\Cast\Object_
-            ) {
-                Expr::implicitfetch($context, $op->expr, $expr);
-                $instDefChained = new MyInstruction(Opcodes::CAST);
-                $instDefChained->addProperty("type_cast", MyDefinition::CAST_SAFE);
-                $instDefChained->addProperty(MyInstruction::EXPRID, $context->getCurrentFunc()->getOpId($op->expr));
-                $instDefChained->addProperty(MyInstruction::RESULTID, $context->getCurrentFunc()->getOpId($op->result));
-                $context->getCurrentMycode()->addCode($instDefChained);
-            } elseif ($op instanceof Op\Expr\Cast\String_) {
-                Expr::implicitfetch($context, $op->expr, $expr);
-                $instDefChained = new MyInstruction(Opcodes::CAST);
-                $instDefChained->addProperty("type_cast", MyDefinition::CAST_NOT_SAFE);
-                $instDefChained->addProperty(MyInstruction::EXPRID, $context->getCurrentFunc()->getOpId($op->expr));
-                $instDefChained->addProperty(MyInstruction::RESULTID, $context->getCurrentFunc()->getOpId($op->result));
-                $context->getCurrentMycode()->addCode($instDefChained);
-            }
+        if (
+                $op instanceof Int_
+                || $op instanceof Array_
+                || $op instanceof Bool_
+                || $op instanceof Double
+                || $op instanceof Object_
+        ) {
+            Expr::implicitfetch($context, $op->expr, $expr);
+            $instDefChained = new MyInstruction(Opcodes::CAST);
+            $instDefChained->addProperty("type_cast", MyDefinition::CAST_SAFE);
+            $instDefChained->addProperty(MyInstruction::EXPRID, $context->requireCurrentFunc()->getOpId($op->expr));
+            $instDefChained->addProperty(MyInstruction::RESULTID, $context->requireCurrentFunc()->getOpId($op->result));
+            $context->requireCurrentMycode()->addCode($instDefChained);
+        } elseif ($op instanceof String_) {
+            Expr::implicitfetch($context, $op->expr, $expr);
+            $instDefChained = new MyInstruction(Opcodes::CAST);
+            $instDefChained->addProperty("type_cast", MyDefinition::CAST_NOT_SAFE);
+            $instDefChained->addProperty(MyInstruction::EXPRID, $context->requireCurrentFunc()->getOpId($op->expr));
+            $instDefChained->addProperty(MyInstruction::RESULTID, $context->requireCurrentFunc()->getOpId($op->result));
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

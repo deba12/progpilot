@@ -12,31 +12,31 @@ namespace progpilot\Objects;
 
 class MyAssertion
 {
-    private $typeAssertion;
-    private $mydef;
+    private string $typeAssertion;
+    private MyDefinition $mydef;
 
-    public function __construct($myDef, $typeAssertion)
+    public function __construct(MyDefinition $myDef, string $typeAssertion)
     {
         $this->typeAssertion = $typeAssertion;
         $this->mydef = $myDef;
     }
 
-    public function addDef($myDef): void
+    public function addDef(MyDefinition $myDef): void
     {
         $this->mydef = $myDef;
     }
 
-    public function getDef()
+    public function getDef(): MyDefinition
     {
         return $this->mydef;
     }
 
-    public function addType($typeAssertion): void
+    public function addType(string $typeAssertion): void
     {
         $this->typeAssertion = $typeAssertion;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->typeAssertion;
     }

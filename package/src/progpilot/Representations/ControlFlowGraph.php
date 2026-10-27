@@ -10,6 +10,8 @@
 
 namespace progpilot\Representations;
 
+use progpilot\Objects\MyBlock;
+
 class ControlFlowGraph
 {
     private array $nodes;
@@ -41,12 +43,12 @@ class ControlFlowGraph
         }
     }
 
-    public function getNodes()
+    public function getNodes(): array
     {
         return $this->nodes;
     }
 
-    public function getEdges()
+    public function getEdges(): array
     {
         return $this->edges;
     }
@@ -56,7 +58,7 @@ class ControlFlowGraph
         $this->nodes["$id"] = $block;
     }
 
-    public function getIdOfNode($block)
+    public function getIdOfNode($block): int|string
     {
         foreach ($this->nodes as $id => $blockTmp) {
             if ($block === $blockTmp) {
@@ -67,7 +69,7 @@ class ControlFlowGraph
         return -1;
     }
 
-    public function addEdge($caller, $callee): void
+    public function addEdge(MyBlock $caller, MyBlock $callee): void
     {
         $this->edges[] = [$caller, $callee];
     }

@@ -10,25 +10,34 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Op\Expr\Include_;
+use PHPCfg\Op\Expr\Print_;
+use PHPCfg\Op\Terminal\Echo_;
+use PHPCfg\Op\Expr\Eval_;
+use PHPCfg\Op\Terminal\Exit_;
+use PHPCfg\Op\Expr\NsFuncCall;
+use PHPCfg\Op\Expr\MethodCall;
+use PHPCfg\Op\Expr\StaticCall;
+use PHPCfg\Op\Expr\New_;
 use PHPCfg\Op;
 use progpilot\Transformations\Php\FuncCall;
 
 class FunccallFetch
 {
-    public static function funccallFetch($context, $op): void
+    public static function funccallFetch(Context $context, Op $op): void
     {
         if (
-            isset($op)
-            && ($op instanceof Op\Expr\Include_
-                || $op instanceof Op\Expr\Print_
-                || $op instanceof Op\Terminal\Echo_
-                || $op instanceof Op\Expr\Eval_
-                || $op instanceof Op\Terminal\Exit_
+            ($op instanceof Include_
+                || $op instanceof Print_
+                || $op instanceof Echo_
+                || $op instanceof Eval_
+                || $op instanceof Exit_
                 || $op instanceof Op\Expr\FuncCall
-                || $op instanceof Op\Expr\NsFuncCall
-                || $op instanceof Op\Expr\MethodCall
-                || $op instanceof Op\Expr\StaticCall
-                || $op instanceof Op\Expr\New_)
+                || $op instanceof NsFuncCall
+                || $op instanceof MethodCall
+                || $op instanceof StaticCall
+                || $op instanceof New_)
         ) {
             $oldOp = $context->getCurrentOp();
             $context->setCurrentOp($op);

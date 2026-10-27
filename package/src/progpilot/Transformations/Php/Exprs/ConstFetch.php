@@ -10,40 +10,40 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Operand\Literal;
 use PHPCfg\Op;
-use PHPCfg\Operand;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
 
 class ConstFetch
 {
-    public static function constFetch($context, $op): void
+    public static function constFetch(Context $context, Op $op): void
     {
         if (
-            isset($op)
-            && $op instanceof Op\Expr\ConstFetch
+            $op instanceof Op\Expr\ConstFetch
             && isset($op->name)
-            && $op->name instanceof Operand\Literal
+            && $op->name instanceof Literal
         ) {
             $myTemp = new MyDefinition(
-                $context->getCurrentBlock()->getId(),
+                $context->requireCurrentBlock()->getId(),
                 $context->getCurrentMyFile(),
                 $context->getCurrentLine(),
                 $context->getCurrentColumn(),
                 $op->name->value
             );
-            $myTemp->getCurrentState()->addType(MyDefinition::TYPE_CONSTANTE);
+            $myTemp->requireCurrentState()->addType(MyDefinition::TYPE_CONSTANTE);
             if ($op->name->value === "DIRECTORY_SEPARATOR") {
-                $myTemp->getCurrentState()->addLastKnownValue("/");
+                $myTemp->requireCurrentState()->addLastKnownValue("/");
             } else {
-                $myTemp->getCurrentState()->addLastKnownValue($op->name->value);
+                $myTemp->requireCurrentState()->addLastKnownValue($op->name->value);
             }
 
             $instDefChained = new MyInstruction(Opcodes::CONST_FETCH);
             $instDefChained->addProperty(MyInstruction::DEF, $myTemp);
-            $instDefChained->addProperty(MyInstruction::RESULTID, $context->getCurrentFunc()->getOpId($op->result));
-            $context->getCurrentMycode()->addCode($instDefChained);
+            $instDefChained->addProperty(MyInstruction::RESULTID, $context->requireCurrentFunc()->getOpId($op->result));
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

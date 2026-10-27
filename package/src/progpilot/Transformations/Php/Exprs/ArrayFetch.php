@@ -10,6 +10,8 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Op\Expr\Array_;
 use PHPCfg\Op;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
@@ -17,11 +19,10 @@ use progpilot\Transformations\Php\Expr;
 
 class ArrayFetch
 {
-    public static function arrayFetch($context, $op): void
+    public static function arrayFetch(Context $context, Op $op): void
     {
         if (
-            isset($op)
-            && $op instanceof Op\Expr\Array_
+            $op instanceof Array_
         ) {
             if (isset($op->values) && !empty($op->values)) {
                 $instVariableFetch = new MyInstruction(Opcodes::ARRAY_EXPR);
@@ -30,7 +31,7 @@ class ArrayFetch
                     if (isset($op->keys[$nbArrayExpr])) {
                         $instVariableFetch->addProperty(
                             "key" . $nbArrayExpr,
-                            $context->getCurrentFunc()->getOpId($op->keys[$nbArrayExpr])
+                            $context->requireCurrentFunc()->getOpId($op->keys[$nbArrayExpr])
                         );
 
                         Expr::implicitfetch($context, $op->keys[$nbArrayExpr], "");
@@ -39,7 +40,7 @@ class ArrayFetch
                     Expr::implicitfetch($context, $value, "");
                     $instVariableFetch->addProperty(
                         "value" . $nbArrayExpr,
-                        $context->getCurrentFunc()->getOpId($value)
+                        $context->requireCurrentFunc()->getOpId($value)
                     );
 
                     $nbArrayExpr++;
@@ -48,7 +49,7 @@ class ArrayFetch
 
                 $instVariableFetch->addProperty(
                     MyInstruction::RESULTID,
-                    $context->getCurrentFunc()->getOpId($op->result)
+                    $context->requireCurrentFunc()->getOpId($op->result)
                 );
 
                 $instVariableFetch->addProperty(
@@ -56,7 +57,7 @@ class ArrayFetch
                     $nbArrayExpr
                 );
 
-                $context->getCurrentMycode()->addCode($instVariableFetch);
+                $context->requireCurrentMycode()->addCode($instVariableFetch);
             }
         }
     }

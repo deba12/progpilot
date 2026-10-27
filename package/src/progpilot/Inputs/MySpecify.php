@@ -12,12 +12,12 @@ namespace progpilot\Inputs;
 
 class MySpecify
 {
-    private $name;
-    private $language;
-    private $instanceOfName;
+    private string $name;
+    private string $language;
+    private ?string $instanceOfName = null;
     private bool $isInstance;
 
-    public function __construct($name, $language)
+    public function __construct(string $name, string $language)
     {
         $this->name = $name;
         $this->language = $language;
@@ -25,32 +25,32 @@ class MySpecify
         $this->isInstance = false;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function getLanguage()
+    public function getLanguage(): string
     {
         return $this->language;
     }
 
-    public function setIsInstance($isInstance): void
+    public function setIsInstance(bool $isInstance): void
     {
         $this->isInstance = $isInstance;
     }
 
-    public function isInstance()
+    public function isInstance(): bool
     {
         return $this->isInstance;
     }
 
-    public function getInstanceOfName()
+    public function getInstanceOfName(): string
     {
         return $this->instanceOfName;
     }
 
-    public function setInstanceOfName($name)
+    public function setInstanceOfName(string $name): string
     {
         return $this->instanceOfName = $name;
     }

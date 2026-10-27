@@ -10,9 +10,16 @@
 
 namespace progpilot\Dataflow;
 
+use progpilot\Objects\MyDefinition;
+
 class ArrayMulti
 {
-    public static function arrayMergeMulti($ar1, $ar2)
+    /**
+     * @param list<MyDefinition> $ar1
+     * @param list<MyDefinition> $ar2
+     * @return list<MyDefinition>
+     */
+    public static function arrayMergeMulti(array $ar1, array $ar2): array
     {
         $newar1 = $ar1;
 
@@ -36,8 +43,10 @@ class ArrayMulti
 
     /**
      * @return mixed[]
+     * @param list<MyDefinition> $ar1
+     * @param list<MyDefinition> $ar2
      */
-    public static function arrayMinusMulti($ar1, $ar2): array
+    public static function arrayMinusMulti(array $ar1, array $ar2): array
     {
         $newar1 = [];
 

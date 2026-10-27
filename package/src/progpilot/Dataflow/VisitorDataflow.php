@@ -10,6 +10,8 @@
 
 namespace progpilot\Dataflow;
 
+use progpilot\Context;
+use progpilot\Analysis\CustomAnalysis;
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyFunction;
 use progpilot\Dataflow\Definitions;
@@ -22,7 +24,7 @@ class VisitorDataflow
 {
     private ?array $blocksArrays = null;
 
-    protected function isArrayAlreadyDefined($nameArray): bool
+    protected function isArrayAlreadyDefined(string $nameArray): bool
     {
         if (isset($this->blocksArrays["" . $nameArray . ""])) {
             return true;
@@ -31,12 +33,12 @@ class VisitorDataflow
         return false;
     }
 
-    protected function defineArray($nameArray)
+    protected function defineArray(string $nameArray)
     {
         $this->blocksArrays["" . $nameArray . ""] = true;
     }
 
-    public function analyze($context, $myFunc, $defsIncluded = null): void
+    public function analyze(Context $context, MyFunction $myFunc, $defsIncluded = null): void
     {
         $myCode = $myFunc->getMyCode();
         $code = $myCode->getCodes();
@@ -70,8 +72,8 @@ class VisitorDataflow
                         $context->setCurrentFunc($myFunc);
 
                         // representations start
-                        $hashedValue = $context->getCurrentFunc()->getName()
-                        . "-" . $context->getCurrentBlock()->getId();
+                        $hashedValue = $context->requireCurrentFunc()->getName()
+                        . "-" . $context->requireCurrentBlock()->getId();
                         $idCfg = hash("sha256", $hashedValue);
                         $context->outputs->cfgAddTextOfMyBlock(
                             $context->getCurrentFunc(),
@@ -90,7 +92,7 @@ class VisitorDataflow
                         array_push($blocksStack, $myBlock);
                         array_push($blocks, $myBlock);
 
-                        $context->getCurrentFunc()->getDefs()->createBlock($myBlock->getId());
+                        $context->requireCurrentFunc()->getDefs()->createBlock($myBlock->getId());
 
                         $assertions = $myBlock->getAssertions();
                         foreach ($assertions as $assertion) {
@@ -99,7 +101,7 @@ class VisitorDataflow
                         }
 
                         // representations start
-                        $idCfg = hash("sha256", $context->getCurrentFunc()->getName() . "-" . $myBlock->getId());
+                        $idCfg = hash("sha256", $context->requireCurrentFunc()->getName() . "-" . $myBlock->getId());
                         $context->outputs->cfgAddTextOfMyBlock(
                             $context->getCurrentFunc(),
                             $idCfg,
@@ -113,11 +115,11 @@ class VisitorDataflow
                         // representations end
 
                         if ($firstBlock) {
-                            $context->getCurrentFunc()->setFirstBlockId($myBlock->getId());
+                            $context->requireCurrentFunc()->setFirstBlockId($myBlock->getId());
                             $firstBlock = false;
 
                             // param are part of the first block of the function
-                            foreach ($context->getCurrentFunc()->getParams() as $param) {
+                            foreach ($context->requireCurrentFunc()->getParams() as $param) {
                                 $param->setBlockId($myBlock->getId());
                                 $param->unsetState(0);
                                 $state = $param->createState();
@@ -126,18 +128,18 @@ class VisitorDataflow
                             // end
 
 
-                            if ($context->getCurrentFunc()->isType(MyFunction::TYPE_FUNC_METHOD)) {
-                                $thisdef = $context->getCurrentFunc()->getThisDef();
+                            if ($context->requireCurrentFunc()->isType(MyFunction::TYPE_FUNC_METHOD)) {
+                                $thisdef = $context->requireCurrentFunc()->getThisDef();
 
                                 $thisdef->setBlockId($myBlock->getId());
                                 $thisdef->unsetState(0);
                                 $state = $thisdef->createState();
                                 $thisdef->assignStateToBlockId($state->getId(), $myBlock->getId());
 
-                                $thisdef->getCurrentState()->addType(MyDefinition::TYPE_INSTANCE);
+                                $thisdef->requireCurrentState()->addType(MyDefinition::TYPE_INSTANCE);
 
-                                $context->getCurrentFunc()->getDefs()->addDef($thisdef->getName(), $thisdef);
-                                $context->getCurrentFunc()->getDefs()->addGen($thisdef->getBlockId(), $thisdef);
+                                $context->requireCurrentFunc()->getDefs()->addDef($thisdef->getName(), $thisdef);
+                                $context->requireCurrentFunc()->getDefs()->addGen($thisdef->getBlockId(), $thisdef);
                             }
                         }
 
@@ -153,10 +155,10 @@ class VisitorDataflow
                             $context->setCurrentBlock($blocksStack[count($blocksStack) - 1]);
                         }
 
-                        $context->getCurrentFunc()->getDefs()->computeKill($myBlock->getId());
+                        $context->requireCurrentFunc()->getDefs()->computeKill($myBlock->getId());
 
                         // representations start
-                        $idCfg = hash("sha256", $context->getCurrentFunc()->getName() . "-" . $myBlock->getId());
+                        $idCfg = hash("sha256", $context->requireCurrentFunc()->getName() . "-" . $myBlock->getId());
                         $context->outputs->cfgAddTextOfMyBlock(
                             $context->getCurrentFunc(),
                             $idCfg,
@@ -170,7 +172,7 @@ class VisitorDataflow
                     case Opcodes::LEAVE_FUNCTION:
                         $myFunc = $instruction->getProperty(MyInstruction::MYFUNC);
 
-                        $context->getCurrentFunc()->getDefs()->reachingDefs($blocks);
+                        $context->requireCurrentFunc()->getDefs()->reachingDefs($blocks);
 
                         $myFunc->setBlocks($blocks);
 
@@ -179,11 +181,9 @@ class VisitorDataflow
                         // functions are generally parsed before the main and so declarations of instances
                         if ($myFunc->isType(MyFunction::TYPE_FUNC_METHOD)) {
                             foreach ($context->getObjects()->getObjects() as $idobject => $myClass) {
-                                if (!is_null($myClass)) {
-                                    foreach ($myClass->getMethods() as $myMethod) {
-                                        if ($myMethod->getName() === $myFunc->getName()) {
-                                            $myMethod->setLastBlockIds($lastBlockIds);
-                                        }
+                                foreach ($myClass->getMethods() as $myMethod) {
+                                    if ($myMethod->getName() === $myFunc->getName()) {
+                                        $myMethod->setLastBlockIds($lastBlockIds);
                                     }
                                 }
                             }
@@ -191,7 +191,7 @@ class VisitorDataflow
 
                         // representations start
                         if (isset($lastBlockIds[0])) {
-                            $idCfg = hash("sha256", $context->getCurrentFunc()->getName() . "-" . $lastBlockIds[0]);
+                            $idCfg = hash("sha256", $context->requireCurrentFunc()->getName() . "-" . $lastBlockIds[0]);
                             $context->outputs->cfgAddTextOfMyBlock(
                                 $context->getCurrentFunc(),
                                 $idCfg,
@@ -204,7 +204,7 @@ class VisitorDataflow
 
                     case Opcodes::FUNC_CALL:
                         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
-                        $myFuncCall->setBlockId($context->getCurrentBlock()->getId());
+                        $myFuncCall->setBlockId($context->requireCurrentBlock()->getId());
 
                         if (is_null($myFuncCall->getSourceMyFile())) {
                             $myFuncCall->setSourceMyFile($context->getCurrentMyfile());
@@ -224,11 +224,11 @@ class VisitorDataflow
                                     if ($mySource->isParameter($nbparams + 1)) {
                                         $deffrom = $instruction->getProperty("argoriginaldef$nbparams");
                                         if (!is_null($deffrom)) {
-                                            $context->getCurrentFunc()->getDefs()->addDef(
+                                            $context->requireCurrentFunc()->getDefs()->addDef(
                                                 $deffrom->getName(),
                                                 $deffrom
                                             );
-                                            $context->getCurrentFunc()->getDefs()->addGen(
+                                            $context->requireCurrentFunc()->getDefs()->addGen(
                                                 $deffrom->getBlockId(),
                                                 $deffrom
                                             );
@@ -243,7 +243,7 @@ class VisitorDataflow
                         // representations start
                         $idCfg = hash(
                             "sha256",
-                            $context->getCurrentFunc()->getName() . "-" . $context->getCurrentBlock()->getId()
+                            $context->requireCurrentFunc()->getName() . "-" . $context->requireCurrentBlock()->getId()
                         );
                         $context->outputs->cfgAddTextOfMyBlock(
                             $context->getCurrentFunc(),
@@ -257,22 +257,22 @@ class VisitorDataflow
                     case Opcodes::DEFINITION:
                         $myDef = $instruction->getProperty(MyInstruction::DEF);
 
-                        if ($context->getCurrentFunc()->getDefs()->getNbDefs() < $context->getMaxDefinitions()) {
+                        if ($context->requireCurrentFunc()->getDefs()->getNbDefs() < $context->getMaxDefinitions()) {
                             if ($myDef->isType(MyDefinition::TYPE_ARRAY)) {
                                 // only one array by name is defined in a function (or blocks see arrays12.php)
                                 if (!$this->isArrayAlreadyDefined($myDef->getName())) {
-                                    $context->getCurrentFunc()->getDefs()->addDef($myDef->getName(), $myDef);
-                                    $context->getCurrentFunc()->getDefs()->addGen($myDef->getBlockId(), $myDef);
+                                    $context->requireCurrentFunc()->getDefs()->addDef($myDef->getName(), $myDef);
+                                    $context->requireCurrentFunc()->getDefs()->addGen($myDef->getBlockId(), $myDef);
                                     $this->defineArray($myDef->getName());
                                 }
                             } elseif (
                                 !$myDef->isType(MyDefinition::TYPE_PROPERTY)
                                 && !$myDef->isType(MyDefinition::TYPE_STATIC_PROPERTY)
                             ) {
-                                $context->getCurrentFunc()->getDefs()->addDef($myDef->getName(), $myDef);
-                                $context->getCurrentFunc()->getDefs()->addGen($myDef->getBlockId(), $myDef);
+                                $context->requireCurrentFunc()->getDefs()->addDef($myDef->getName(), $myDef);
+                                $context->requireCurrentFunc()->getDefs()->addGen($myDef->getBlockId(), $myDef);
 
-                                \progpilot\Analysis\CustomAnalysis::defineObject(
+                                CustomAnalysis::defineObject(
                                     $context,
                                     $instruction,
                                     $myDef,
@@ -290,7 +290,7 @@ class VisitorDataflow
                         // representations start
                         $idCfg = hash(
                             "sha256",
-                            $context->getCurrentFunc()->getName() . "-" . $context->getCurrentBlock()->getId()
+                            $context->requireCurrentFunc()->getName() . "-" . $context->requireCurrentBlock()->getId()
                         );
                         $context->outputs->cfgAddTextOfMyBlock(
                             $context->getCurrentFunc(),

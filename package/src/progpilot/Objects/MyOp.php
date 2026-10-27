@@ -13,12 +13,12 @@ namespace progpilot\Objects;
 class MyOp
 {
     public static $nbObjects;
-    protected $varId;
+    protected ?int $varId = null;
 
-    private $varName;
-    private $varLine;
-    private $varColumn;
-    private $sourceMyFile;
+    private string $varName;
+    private int $varLine;
+    private int $varColumn;
+    private ?MyFile $sourceMyFile = null;
 
     private int $flags;
 
@@ -35,7 +35,7 @@ class MyOp
     public const TYPE_CONST = "type_const";
     public const TYPE_STATIC_PROPERTY = "type_static_property";
 
-    public function __construct($varName, $varLine, $varColumn)
+    public function __construct(string $varName, int $varLine, int $varColumn)
     {
         $this->flags = 0;
         $this->varId = MyOp::$nbObjects++;
@@ -50,79 +50,79 @@ class MyOp
         $this->varId = MyOp::$nbObjects++;
     }
 
-    public function setType($flags): void
+    public function setType(int $flags): void
     {
         $this->flags = $flags;
     }
 
-    public function getType()
+    public function getType(): int
     {
         return $this->flags;
     }
 
-    public function isType($type): bool
+    public function isType(int $type): bool
     {
         return (bool) ($this->flags & $type);
     }
 
-    public function addType($type): void
+    public function addType(int $type): void
     {
         $this->flags |= $type;
     }
 
-    public function removeType($type): void
+    public function removeType(int $type): void
     {
         if ($this->isType($type)) {
             $this->flags ^= $type;
         }
     }
 
-    public function setId($varId): void
+    public function setId(int $varId): void
     {
         $this->varId = $varId;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->varId;
     }
 
-    public function getLine()
+    public function getLine(): int
     {
         return $this->varLine;
     }
 
-    public function getColumn()
+    public function getColumn(): int
     {
         return $this->varColumn;
     }
 
-    public function setLine($line): void
+    public function setLine(int $line): void
     {
         $this->varLine = $line;
     }
 
-    public function setColumn($column): void
+    public function setColumn(int $column): void
     {
         $this->varColumn = $column;
     }
 
-    public function getSourceMyFile()
+    public function getSourceMyFile(): ?MyFile
     {
         return $this->sourceMyFile;
     }
 
-    public function setSourceMyFile($sourceMyFile): void
+    public function setSourceMyFile(MyFile $sourceMyFile): void
     {
         $this->sourceMyFile = $sourceMyFile;
     }
 
-    public function setName($varName): void
+    public function setName(string $varName): void
     {
         $this->varName = $varName;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->varName;
     }

@@ -12,8 +12,8 @@ namespace progpilot\Inputs;
 
 class MySink extends MySpecify
 {
-    private $attack;
-    private $cwe;
+    private string $attack;
+    private string $cwe;
     private array $parameters;
     private bool $hasParameters;
     private array $globalconditions;
@@ -29,12 +29,12 @@ class MySink extends MySpecify
         $this->globalconditions = [];
     }
 
-    public function addGlobalconditions($conditions): void
+    public function addGlobalconditions(string $conditions): void
     {
         $this->globalconditions[] = $conditions;
     }
 
-    public function isGlobalcondition($condition): bool
+    public function isGlobalcondition(string $condition): bool
     {
         foreach ($this->globalconditions as $conditionsGlobal) {
             if ($condition === $conditionsGlobal) {
@@ -45,13 +45,13 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function addParameter($id, $conditions = null): void
+    public function addParameter(int $id, array|string|null $conditions = null): void
     {
         $parameter = [$id, $conditions];
         $this->parameters[] = $parameter;
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
@@ -70,7 +70,7 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function isParametercondition($i, $condition): bool
+    public function isParametercondition(int $i, ?string $condition): bool
     {
         if (is_null($condition)) {
             return true;
@@ -108,7 +108,7 @@ class MySink extends MySpecify
         return null;
     }
 
-    public function isParameter($i): bool
+    public function isParameter(int $i): bool
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -120,22 +120,22 @@ class MySink extends MySpecify
         return false;
     }
 
-    public function hasParameters()
+    public function hasParameters(): bool
     {
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters): void
+    public function setHasParameters(bool $hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }
 
-    public function getAttack()
+    public function getAttack(): string
     {
         return $this->attack;
     }
 
-    public function getCwe()
+    public function getCwe(): string
     {
         return $this->cwe;
     }

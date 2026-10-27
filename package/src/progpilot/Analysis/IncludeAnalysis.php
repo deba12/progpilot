@@ -10,6 +10,10 @@
 
 namespace progpilot\Analysis;
 
+use progpilot\Objects\MyBlock;
+use progpilot\Context;
+use progpilot\Dataflow\Definitions;
+use progpilot\Analyzer;
 use progpilot\Objects\MyFile;
 use progpilot\Code\MyInstruction;
 use progpilot\Helpers\Analysis as HelpersAnalysis;
@@ -17,7 +21,7 @@ use progpilot\Helpers\State as HelpersState;
 
 class IncludeAnalysis
 {
-    public static function isCircularInclude($myFile): bool
+    public static function isCircularInclude(MyFile $myFile): bool
     {
         $includedMyFile = $myFile->getIncludedFromMyfile();
         while (!is_null($includedMyFile)) {
@@ -31,8 +35,15 @@ class IncludeAnalysis
         return false;
     }
 
-    public static function funccall($context, $blocks, $defs, $instruction): void
-    {
+    /**
+     * @param list<MyBlock> $blocks
+     */
+    public static function funccall(
+        Context $context,
+        array $blocks,
+        Definitions $defs,
+        MyInstruction $instruction
+    ): void {
         $funcName = $instruction->getProperty(MyInstruction::FUNCNAME);
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
 
@@ -44,8 +55,8 @@ class IncludeAnalysis
                 $atLeastOneIncludeResolved = false;
 
                 $myDefArg = $instruction->getProperty("argdef0");
-                if (count($myDefArg->getCurrentState()->getLastKnownValues()) !== 0) {
-                    foreach ($myDefArg->getCurrentState()->getLastKnownValues() as $lastKnownValue) {
+                if (count($myDefArg->requireCurrentState()->getLastKnownValues()) !== 0) {
+                    foreach ($myDefArg->requireCurrentState()->getLastKnownValues() as $lastKnownValue) {
                         $realFile = false;
                         // else it's maybe a relative path
                         if (
@@ -125,7 +136,7 @@ class IncludeAnalysis
                                         $arrayRequires[] = $nameIncludedFile;
                                     }
 
-                                    $analyzerInclude = new \progpilot\Analyzer();
+                                    $analyzerInclude = new Analyzer();
                                     $saveCurrentMyfile = $context->getCurrentMyfile();
                                     $saveCurrentOp = $context->getCurrentOp();
                                     $saveCurrentBlock = $context->getCurrentBlock();
@@ -149,7 +160,7 @@ class IncludeAnalysis
                                         $context->setPath(dirname($currentFile));
                                     }
 
-                                    $fileNameHash = hash("sha256", $context->getCurrentMyfile()->getName());
+                                    $fileNameHash = hash("sha256", $context->requireCurrentMyfile()->getName());
                                     $mainInclude = $context->getFunctions()->getFunction(
                                         "{main}",
                                         "function",
@@ -238,9 +249,10 @@ class IncludeAnalysis
                                             }
 
                                             $resultid = $instruction->getProperty(MyInstruction::RESULTID);
-                                            $opInformation = $context->getCurrentFunc()->getOpInformation($resultid);
+                                            $currentFunc = $context->requireCurrentFunc();
+                                            $opInformation = $currentFunc->getOpInformation($resultid);
                                             $opInformation["chained_results"] = $mainInclude->getReturnDefs();
-                                            $context->getCurrentFunc()->storeOpInformation($resultid, $opInformation);
+                                            $currentFunc->storeOpInformation($resultid, $opInformation);
                                         }
 
                                         // even if we don't visit again the function
@@ -248,26 +260,24 @@ class IncludeAnalysis
                                         // to include them in the file performing the include
                                         // it's an approximation ...
                                         $defsOutputIncludedFinal = [];
-                                        if (!is_null($mainInclude->getDefs())) {
                                             $defsOutputIncluded = [];
-                                            foreach ($mainInclude->getLastBlockIds() as $lastBlockId) {
-                                                $defsOutputIncluded = array_merge(
-                                                    $mainInclude->getDefs()->getOutMinusKill($lastBlockId),
-                                                    $defsOutputIncluded
-                                                );
-                                            }
+                                        foreach ($mainInclude->getLastBlockIds() as $lastBlockId) {
+                                            $defsOutputIncluded = array_merge(
+                                                $mainInclude->getDefs()->getOutMinusKill($lastBlockId),
+                                                $defsOutputIncluded
+                                            );
+                                        }
 
-                                            if (!empty($defsOutputIncluded)) {
-                                                foreach ($defsOutputIncluded as $defOutputIncludedId) {
-                                                    if (
-                                                        !in_array(
-                                                            $defOutputIncludedId,
-                                                            $defsOutputIncludedFinal,
-                                                            true
-                                                        ) && !in_array($defOutputIncludedId, $defsIncluded, true)
-                                                    ) {
-                                                        $defsOutputIncludedFinal[] = $defOutputIncludedId;
-                                                    }
+                                        if (!empty($defsOutputIncluded)) {
+                                            foreach ($defsOutputIncluded as $defOutputIncludedId) {
+                                                if (
+                                                    !in_array(
+                                                        $defOutputIncludedId,
+                                                        $defsOutputIncludedFinal,
+                                                        true
+                                                    ) && !in_array($defOutputIncludedId, $defsIncluded, true)
+                                                ) {
+                                                    $defsOutputIncludedFinal[] = $defOutputIncludedId;
                                                 }
                                             }
                                         }
@@ -282,11 +292,11 @@ class IncludeAnalysis
                                         $newDefs = false;
                                         if (!empty($defsOutputIncludedFinal)) {
                                             foreach ($defsOutputIncludedFinal as $defOutputIncludedFinal) {
-                                                $ret1 = $defs->addDef(
+                                                $defs->addDef(
                                                     $defOutputIncludedFinal->getName(),
                                                     $defOutputIncludedFinal
                                                 );
-                                                $ret2 = $defs->addGen(
+                                                $defs->addGen(
                                                     $myFuncCall->getBlockId(),
                                                     $defOutputIncludedFinal
                                                 );

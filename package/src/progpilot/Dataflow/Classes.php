@@ -10,6 +10,8 @@
 
 namespace progpilot\Dataflow;
 
+use progpilot\Objects\MyClass;
+
 class Classes
 {
     private array $listClasses;
@@ -19,19 +21,22 @@ class Classes
         $this->listClasses = [];
     }
 
-    public function getListClasses()
+    /**
+     * @return array<string, MyClass>
+     */
+    public function getListClasses(): array
     {
         return $this->listClasses;
     }
 
-    public function addMyclass($newMyClass): void
+    public function addMyclass(MyClass $newMyClass): void
     {
         if (!isset($this->listClasses[$newMyClass->getName()])) {
             $this->listClasses[$newMyClass->getName()] = $newMyClass;
         }
     }
 
-    public function getMyClass($name)
+    public function getMyClass(string $name): ?MyClass
     {
         if (isset($this->listClasses[$name])) {
             return $this->listClasses[$name];

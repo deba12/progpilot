@@ -12,8 +12,11 @@ namespace progpilot\Objects;
 
 class MyDefOriginal
 {
-    private $def;
-    private $arrayIndexAccessor;
+    /**
+     * @var list<MyDefinition|string|int>|null
+     */
+    private ?array $def = null;
+    private string|int|null $arrayIndexAccessor = null;
 
     public function __construct()
     {
@@ -21,22 +24,28 @@ class MyDefOriginal
         $this->arrayIndexAccessor = null;
     }
 
-    public function getDef()
+    /**
+     * @return list<MyDefinition|string|int>|null
+     */
+    public function getDef(): ?array
     {
         return $this->def;
     }
 
-    public function setDef($myDef): void
+    /**
+     * @param list<MyDefinition|string|int> $myDef
+     */
+    public function setDef(array $myDef): void
     {
         $this->def = $myDef;
     }
 
-    public function getArrayIndexAccessor()
+    public function getArrayIndexAccessor(): string|int|null
     {
         return $this->arrayIndexAccessor;
     }
 
-    public function setArrayIndexAccessor($arrayIndexAccessor): void
+    public function setArrayIndexAccessor(string|int $arrayIndexAccessor): void
     {
         $this->arrayIndexAccessor = $arrayIndexAccessor;
     }

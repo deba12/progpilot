@@ -10,6 +10,8 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Operand\Literal;
 use PHPCfg\Operand;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
@@ -17,27 +19,26 @@ use progpilot\Code\Opcodes;
 
 class LiteralFetch
 {
-    public static function literalFetch($context, $op): void
+    public static function literalFetch(Context $context, Operand $op): void
     {
         if (
-            isset($op)
-            && $op instanceof Operand\Literal
+            $op instanceof Literal
         ) {
             $myTemp = new MyDefinition(
-                $context->getCurrentBlock()->getId(),
+                $context->requireCurrentBlock()->getId(),
                 $context->getCurrentMyFile(),
                 $context->getCurrentLine(),
                 $context->getCurrentColumn(),
                 "literal"
             );
 
-            $myTemp->getCurrentState()->addType(MyDefinition::TYPE_LITERAL);
-            $myTemp->getCurrentState()->addLastKnownValue($op->value);
+            $myTemp->requireCurrentState()->addType(MyDefinition::TYPE_LITERAL);
+            $myTemp->requireCurrentState()->addLastKnownValue($op->value);
 
             $instDefChained = new MyInstruction(Opcodes::LITERAL_FETCH);
             $instDefChained->addProperty(MyInstruction::DEF, $myTemp);
-            $instDefChained->addProperty(MyInstruction::RESULTID, $context->getCurrentFunc()->getOpId($op));
-            $context->getCurrentMycode()->addCode($instDefChained);
+            $instDefChained->addProperty(MyInstruction::RESULTID, $context->requireCurrentFunc()->getOpId($op));
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

@@ -10,6 +10,8 @@
 
 namespace progpilot\Objects;
 
+use progpilot\Code\MyCode;
+use PHPCfg\Operand;
 use progpilot\Dataflow\Definitions;
 
 class MyFunction extends MyOp
@@ -21,6 +23,9 @@ class MyFunction extends MyOp
     private int $lastLine;
     private int $lastColumn;
     private int $firstBlockId;
+    /**
+     * @var list<int>
+     */
     private array $lastBlockIds;
 
     private int $nbParams;
@@ -28,15 +33,18 @@ class MyFunction extends MyOp
     private array $params;
     private array $returnDefs;
     private array $initialReturnDefs;
-    private \progpilot\Dataflow\Definitions $defs;
+    private Definitions $defs;
     private ?array $opInformations = null;
+    /**
+     * @var list<MyBlock>
+     */
     private array $blocks;
     private string $visibility;
-    private $myClass;
+    private ?MyClass $myClass = null;
     private int $blockId;
-    private $nameInstance;
+    private ?string $nameInstance = null;
 
-    private $thisDef;
+    private ?MyDefinition $thisDef = null;
     private string $instanceClassName;
 
     private bool $thisHasBeenUpdated;
@@ -47,7 +55,7 @@ class MyFunction extends MyOp
     private float $lastExecutionTime;
     private int $nbExecutions;
     private bool $hasGlobalVariables;
-    private \progpilot\Code\MyCode $myCode;
+    private MyCode $myCode;
 
     public function __construct($name)
     {
@@ -82,7 +90,7 @@ class MyFunction extends MyOp
         $this->opInformations = [];
         $this->blocks = [];
 
-        $this->myCode = new \progpilot\Code\MyCode();
+        $this->myCode = new MyCode();
     }
 
     public function reset(): void
@@ -90,184 +98,196 @@ class MyFunction extends MyOp
         $this->opInformations = [];
     }
 
-    public function setNbExecutions($nbExecutions): void
+    public function setNbExecutions(int $nbExecutions): void
     {
         $this->nbExecutions = $nbExecutions;
     }
 
-    public function getNbExecutions()
+    public function getNbExecutions(): int
     {
         return $this->nbExecutions;
     }
 
-    public function setStartExecutionTime($startExecutionTime): void
+    public function setStartExecutionTime(float $startExecutionTime): void
     {
         $this->startExecutionTime = $startExecutionTime;
     }
 
-    public function getStartExecutionTime()
+    public function getStartExecutionTime(): float
     {
         return $this->startExecutionTime;
     }
 
-    public function setLastExecutionTime($lastExecutionTime): void
+    public function setLastExecutionTime(float $lastExecutionTime): void
     {
         $this->lastExecutionTime = $lastExecutionTime;
     }
 
-    public function getLastExecutionTime()
+    public function getLastExecutionTime(): float
     {
         return $this->lastExecutionTime;
     }
 
-    public function setThisHasBeenUpdated($thisHasBeenUpdated): void
+    public function setThisHasBeenUpdated(bool $thisHasBeenUpdated): void
     {
         $this->thisHasBeenUpdated = $thisHasBeenUpdated;
     }
 
-    public function thisHasBeenUpdated()
+    public function thisHasBeenUpdated(): bool
     {
         return $this->thisHasBeenUpdated;
     }
 
-    public function setHasGlobalVariables($hasGlobalVariables): void
+    public function setHasGlobalVariables(bool $hasGlobalVariables): void
     {
         $this->hasGlobalVariables = $hasGlobalVariables;
     }
 
-    public function hasGlobalVariables()
+    public function hasGlobalVariables(): bool
     {
         return $this->hasGlobalVariables;
     }
 
-    public function setIsVisitedFromInclude($isVisited): void
+    public function setIsVisitedFromInclude(bool $isVisited): void
     {
         $this->isVisitedFromInclude = $isVisited;
     }
 
-    public function isVisitedFromInclude()
+    public function isVisitedFromInclude(): bool
     {
         return $this->isVisitedFromInclude;
     }
 
-    public function setIsVisited($isVisited): void
+    public function setIsVisited(bool $isVisited): void
     {
         $this->isVisited = $isVisited;
     }
 
-    public function isVisited()
+    public function isVisited(): bool
     {
         return $this->isVisited;
     }
 
-    public function setMyCode($myCode): void
+    public function setMyCode(MyCode $myCode): void
     {
         $this->myCode = $myCode;
     }
 
-    public function getMyCode()
+    public function getMyCode(): MyCode
     {
         return $this->myCode;
     }
 
-    public function setLastLine($lastLine): void
+    public function setLastLine(int $lastLine): void
     {
         $this->lastLine = $lastLine;
     }
 
-    public function setLastColumn($lastColumn): void
+    public function setLastColumn(int $lastColumn): void
     {
         $this->lastColumn = $lastColumn;
     }
 
-    public function setLastBlockIds($lastBlockIds): void
+    /**
+     * @param list<int> $lastBlockIds
+     */
+    public function setLastBlockIds(array $lastBlockIds): void
     {
         $this->lastBlockIds = $lastBlockIds;
     }
 
-    public function getLastBlockIds()
+    /**
+     * @return list<int>
+     */
+    public function getLastBlockIds(): array
     {
         return $this->lastBlockIds;
     }
 
-    public function addLastBlockId($id): void
+    public function addLastBlockId(int $id): void
     {
         if (!in_array($id, $this->lastBlockIds, true)) {
             $this->lastBlockIds[] = $id;
         }
     }
 
-    public function getLastLine()
+    public function getLastLine(): int
     {
         return $this->lastLine;
     }
 
-    public function getLastColumn()
+    public function getLastColumn(): int
     {
         return $this->lastColumn;
     }
 
-    public function getMyClass()
+    public function getMyClass(): ?MyClass
     {
         return $this->myClass;
     }
 
-    public function setMyClass($myClass): void
+    public function setMyClass(MyClass $myClass): void
     {
         $this->myClass = $myClass;
     }
 
-    public function getThisDef()
+    public function getThisDef(): MyDefinition
     {
         return $this->thisDef;
     }
 
-    public function setThisDef($thisDef): void
+    public function setThisDef(MyDefinition $thisDef): void
     {
         $this->thisDef = $thisDef;
     }
 
-    public function getInstanceClassName()
+    public function getInstanceClassName(): string
     {
         return $this->instanceClassName;
     }
 
-    public function setInstanceClassName($instanceClassName): void
+    public function setInstanceClassName(string $instanceClassName): void
     {
         $this->instanceClassName = $instanceClassName;
     }
 
-    public function getNameInstance()
+    public function getNameInstance(): string
     {
         return $this->nameInstance;
     }
 
-    public function setNameInstance($nameInstance): void
+    public function setNameInstance(string $nameInstance): void
     {
         $this->nameInstance = $nameInstance;
     }
 
-    public function setVisibility($visibility): void
+    public function setVisibility(string $visibility): void
     {
         $this->visibility = $visibility;
     }
 
-    public function getVisibility()
+    public function getVisibility(): string
     {
         return $this->visibility;
     }
 
-    public function setBlocks($blocks): void
+    /**
+     * @param list<MyBlock> $blocks
+     */
+    public function setBlocks(array $blocks): void
     {
         $this->blocks = $blocks;
     }
 
-    public function getBlocks()
+    /**
+     * @return list<MyBlock>
+     */
+    public function getBlocks(): array
     {
         return $this->blocks;
     }
 
-    public function getBlockById($id)
+    public function getBlockById(int $id): ?MyBlock
     {
         foreach ($this->blocks as $block) {
             if ($block->getId() === $id) {
@@ -278,23 +298,19 @@ class MyFunction extends MyOp
         return null;
     }
 
-    public function setOpInformations($opInformations): void
+    public function setOpInformations(?array $opInformations): void
     {
         $this->opInformations = $opInformations;
     }
 
-    public function getOpInformations()
+    public function getOpInformations(): ?array
     {
         return $this->opInformations;
     }
 
-    public function getOpId($op): ?int
+    public function getOpId(Operand $op): ?int
     {
-        if (is_object($op)) {
             return spl_object_id($op);
-        }
-
-        return null;
     }
 
     public function getNbsOpInformations(): int
@@ -324,14 +340,17 @@ class MyFunction extends MyOp
         $this->opInformations = null;
     }
 
-    public function cleanOpInformation($id): void
+    public function cleanOpInformation(?int $id): void
     {
         if (isset($this->opInformations[$id])) {
             unset($this->opInformations[$id]);
         }
     }
 
-    public function getOpInformation($id)
+    /**
+     * @return array<string, array<mixed>|null|MyDefinition|string|int|bool>|null
+     */
+    public function getOpInformation(?int $id): ?array
     {
         if (isset($this->opInformations[$id])) {
             return $this->opInformations[$id];
@@ -340,49 +359,58 @@ class MyFunction extends MyOp
         return null;
     }
 
-    public function storeOpInformation($id, $infos): void
+    /**
+     * @param array<string, array<mixed>|null|MyDefinition|string|int|bool>|null $infos
+     */
+    public function storeOpInformation(?int $id, ?array $infos): void
     {
         if (!empty($id)) {
             $this->opInformations[$id] = $infos;
         }
     }
 
-    public function setDefs($defs): void
+    public function setDefs(Definitions $defs): void
     {
         $this->defs = $defs;
     }
 
-    public function getDefs()
+    public function getDefs(): Definitions
     {
         return $this->defs;
     }
 
-    public function getStatePastArguments()
+    /**
+     * @return list<array<mixed>>
+     */
+    public function getStatePastArguments(): array
     {
         return $this->args;
     }
 
-    public function addStatePastArgument(mixed $nbparam, $state): void
+    public function addStatePastArgument(mixed $nbparam, MyDefState $state): void
     {
         $this->args[$nbparam][] = $state;
     }
 
-    public function addParam($param): void
+    public function addParam(MyDefinition $param): void
     {
         $this->params[] = $param;
     }
 
-    public function getParams()
+    /**
+     * @return list<MyDefinition>
+     */
+    public function getParams(): array
     {
         return $this->params;
     }
 
-    public function setNbParams($nbParams): void
+    public function setNbParams(int $nbParams): void
     {
         $this->nbParams = $nbParams;
     }
 
-    public function getNbParams()
+    public function getNbParams(): int
     {
         return $this->nbParams;
     }
@@ -396,52 +424,58 @@ class MyFunction extends MyOp
         return null;
     }
 
-    public function getReturnDefs()
+    /**
+     * @return list<MyDefinition>
+     */
+    public function getReturnDefs(): array
     {
         return $this->returnDefs;
     }
 
-    public function addReturnDef($return_def): void
+    public function addReturnDef(MyDefinition $return_def): void
     {
         $this->returnDefs[] = $return_def;
     }
 
-    public function setReturnDefs($returndefs): void
+    public function setReturnDefs(array $returndefs): void
     {
         $this->returnDefs = $returndefs;
     }
 
-    public function getInitialReturnDefs()
+    /**
+     * @return list<MyDefinition>
+     */
+    public function getInitialReturnDefs(): array
     {
         return $this->initialReturnDefs;
     }
 
-    public function addInitialReturnDef($returnDef): void
+    public function addInitialReturnDef(MyDefinition $returnDef): void
     {
         $this->initialReturnDefs[] = $returnDef;
     }
 
-    public function setInitialReturnDefs($returndefs): void
+    public function setInitialReturnDefs(array $returndefs): void
     {
         $this->initialReturnDefs = $returndefs;
     }
 
-    public function getFirstBlockId()
+    public function getFirstBlockId(): int
     {
         return $this->firstBlockId;
     }
 
-    public function setFirstBlockId($blockId): void
+    public function setFirstBlockId(int $blockId): void
     {
         $this->firstBlockId = $blockId;
     }
 
-    public function getBlockId()
+    public function getBlockId(): int
     {
         return $this->blockId;
     }
 
-    public function setBlockId($blockId): void
+    public function setBlockId(int $blockId): void
     {
         $this->blockId = $blockId;
     }

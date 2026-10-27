@@ -12,51 +12,60 @@ namespace progpilot\Code;
 
 class MyCode
 {
+    /**
+     * @var list<MyInstruction>
+     */
     private array $code;
-    private $start;
-    private $end;
+    private int $start = 0;
+    private int $end = 0;
 
     public function __construct()
     {
         $this->code = [];
     }
 
-    public function getStart()
+    public function getStart(): int
     {
         return $this->start;
     }
 
-    public function getEnd()
+    public function getEnd(): int
     {
         return $this->end;
     }
 
-    public function setStart($start): void
+    public function setStart(int $start): void
     {
         $this->start = $start;
     }
 
-    public function setEnd($end): void
+    public function setEnd(int $end): void
     {
         $this->end = $end;
     }
 
-    public function setCodes($codes): void
+    /**
+     * @param list<MyInstruction> $codes
+     */
+    public function setCodes(array $codes): void
     {
         $this->code = $codes;
     }
 
-    public function getCodes()
+    /**
+     * @return list<MyInstruction>
+     */
+    public function getCodes(): array
     {
         return $this->code;
     }
 
-    public function addCode($code): void
+    public function addCode(MyInstruction $code): void
     {
         $this->code[] = $code;
     }
 
-    public function getLastCode()
+    public function getLastCode(): MyInstruction
     {
         $last_index = count($this->code);
         return $this->code[$last_index - 1];
@@ -238,8 +247,8 @@ class MyCode
                     case Opcodes::LITERAL_FETCH:
                         echo "Opcodes::LITERAL_FETCH\n";
                         $def = $instruction->getProperty(MyInstruction::DEF);
-                        if (isset($def->getCurrentState()->getLastKnownValues()[0])) {
-                            $literal = $def->getCurrentState()->getLastKnownValues()[0];
+                        if (isset($def->requireCurrentState()->getLastKnownValues()[0])) {
+                            $literal = $def->requireCurrentState()->getLastKnownValues()[0];
                             echo "literal = $literal\n";
                         }
 

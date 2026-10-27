@@ -10,11 +10,13 @@
 
 namespace progpilot\Objects;
 
+use progpilot\Context;
+
 class MyClass extends MyOp
 {
     private array $methods;
     private array $properties;
-    private $extendsof;
+    private ?string $extendsof = null;
 
     public function __construct($varLine, $varColumn, $varName)
     {
@@ -36,7 +38,7 @@ class MyClass extends MyOp
         }
     }
 
-    public function addMethod($method): void
+    public function addMethod(MyFunction $method): void
     {
         $exist = false;
         foreach ($this->methods as $methodClass) {
@@ -51,7 +53,7 @@ class MyClass extends MyOp
         }
     }
 
-    public function getMethod($name)
+    public function getMethod(string $name): ?MyFunction
     {
         foreach ($this->methods as $method) {
             if ($method->getName() === $name) {
@@ -62,17 +64,23 @@ class MyClass extends MyOp
         return null;
     }
 
-    public function getMethods()
+    /**
+     * @return list<MyFunction>
+     */
+    public function getMethods(): array
     {
         return $this->methods;
     }
 
-    public function getProperties()
+    /**
+     * @return list<MyProperty>
+     */
+    public function getProperties(): array
     {
         return $this->properties;
     }
 
-    public function addProperty($property): void
+    public function addProperty(MyProperty $property): void
     {
         $exist = false;
         foreach ($this->properties as $defClass) {
@@ -87,7 +95,7 @@ class MyClass extends MyOp
         }
     }
 
-    public function getProperty($context, $blockid, $instance, $name)
+    public function getProperty(Context $context, int $blockid, MyDefinition $instance, string $name): ?MyProperty
     {
         foreach ($this->properties as $def) {
             // we don't check if it's STATIC property or NOT
@@ -99,7 +107,7 @@ class MyClass extends MyOp
         // we didn't find any propery but in this case php create automatically the property
         // same code than in selectproperties resolvedef
         $myProperty = new MyProperty(
-            $context->getCurrentBlock()->getId(),
+            $context->requireCurrentBlock()->getId(),
             $context->getCurrentMyFile(),
             $instance->getLine(),
             $instance->getColumn(),
@@ -110,19 +118,19 @@ class MyClass extends MyOp
 
         $state = $instance->getState($blockid);
         if (!is_null($state) && $state->isType(MyDefinition::ALL_PROPERTIES_TAINTED)) {
-            $myProperty->getCurrentState()->setTainted(true);
-            $myProperty->getCurrentState()->addTaintedByDef([$instance, $state]);
+            $myProperty->requireCurrentState()->setTainted(true);
+            $myProperty->requireCurrentState()->addTaintedByDef([$instance, $state]);
         }
 
         return $myProperty;
     }
 
-    public function getExtendsOf()
+    public function getExtendsOf(): ?string
     {
         return $this->extendsof;
     }
 
-    public function setExtendsOf($extendsof): void
+    public function setExtendsOf(string $extendsof): void
     {
         $this->extendsof = $extendsof;
     }

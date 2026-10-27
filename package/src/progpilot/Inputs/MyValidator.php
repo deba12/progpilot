@@ -10,11 +10,13 @@
 
 namespace progpilot\Inputs;
 
+use stdClass;
+
 class MyValidator extends MySpecify
 {
     private array $parameters;
     private bool $hasParameters;
-    private $validWhenReturning;
+    private bool $validWhenReturning;
 
     public function __construct($name, $language, $validWhenReturning)
     {
@@ -25,27 +27,30 @@ class MyValidator extends MySpecify
         $this->validWhenReturning = $validWhenReturning;
     }
 
-    public function getValidWhenReturning()
+    public function getValidWhenReturning(): bool
     {
         return $this->validWhenReturning;
     }
 
-    public function setValidWhenReturning($validWhenReturning, $validwhenreturning, $notboolean): void
+    public function setValidWhenReturning(bool $validWhenReturning, bool $validwhenreturning, $notboolean): void
     {
         $this->validWhenReturning = $validWhenReturning;
     }
 
-    public function addParameter($parameter, $conditions, $values = null): void
+    /**
+     * @param list<stdClass>|null $values
+     */
+    public function addParameter(int $parameter, string $conditions, ?array $values = null): void
     {
         $this->parameters[] = [$parameter, $conditions, $values];
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function getParameterconditions($i)
+    public function getParameterconditions(int $i): ?string
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -59,7 +64,10 @@ class MyValidator extends MySpecify
         return null;
     }
 
-    public function getParameterValues($i)
+    /**
+     * @return list<stdClass>|null
+     */
+    public function getParameterValues(int $i): ?array
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -86,12 +94,12 @@ class MyValidator extends MySpecify
         return false;
     }
 
-    public function hasParameters()
+    public function hasParameters(): bool
     {
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters): void
+    public function setHasParameters(bool $hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

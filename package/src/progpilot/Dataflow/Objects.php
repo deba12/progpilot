@@ -10,6 +10,8 @@
 
 namespace progpilot\Dataflow;
 
+use progpilot\Objects\MyClass;
+
 class Objects
 {
     private array $objects;
@@ -19,7 +21,10 @@ class Objects
         $this->objects = [];
     }
 
-    public function getObjects()
+    /**
+     * @return list<MyClass>
+     */
+    public function getObjects(): array
     {
         return $this->objects;
     }
@@ -32,12 +37,12 @@ class Objects
         return $idObject;
     }
 
-    public function addMyclassToObject(mixed $idObject, $myClass): void
+    public function addMyclassToObject(mixed $idObject, MyClass $myClass): void
     {
         $this->objects[$idObject] = $myClass;
     }
 
-    public function getMyClassFromObject($idObject)
+    public function getMyClassFromObject(int $idObject): ?MyClass
     {
         if (isset($this->objects[$idObject])) {
             return $this->objects[$idObject];

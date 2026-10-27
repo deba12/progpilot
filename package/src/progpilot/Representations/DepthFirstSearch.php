@@ -12,17 +12,23 @@ namespace progpilot\Representations;
 
 class DepthFirstSearch
 {
-    private $nodes;
+    /**
+     * @var array<string, NodeCG>
+     */
+    private array $nodes;
 
     private DFSVisitor $visitor;
 
-    public function __construct($nodes, \progpilot\Representations\DFSVisitor $visitor)
+    /**
+     * @param array<string, NodeCG> $nodes
+     */
+    public function __construct(array $nodes, DFSVisitor $visitor)
     {
         $this->nodes = $nodes;
         $this->visitor = $visitor;
     }
 
-    public function init($root): void
+    public function init(NodeCG $root): void
     {
         foreach ($this->nodes as $key => $value) {
             $this->visitor->initializeNode($value);
@@ -31,9 +37,9 @@ class DepthFirstSearch
         $this->search($root);
     }
 
-    public function search($node): void
+    public function search(NodeCG $node): void
     {
-        if (!is_null($node) && array_key_exists($node->getId(), $this->nodes)) {
+        if (array_key_exists($node->getId(), $this->nodes)) {
             $this->visitor->examineNode($node);
 
             foreach ($node->getChildren() as $childId) {

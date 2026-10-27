@@ -10,6 +10,15 @@
 
 namespace progpilot\Transformations\Php;
 
+use PHPCfg\Operand\Literal;
+use PHPCfg\Op\Expr\PropertyFetch;
+use PHPCfg\Op\Expr\StaticPropertyFetch;
+use PHPCfg\Op\Expr\ArrayDimFetch;
+use PHPCfg\Op\Expr\Array_;
+use PHPCfg\Op\Expr\FuncCall;
+use PHPCfg\Operand\BoundVariable;
+use PHPCfg\Op\Expr\ConstFetch;
+use PHPCfg\Op\Iterator\Value;
 use PHPCfg\Op;
 use PHPCfg\Operand;
 use progpilot\Objects\MyOp;
@@ -21,15 +30,11 @@ class Common
      */
     public static function literalValue(?Operand $operand): mixed
     {
-        return $operand instanceof Operand\Literal ? $operand->value : null;
+        return $operand instanceof Literal ? $operand->value : null;
     }
 
-    public static function validLastKnownValue($value): bool
+    public static function validLastKnownValue(string $value): bool
     {
-        if ($value === null) {
-            return true;
-        }
-
         if (strpos($value, '\n') === false && strpos($value, '\r') === false && strlen($value) < 200) {
             return true;
         }
@@ -37,12 +42,12 @@ class Common
         return false;
     }
 
-    public static function isChainedKnownType($op): bool
+    public static function isChainedKnownType(Op $op): bool
     {
         if (
-            $op instanceof Op\Expr\PropertyFetch
-            || $op instanceof Op\Expr\StaticPropertyFetch
-            || $op instanceof Op\Expr\ArrayDimFetch
+            $op instanceof PropertyFetch
+            || $op instanceof StaticPropertyFetch
+            || $op instanceof ArrayDimFetch
         ) {
             return true;
         }
@@ -50,7 +55,7 @@ class Common
         return false;
     }
 
-    public static function getTypeDef($op)
+    public static function getTypeDef(Op $op): ?string
     {
         // the order is important (current it breaks array14.php)
         // first we look for the left side
@@ -64,19 +69,19 @@ class Common
             ) {
                 return Common::getTypeDef($op->var->ops[0]);
             } else {
-                if ($op->var->ops[0] instanceof Op\Expr\PropertyFetch) {
+                if ($op->var->ops[0] instanceof PropertyFetch) {
                     return MyOp::TYPE_PROPERTY;
                 }
 
-                if ($op->var->ops[0] instanceof Op\Expr\StaticPropertyFetch) {
+                if ($op->var->ops[0] instanceof StaticPropertyFetch) {
                     return MyOp::TYPE_STATIC_PROPERTY;
                 }
 
-                if ($op->var->ops[0] instanceof Op\Expr\ArrayDimFetch) {
+                if ($op->var->ops[0] instanceof ArrayDimFetch) {
                     return MyOp::TYPE_ARRAY;
                 }
 
-                if ($op->var->ops[0] instanceof Op\Expr\Array_) {
+                if ($op->var->ops[0] instanceof Array_) {
                     return MyOp::TYPE_ARRAY_EXPR;
                 }
 
@@ -89,10 +94,10 @@ class Common
         // then for the right
         // foo = array()
         // foo = define("FOO")
-        if (isset($op) && isset($op->name)) {
+        if (isset($op->name)) {
             if (
-                $op instanceof Op\Expr\FuncCall
-                && $op->name instanceof Operand\Literal
+                $op instanceof FuncCall
+                && $op->name instanceof Literal
                 && $op->name->value === "define"
             ) {
                 return MyOp::TYPE_CONST;
@@ -100,7 +105,7 @@ class Common
         }
 
         if (isset($op->expr->ops[0])) {
-            if ($op->expr->ops[0] instanceof Op\Expr\Array_) {
+            if ($op->expr->ops[0] instanceof Array_) {
                 return MyOp::TYPE_ARRAY_EXPR;
             }
         }
@@ -108,61 +113,61 @@ class Common
         return null;
     }
 
-    public static function getNameDefinition($ops, $lookingForProperty = false)
+    public static function getNameDefinition($ops, bool $lookingForProperty = false): string
     {
         //  $this->property = property
         if (
             $lookingForProperty
-            && ($ops instanceof Op\Expr\PropertyFetch || $ops instanceof Op\Expr\StaticPropertyFetch)
+            && ($ops instanceof PropertyFetch || $ops instanceof StaticPropertyFetch)
             && isset($ops->name->value)
         ) {
             return $ops->name->value;
         }
 
         //  $this->property = this
-        if (isset($ops->var) && $ops->var instanceof Operand\BoundVariable && isset($ops->var->name->value)) {
+        if (isset($ops->var) && $ops->var instanceof BoundVariable && isset($ops->var->name->value)) {
             return $ops->var->name->value;
         }
 
         if (isset($ops->ops[0])) {
-            if ($ops->ops[0] instanceof Op\Expr\ConstFetch) {
+            if ($ops->ops[0] instanceof ConstFetch) {
                 return Common::getNameDefinition($ops->ops[0], $lookingForProperty);
             }
 
-            if ($ops->ops[0] instanceof Op\Expr\ArrayDimFetch) {
+            if ($ops->ops[0] instanceof ArrayDimFetch) {
                 return Common::getNameDefinition($ops->ops[0], $lookingForProperty);
             }
 
-            if ($ops->ops[0] instanceof Op\Expr\PropertyFetch) {
+            if ($ops->ops[0] instanceof PropertyFetch) {
                 return Common::getNameDefinition($ops->ops[0], $lookingForProperty);
             }
 
-            if ($ops->ops[0] instanceof Op\Expr\StaticPropertyFetch) {
+            if ($ops->ops[0] instanceof StaticPropertyFetch) {
                 return Common::getNameDefinition($ops->ops[0], $lookingForProperty);
             }
         }
 
         if (isset($ops->var->ops)) {
             foreach ($ops->var->ops as $op) {
-                if ($op instanceof Op\Expr\ConstFetch) {
+                if ($op instanceof ConstFetch) {
                     return Common::getNameDefinition($op, $lookingForProperty);
                 }
 
-                if ($op instanceof Op\Expr\ArrayDimFetch) {
+                if ($op instanceof ArrayDimFetch) {
                     return Common::getNameDefinition($op, $lookingForProperty);
                 }
 
-                if ($op instanceof Op\Expr\PropertyFetch) {
+                if ($op instanceof PropertyFetch) {
                     return Common::getNameDefinition($op, $lookingForProperty);
                 }
 
-                if ($op instanceof Op\Expr\StaticPropertyFetch) {
+                if ($op instanceof StaticPropertyFetch) {
                     return Common::getNameDefinition($op, $lookingForProperty);
                 }
             }
         }
 
-        if ($ops instanceof Op\Iterator\Value) {
+        if ($ops instanceof Value) {
             return Common::getNameDefinition($ops->var, $lookingForProperty);
         }
 
@@ -205,7 +210,7 @@ class Common
          public const FLAG_CLOSURE     = 0x80;
      */
 
-    public static function getTypeVisibility($visibility): string
+    public static function getTypeVisibility(int $visibility): string
     {
         switch ($visibility) {
             case 1:

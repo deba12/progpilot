@@ -9,6 +9,8 @@
 
 namespace progpilot\Analysis;
 
+use progpilot\Context;
+use progpilot\Objects\MyProperty;
 use progpilot\Code\MyInstruction;
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyFunction;
@@ -17,21 +19,32 @@ use progpilot\Helpers\Analysis as HelpersAnalysis;
 
 class ResolveDefs
 {
-    public static function funccallReturnValues($myFuncCall, $instruction, $virtualReturnDef): void
-    {
+    public static function funccallReturnValues(
+        MyFunction $myFuncCall,
+        MyInstruction $instruction,
+        MyDefinition $virtualReturnDef
+    ): void {
         if ($myFuncCall->getName() === "dirname") {
             if ($instruction->isPropertyExist("argdef0")) {
                 $defarg = $instruction->getProperty("argdef0");
 
-                foreach ($defarg->getCurrentState()->getLastKnownValues() as $knownValue) {
-                    $virtualReturnDef->getCurrentState()->addLastKnownValue(dirname($knownValue));
+                foreach ($defarg->requireCurrentState()->getLastKnownValues() as $knownValue) {
+                    $virtualReturnDef->requireCurrentState()->addLastKnownValue(dirname($knownValue));
                 }
             }
         }
     }
 
-    public static function funccallClass($context, $data, $myFuncCall, $instruction): array
-    {
+    /**
+     * @param list<MyDefinition> $data
+     * @return list<array<mixed>>
+     */
+    public static function funccallClass(
+        Context $context,
+        array $data,
+        MyFunction $myFuncCall,
+        MyInstruction $instruction
+    ): array {
         $varid = $instruction->getProperty(MyInstruction::VARID);
         $resultid = $instruction->getProperty(MyInstruction::RESULTID);
 
@@ -40,26 +53,26 @@ class ResolveDefs
 
         if ($myFuncCall->getName() === "__construct") {
             $myFakeInstance = new MyDefinition(
-                $context->getCurrentBlock()->getId(),
+                $context->requireCurrentBlock()->getId(),
                 $context->getCurrentMyFile(),
                 $myFuncCall->getLine(),
                 $myFuncCall->getColumn(),
                 "return__construct"
             );
             $myFakeInstance->addType(MyDefinition::TYPE_INSTANCE);
-            $myFakeInstance->getCurrentState()->addType(MyDefinition::TYPE_INSTANCE);
+            $myFakeInstance->requireCurrentState()->addType(MyDefinition::TYPE_INSTANCE);
             $myFakeInstance->setClassName($myFuncCall->getInstanceClassName());
 
             HelpersAnalysis::createObject($context, $myFakeInstance);
 
             $opInformation["chained_results"][] = $myFakeInstance;
-            $context->getCurrentFunc()->storeOpInformation($resultid, $opInformation);
+            $context->requireCurrentFunc()->storeOpInformation($resultid, $opInformation);
 
             $classStackName[$i][] = $myFakeInstance->getCurrentState();
         } elseif ($myFuncCall->isType(MyFunction::TYPE_FUNC_METHOD)) {
             $myDefTmp = new MyDefinition(
-                $context->getCurrentBlock()->getId(),
-                $context->getCurrentFunc()->getSourceMyFile(),
+                $context->requireCurrentBlock()->getId(),
+                $context->requireCurrentFunc()->getSourceMyFile(),
                 $myFuncCall->getLine(),
                 $myFuncCall->getColumn(),
                 $myFuncCall->getNameInstance()
@@ -69,7 +82,7 @@ class ResolveDefs
             // we don't want the backdef but the original instance
 
             $classStackName[$i] = [];
-            $previousChainedResults = $context->getCurrentFunc()->getOpInformation($varid);
+            $previousChainedResults = $context->requireCurrentFunc()->getOpInformation($varid);
 
             if (
                 !is_null($previousChainedResults)
@@ -102,12 +115,12 @@ class ResolveDefs
 
             foreach ($instances as $instance) {
                 if ($instance->isType(MyDefinition::TYPE_PROPERTY)) {
-                    $state = $instance->getState($context->getCurrentBlock()->getId());
+                    $state = $instance->getState($context->requireCurrentBlock()->getId());
                     if (!is_null($state) && $state->isType(MyDefinition::TYPE_INSTANCE)) {
                         $classStackName[$i][] = $state;
                     }
                 } else {
-                    if ($instance->getCurrentState()->isType(MyDefinition::TYPE_INSTANCE)) {
+                    if ($instance->requireCurrentState()->isType(MyDefinition::TYPE_INSTANCE)) {
                         $classStackName[$i][] = $instance->getCurrentState();
                     }
                 }
@@ -119,7 +132,7 @@ class ResolveDefs
 
     // def1 and def2 defined in different files
     // return true if def1 is deeper by def2
-    public static function isNearestIncludes($def1, $def2): bool
+    public static function isNearestIncludes(MyDefinition $def1, MyDefinition $def2): bool
     {
         $def1IncludedByDef2 = false;
         $def1IncludedToDef2 = false;
@@ -258,7 +271,7 @@ class ResolveDefs
     }
 
     // return true if op is deeper in code than def
-    public static function isNearest($context, $def1, $def2)
+    public static function isNearest(Context $context, MyDefinition $def1, MyDefinition $def2): bool
     {
         if ($def1->getSourceMyFile()->getName() === $def2->getSourceMyFile()->getName()) {
             // def1 is deeper in the code
@@ -279,7 +292,7 @@ class ResolveDefs
         return false;
     }
 
-    public static function getVisibilityMethod($defName, $method): bool
+    public static function getVisibilityMethod(string $defName, ?MyFunction $method): bool
     {
         if ($defName === "this") {
             return true;
@@ -300,26 +313,20 @@ class ResolveDefs
         return false;
     }
 
-    public static function getVisibility($def, $property, $currentFunc): bool
+    public static function getVisibility(MyDefinition $def, MyProperty $property, MyFunction $currentFunc): bool
     {
-        if (
-            !is_null($def)
-            && $def->getName() === "this"
-        ) {
+        if ($def->getName() === "this") {
             return true;
         }
 
         if (
-            !is_null($def) && !is_null($currentFunc) && !is_null($currentFunc->getMyClass())
+            !is_null($currentFunc->getMyClass())
             && $def->getName() === $currentFunc->getMyClass()->getName()
         ) {
             return true;
         }
 
-        if (
-            !is_null($property)
-            && $property->getVisibility() === "public"
-        ) {
+        if ($property->getVisibility() === "public") {
             return true;
         }
 
@@ -340,11 +347,11 @@ class ResolveDefs
             $instances = ResolveDefs::selectDefinitions($context, $data, $copyDefAssign);
             foreach ($instances as $instance) {
                 if ($instance->isType(MyDefinition::TYPE_INSTANCE)) {
-                    $idObject = $instance->getCurrentState()->getObjectId();
+                    $idObject = $instance->requireCurrentState()->getObjectId();
                     $tmpMyClass = $context->getObjects()->getMyClassFromObject($idObject);
 
                     if (!is_null($tmpMyClass)) {
-                        $property = $tmpMyClass->getProperty($context, $instance, $prop);
+                        $property = $tmpMyClass->getProperty($context, $instance->getBlockId(), $instance, $prop);
 
                         if (
                             !is_null($property)
@@ -380,13 +387,11 @@ class ResolveDefs
 
     /**
      * @return mixed[]
+     * @param list<MyDefinition> $data
      */
-    public static function selectDefinitions($context, $data, $searchedDed): array
+    public static function selectDefinitions(Context $context, array $data, MyDefinition $searchedDed): array
     {
         $defsFound = [];
-        if (is_null($data)) {
-            return $defsFound;
-        }
 
         foreach ($data as $def) {
             if (
@@ -436,9 +441,14 @@ class ResolveDefs
 
     /**
      * @return mixed[]
+     * @param list<MyDefinition> $data
      */
-    public static function selectArrays($context, $data, $tempDefa, $arrayDim): array
-    {
+    public static function selectArrays(
+        Context $context,
+        array $data,
+        MyDefinition $tempDefa,
+        string|int $arrayDim
+    ): array {
         $arrayDefs = [];
 
         $copyTempDefa = clone $tempDefa;
@@ -463,8 +473,11 @@ class ResolveDefs
         return $arrayDefs;
     }
 
-    public static function selectStaticProperties($context, $tempDef, $propertyName)
-    {
+    public static function selectStaticProperties(
+        Context $context,
+        MyDefinition $tempDef,
+        string $propertyName
+    ): ?MyProperty {
         $currentFunc = $context->getCurrentFunc();
         $className = $tempDef->getName();
 
@@ -486,9 +499,14 @@ class ResolveDefs
 
     /**
      * @return array{mixed, mixed}[]
+     * @param list<MyDefinition> $data
      */
-    public static function selectProperties($context, $data, $tempDefa, $propertyName): array
-    {
+    public static function selectProperties(
+        Context $context,
+        array $data,
+        MyDefinition $tempDefa,
+        string $propertyName
+    ): array {
         $propertiesDefs = [];
         $currentFunc = $context->getCurrentFunc();
 
@@ -500,7 +518,7 @@ class ResolveDefs
             if (
                 $instance->isType(MyDefinition::TYPE_ITERATOR)
                 && !empty($instance->getIteratorValues())
-                && $instance->getIteratorValues()[0]->getCurrentState()->isType(MyDefinition::TYPE_INSTANCE)
+                && $instance->getIteratorValues()[0]->requireCurrentState()->isType(MyDefinition::TYPE_INSTANCE)
             ) {
                 // source of type array of properties
                 $instance = $instance->getIteratorValues()[0];
@@ -523,10 +541,8 @@ class ResolveDefs
 
                 if (!is_null($tmpMyClass)) {
                     $property = $tmpMyClass->getProperty($context, $stateId, $instance, $propertyName);
-                    if (!is_null($property)) {
-                        if (ResolveDefs::getVisibility($tempDefaProp, $property, $currentFunc)) {
-                            $propertiesDefs[] = [$property, $tmpMyClass];
-                        }
+                    if (ResolveDefs::getVisibility($tempDefaProp, $property, $currentFunc)) {
+                        $propertiesDefs[] = [$property, $tmpMyClass];
                     }
                 }
             }
@@ -535,32 +551,33 @@ class ResolveDefs
         return $propertiesDefs;
     }
 
-    public static function selectGlobals($context, $defa)
+    /**
+     * @return list<MyDefinition>
+     */
+    public static function selectGlobals(Context $context, MyDefinition $defa): array
     {
         $callStack = $context->getCallStack();
 
-        if (is_array($callStack)) {
-            for ($callNumber = count($callStack) - 1; $callNumber !== 0; $callNumber--) {
-                $currentContextCall = $callStack[$callNumber][3];
-                // ca peut arriver si on est dans le main() est qu'on appelle une globale
-                if (!is_null($currentContextCall->func_called) && !is_null($currentContextCall->func_callee)) {
-                    // we can't looking for an element of a global array in PHP
-                    foreach ($currentContextCall->func_callee->getLastBlockIds() as $lastBlockId) {
-                        $tempDefa = clone $defa;
-                        $tempDefa->setLine($currentContextCall->func_called->getLine());
-                        $tempDefa->setColumn($currentContextCall->func_called->getColumn());
-                        $tempDefa->setBlockId($lastBlockId);
+        for ($callNumber = count($callStack) - 1; $callNumber !== 0; $callNumber--) {
+            $currentContextCall = $callStack[$callNumber][3];
+            // ca peut arriver si on est dans le main() est qu'on appelle une globale
+            if (!is_null($currentContextCall->func_called) && !is_null($currentContextCall->func_callee)) {
+                // we can't looking for an element of a global array in PHP
+                foreach ($currentContextCall->func_callee->getLastBlockIds() as $lastBlockId) {
+                    $tempDefa = clone $defa;
+                    $tempDefa->setLine($currentContextCall->func_called->getLine());
+                    $tempDefa->setColumn($currentContextCall->func_called->getColumn());
+                    $tempDefa->setBlockId($lastBlockId);
 
-                        $resGlobal = ResolveDefs::selectDefinitions(
-                            $context,
-                            $currentContextCall->func_callee->getDefs()->getOutMinusKill($tempDefa->getBlockId()),
-                            $tempDefa
-                        );
+                    $resGlobal = ResolveDefs::selectDefinitions(
+                        $context,
+                        $currentContextCall->func_callee->getDefs()->getOutMinusKill($tempDefa->getBlockId()),
+                        $tempDefa
+                    );
 
-                        // to not call recursively this function
-                        if (!(count($resGlobal) === 1 && $resGlobal[0] === $tempDefa)) {
-                            return $resGlobal;
-                        }
+                    // to not call recursively this function
+                    if (!(count($resGlobal) === 1 && $resGlobal[0] === $tempDefa)) {
+                        return $resGlobal;
                     }
                 }
             }

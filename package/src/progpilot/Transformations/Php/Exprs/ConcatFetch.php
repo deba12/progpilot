@@ -10,6 +10,9 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Op\Expr\BinaryOp\Concat;
+use PHPCfg\Op\Expr\ConcatList;
 use PHPCfg\Op;
 use progpilot\Transformations\Php\Expr;
 use progpilot\Code\MyInstruction;
@@ -17,32 +20,30 @@ use progpilot\Code\Opcodes;
 
 class ConcatFetch
 {
-    public static function concatFetch($context, $op, $expr): void
+    public static function concatFetch(Context $context, Op $op, $expr): void
     {
-        if (isset($op)) {
-            if ($op instanceof Op\Expr\BinaryOp\Concat) {
-                $instDefChained = new MyInstruction(Opcodes::CONCAT_LEFT);
-                Expr::implicitfetch($context, $op->left, $expr);
-                $instDefChained->addProperty(MyInstruction::LEFTID, $context->getCurrentFunc()->getOpId($op->left));
-                Expr::implicitfetch($context, $op->right, $expr);
-                $opIds = [];
-                $opIds[] = $context->getCurrentFunc()->getOpId($op->right);
-                $instDefChained->addProperty(MyInstruction::RIGHTID, $opIds);
-                $instDefChained->addProperty(MyInstruction::RESULTID, $context->getCurrentFunc()->getOpId($op->result));
+        if ($op instanceof Concat) {
+            $instDefChained = new MyInstruction(Opcodes::CONCAT_LEFT);
+            Expr::implicitfetch($context, $op->left, $expr);
+            $instDefChained->addProperty(MyInstruction::LEFTID, $context->requireCurrentFunc()->getOpId($op->left));
+            Expr::implicitfetch($context, $op->right, $expr);
+            $opIds = [];
+            $opIds[] = $context->requireCurrentFunc()->getOpId($op->right);
+            $instDefChained->addProperty(MyInstruction::RIGHTID, $opIds);
+            $instDefChained->addProperty(MyInstruction::RESULTID, $context->requireCurrentFunc()->getOpId($op->result));
 
-                $context->getCurrentMycode()->addCode($instDefChained);
-            } elseif ($op instanceof Op\Expr\ConcatList) {
-                $instDefChained = new MyInstruction(Opcodes::CONCAT_LEFT);
+            $context->requireCurrentMycode()->addCode($instDefChained);
+        } elseif ($op instanceof ConcatList) {
+            $instDefChained = new MyInstruction(Opcodes::CONCAT_LEFT);
 
-                $opIds = [];
-                foreach ($op->list as $opsbis) {
-                    $opIds[] = $context->getCurrentFunc()->getOpId($opsbis);
-                    Expr::implicitfetch($context, $opsbis, $expr);
-                }
-                $instDefChained->addProperty(MyInstruction::RIGHTID, $opIds);
-                $instDefChained->addProperty(MyInstruction::RESULTID, $context->getCurrentFunc()->getOpId($op->result));
-                $context->getCurrentMycode()->addCode($instDefChained);
+            $opIds = [];
+            foreach ($op->list as $opsbis) {
+                $opIds[] = $context->requireCurrentFunc()->getOpId($opsbis);
+                Expr::implicitfetch($context, $opsbis, $expr);
             }
+            $instDefChained->addProperty(MyInstruction::RIGHTID, $opIds);
+            $instDefChained->addProperty(MyInstruction::RESULTID, $context->requireCurrentFunc()->getOpId($op->result));
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

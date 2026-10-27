@@ -10,13 +10,15 @@
 
 namespace progpilot\Inputs;
 
+use stdClass;
+
 class MyCustomFunction extends MySpecify
 {
     private array $parameters;
     private bool $hasParameters;
 
     private $action;
-    private $orderNumberExpected;
+    private int $orderNumberExpected;
     private int $orderNumberReal;
 
     private int $minNbArgs;
@@ -36,14 +38,17 @@ class MyCustomFunction extends MySpecify
         $this->parameters = [];
     }
 
+    /**
+     * @param list<stdClass>|null $values
+     */
     public function addParameter(
-        $parameter,
-        $validbydefault,
-        $fixed,
-        $sufficient,
-        $failifnotverified,
-        $notequals,
-        $values = null
+        int $parameter,
+        bool $validbydefault,
+        bool $fixed,
+        bool $sufficient,
+        bool $failifnotverified,
+        bool $notequals,
+        ?array $values = null
     ): void {
         $this->parameters[] = [
             $parameter,
@@ -56,17 +61,20 @@ class MyCustomFunction extends MySpecify
         ];
     }
 
-    public function getParameters()
+    /**
+     * @return list<array<mixed>>
+     */
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function hasParameters()
+    public function hasParameters(): bool
     {
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters): void
+    public function setHasParameters(bool $hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }
@@ -127,22 +135,22 @@ class MyCustomFunction extends MySpecify
         return null;
     }
 
-    public function setOrderNumberReal($orderNumberReal): void
+    public function setOrderNumberReal(int $orderNumberReal): void
     {
         $this->orderNumberReal = $orderNumberReal;
     }
 
-    public function getOrderNumberReal()
+    public function getOrderNumberReal(): int
     {
         return $this->orderNumberReal;
     }
 
-    public function setOrderNumberExpected($orderNumberExpected): void
+    public function setOrderNumberExpected(int $orderNumberExpected): void
     {
         $this->orderNumberExpected = $orderNumberExpected;
     }
 
-    public function getOrderNumberExpected()
+    public function getOrderNumberExpected(): int
     {
         return $this->orderNumberExpected;
     }
@@ -157,22 +165,22 @@ class MyCustomFunction extends MySpecify
         return $this->action = $action;
     }
 
-    public function setMinNbArgs($minNbArgs)
+    public function setMinNbArgs(int $minNbArgs): int
     {
         return $this->minNbArgs = $minNbArgs;
     }
 
-    public function getMinNbArgs()
+    public function getMinNbArgs(): int
     {
         return $this->minNbArgs;
     }
 
-    public function setMaxNbArgs($maxNbArgs)
+    public function setMaxNbArgs(int $maxNbArgs): int
     {
         return $this->maxNbArgs = $maxNbArgs;
     }
 
-    public function getMaxNbArgs()
+    public function getMaxNbArgs(): int
     {
         return $this->maxNbArgs;
     }

@@ -10,11 +10,21 @@
 
 namespace progpilot\Analysis;
 
+use progpilot\Context;
+use progpilot\Objects\MyClass;
+use progpilot\Inputs\MySink;
+use progpilot\Objects\MyDefState;
+use progpilot\Utils;
+use progpilot\Objects\MyFunction;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 
 class SecurityAnalysis
 {
+    /**
+     * @param array<string, array<mixed>> $temp
+     * @param array<string, string|int> $ret
+     */
     public static function inArrayStateSource(array $temp, array $ret): bool
     {
         for ($i = 0; $i < count($temp["source_name"]); $i++) {
@@ -31,7 +41,7 @@ class SecurityAnalysis
         return false;
     }
 
-    public static function funccall($context, $instruction, $myClass = null): void
+    public static function funccall(Context $context, MyInstruction $instruction, ?MyClass $myClass = null): void
     {
         $myFuncCall = $instruction->getProperty(MyInstruction::MYFUNC_CALL);
 
@@ -54,10 +64,18 @@ class SecurityAnalysis
         }
     }
 
-    public static function taintedStateFlow($context, $mySink, $indexParameter, $taintedDef, $taintedState): array
-    {
+    /**
+     * @return list<array<mixed>|string>
+     */
+    public static function taintedStateFlow(
+        Context $context,
+        MySink $mySink,
+        int $indexParameter,
+        MyDefinition $taintedDef,
+        MyDefState $taintedState
+    ): array {
         $resultTaintedFlow = [];
-        $idFlow = \progpilot\Utils::printDefinition($taintedDef);
+        $idFlow = Utils::printDefinition($taintedDef);
 
         do {
             $fromTaintedByDefs = $taintedState->getTaintedByDefs();
@@ -89,7 +107,7 @@ class SecurityAnalysis
 
                             $resultTaintedFlow[] = $oneTainted;
 
-                            $idFlow .= \progpilot\Utils::printDefinition($fromTaintedDef);
+                            $idFlow .= Utils::printDefinition($fromTaintedDef);
                             $idFlow .= "-" . $fromTaintedDef->getSourceMyFile()->fileName;
                             $taintedDef = $fromTaintedDef;
                             $taintedState = $fromTaintedState;
@@ -103,7 +121,7 @@ class SecurityAnalysis
         return [$resultTaintedFlow, $idFlow];
     }
 
-    public static function isSafeState($context, $mySink, $indexParameter, $myState): bool
+    public static function isSafeState(Context $context, MySink $mySink, int $indexParameter, MyDefState $myState): bool
     {
         $possibleConditions = ["QUOTES", "object_tainted", "array_tainted", "variable_tainted", null];
 
@@ -118,8 +136,13 @@ class SecurityAnalysis
         return true;
     }
 
-    public static function isSafeStateCondition($context, $mySink, $state, $condition, $isFlow = false): bool
-    {
+    public static function isSafeStateCondition(
+        Context $context,
+        MySink $mySink,
+        MyDefState $state,
+        ?string $condition,
+        bool $isFlow = false
+    ): bool {
         if (
             ($state->isTainted())
             && $state->getCast() === MyDefinition::CAST_NOT_SAFE
@@ -203,8 +226,13 @@ class SecurityAnalysis
         return true;
     }
 
-    public static function callbis($indexParameter, $myFuncCall, $context, $mySink, $myDef): void
-    {
+    public static function callbis(
+        int $indexParameter,
+        MyFunction $myFuncCall,
+        Context $context,
+        MySink $mySink,
+        MyDefinition $myDef
+    ): void {
         $hashIdVuln = "";
 
         $temp["source_name"] = [];
@@ -220,7 +248,7 @@ class SecurityAnalysis
 
         // arg param of sink = always current state
         if (!SecurityAnalysis::isSafeState($context, $mySink, $indexParameter, $myDef->getCurrentState())) {
-            $taintedDefs = $myDef->getCurrentState()->getTaintedByDefs();
+            $taintedDefs = $myDef->requireCurrentState()->getTaintedByDefs();
             foreach ($taintedDefs as $taintedByDef) {
                 $taintedDef = $taintedByDef[0];
                 $taintedState = $taintedByDef[1];
@@ -258,12 +286,12 @@ class SecurityAnalysis
             $hashIdVuln = hash("sha256", $hashedValue);
 
             if ($nbtainted && is_null($context->inputs->getFalsePositiveById($hashIdVuln))) {
-                $temp["sink_name"] = \progpilot\Utils::encodeCharacters($mySink->getName());
+                $temp["sink_name"] = Utils::encodeCharacters($mySink->getName());
                 $temp["sink_line"] = $myFuncCall->getLine();
                 $temp["sink_column"] = $myFuncCall->getColumn();
-                $temp["sink_file"] = \progpilot\Utils::encodeCharacters($myFuncCall->getSourceMyFile()->getName());
-                $temp["vuln_name"] = \progpilot\Utils::encodeCharacters($mySink->getAttack());
-                $temp["vuln_cwe"] = \progpilot\Utils::encodeCharacters($mySink->getCwe());
+                $temp["sink_file"] = Utils::encodeCharacters($myFuncCall->getSourceMyFile()->getName());
+                $temp["vuln_name"] = Utils::encodeCharacters($mySink->getAttack());
+                $temp["vuln_cwe"] = Utils::encodeCharacters($mySink->getCwe());
                 $temp["vuln_id"] = $hashIdVuln;
                 $temp["vuln_type"] = "taint-style";
 
@@ -273,35 +301,38 @@ class SecurityAnalysis
     }
 
 
-    public static function getPrintableTaintedDef($mySink, $myDef)
+    /**
+     * @return array<string, string|int>
+     */
+    public static function getPrintableTaintedDef(MySink $mySink, MyDefinition $myDef): array
     {
         if (!is_null($myDef->getArgToParam())) {
             $param = $myDef->getArgToParam();
-            $return["source_name"] = \progpilot\Utils::printDefinition($param);
+            $return["source_name"] = Utils::printDefinition($param);
             $return["source_line"] = $param->getLine();
             $return["source_column"] = $param->getColumn();
-            $return["source_file"] = \progpilot\Utils::encodeCharacters($param->getSourceMyFile()->getName());
+            $return["source_file"] = Utils::encodeCharacters($param->getSourceMyFile()->getName());
 
             return $return;
         }
 
         if (!is_null($myDef->original->getDef())) {
-            $return["source_name"] = \progpilot\Utils::printDefinition(
+            $return["source_name"] = Utils::printDefinition(
                 $myDef,
                 $myDef->original->getDef()
             );
             $return["source_line"] = $myDef->original->getDef()[0]->getLine();
             $return["source_column"] = $myDef->original->getDef()[0]->getColumn();
-            $return["source_file"] = \progpilot\Utils::encodeCharacters(
+            $return["source_file"] = Utils::encodeCharacters(
                 $myDef->original->getDef()[0]->getSourceMyFile()->getName()
             );
             return $return;
         }
 
-        $return["source_name"] = \progpilot\Utils::printDefinition($myDef);
+        $return["source_name"] = Utils::printDefinition($myDef);
         $return["source_line"] = $myDef->getLine();
         $return["source_column"] = $myDef->getColumn();
-        $return["source_file"] = \progpilot\Utils::encodeCharacters($myDef->getSourceMyFile()->getName());
+        $return["source_file"] = Utils::encodeCharacters($myDef->getSourceMyFile()->getName());
 
         return $return;
     }

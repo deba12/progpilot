@@ -19,10 +19,13 @@ class MyBlock extends MyOp
     private bool $hasBeenAnalyzed;
     private array $loopParents;
 
-    public $children;
-    public $parents;
-    public $virtualParents;
-    public $assertions;
+    public array $children;
+    public array $parents;
+    /**
+     * @var list<MyBlock>
+     */
+    public array $virtualParents;
+    public array $assertions;
 
     public function __construct($startLine, $startColumn)
     {
@@ -40,119 +43,134 @@ class MyBlock extends MyOp
         $this->hasBeenAnalyzed = false;
     }
 
-    public function hasBeenAnalyzed()
+    public function hasBeenAnalyzed(): bool
     {
         return $this->hasBeenAnalyzed;
     }
 
-    public function setHasBeenAnalyzed($hasBeenAnalyzed): void
+    public function setHasBeenAnalyzed(bool $hasBeenAnalyzed): void
     {
         $this->hasBeenAnalyzed = $hasBeenAnalyzed;
     }
 
-    public function setNeedUpdateOfState($update): void
+    public function setNeedUpdateOfState(bool $update): void
     {
         $this->needUpdateOfState = $update;
     }
 
-    public function doNeedUpdateOfState()
+    public function doNeedUpdateOfState(): bool
     {
         return $this->needUpdateOfState;
     }
 
-    public function addLoopParent($parent): void
+    public function addLoopParent(MyBlock $parent): void
     {
         if (!in_array($parent, $this->loopParents, true)) {
             $this->loopParents[] = $parent;
         }
     }
 
-    public function isLoopParent($parent): bool
+    public function isLoopParent(MyBlock $parent): bool
     {
         return in_array($parent, $this->loopParents, true);
     }
 
-    public function addVirtualParent($parent): void
+    public function addVirtualParent(MyBlock $parent): void
     {
         if (!in_array($parent, $this->virtualParents, true)) {
             $this->virtualParents[] = $parent;
         }
     }
 
-    public function setVirtualParents($parents): void
+    /**
+     * @param list<MyBlock> $parents
+     */
+    public function setVirtualParents(array $parents): void
     {
         $this->virtualParents = $parents;
     }
 
-    public function getVirtualParents()
+    /**
+     * @return list<MyBlock>
+     */
+    public function getVirtualParents(): array
     {
         return $this->virtualParents;
     }
 
-    public function addParent($parent): void
+    public function addParent(MyBlock $parent): void
     {
         if (!in_array($parent, $this->parents, true)) {
             $this->parents[] = $parent;
         }
     }
 
-    public function getParents()
+    /**
+     * @return list<MyBlock>
+     */
+    public function getParents(): array
     {
         return $this->parents;
     }
 
-    public function addChild($child): void
+    public function addChild(MyBlock $child): void
     {
         if (!in_array($child, $this->children, true)) {
             $this->children[] = $child;
         }
     }
 
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
 
-    public function addReturnDef($def): void
+    public function addReturnDef(MyDefinition $def): void
     {
         if (!in_array($def, $this->returnDefs, true)) {
             $this->returnDefs[] = $def;
         }
     }
 
-    public function getReturnDefs()
+    /**
+     * @return list<MyDefinition>
+     */
+    public function getReturnDefs(): array
     {
         return $this->returnDefs;
     }
 
-    public function addAssertion($myassertion): void
+    public function addAssertion(MyAssertion $myassertion): void
     {
         if (!in_array($myassertion, $this->assertions, true)) {
             $this->assertions[] = $myassertion;
         }
     }
 
-    public function getAssertions()
+    /**
+     * @return list<MyAssertion>
+     */
+    public function getAssertions(): array
     {
         return $this->assertions;
     }
 
-    public function setStartAddressBlock($address): void
+    public function setStartAddressBlock(int $address): void
     {
         $this->startAddressBlock = $address;
     }
 
-    public function setEndAddressBlock($address): void
+    public function setEndAddressBlock(int $address): void
     {
         $this->endAddressBlock = $address;
     }
 
-    public function getStartAddressBlock()
+    public function getStartAddressBlock(): int
     {
         return $this->startAddressBlock;
     }
 
-    public function getEndAddressBlock()
+    public function getEndAddressBlock(): int
     {
         return $this->endAddressBlock;
     }

@@ -10,13 +10,20 @@
 
 namespace progpilot\Helpers;
 
+use progpilot\Context;
+use progpilot\Objects\MyFunction;
+use progpilot\Objects\MyProperty;
+use progpilot\Objects\MyBlock;
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyDefState;
 use progpilot\Analysis\AssertionAnalysis;
 
 class State
 {
-    public static function updateBlocksOfDef($context, $def, &$defStack): void
+    /**
+     * @param list<int> $defStack
+     */
+    public static function updateBlocksOfDef(Context $context, MyDefinition $def, array &$defStack): void
     {
         if (!is_null($def->getParamToArg())) {
             $def = $def->getParamToArg();
@@ -36,7 +43,7 @@ class State
         }
     }
 
-    public static function blockSwitching($context, $myFunc): void
+    public static function blockSwitching(Context $context, MyFunction $myFunc): void
     {
         $defStack = [];
         $tmpDefs = $myFunc->getDefs();
@@ -46,13 +53,19 @@ class State
             }
         }
 
-        foreach ($context->getCurrentFunc()->getBlocks() as $myBlock) {
+        foreach ($context->requireCurrentFunc()->getBlocks() as $myBlock) {
             $myBlock->setNeedUpdateOfState(false);
         }
     }
 
-    public static function updateBlocksOfArrayElement($context, $arrayElement, &$defStack): void
-    {
+    /**
+     * @param list<int> $defStack
+     */
+    public static function updateBlocksOfArrayElement(
+        Context $context,
+        MyDefinition $arrayElement,
+        array &$defStack
+    ): void {
         $myBlock = $context->getCurrentBlock();
         $states = [];
         $blockParents = array_merge($myBlock->getParents(), $myBlock->getVirtualParents());
@@ -79,7 +92,10 @@ class State
         }
     }
 
-    public static function updateBlocksOfArrayElements($context, $state, &$defStack): void
+    /**
+     * @param list<int> $defStack
+     */
+    public static function updateBlocksOfArrayElements(Context $context, MyDefState $state, array &$defStack): void
     {
         $arrayIndexes = $state->getArrayIndexes();
         foreach ($arrayIndexes as $arrayIndexArr) {
@@ -89,7 +105,10 @@ class State
         }
     }
 
-    public static function updateBlocksOfProperty($context, $property, &$defStack): void
+    /**
+     * @param list<int> $defStack
+     */
+    public static function updateBlocksOfProperty(Context $context, MyProperty $property, array &$defStack): void
     {
         $myBlock = $context->getCurrentBlock();
         $states = [];
@@ -125,7 +144,10 @@ class State
         }
     }
 
-    public static function updateBlocksOfProperties($context, $state, &$defStack): void
+    /**
+     * @param list<int> $defStack
+     */
+    public static function updateBlocksOfProperties(Context $context, MyDefState $state, array &$defStack): void
     {
         $idObject = $state->getObjectId();
         $tmpMyClass = $context->getObjects()->getMyClassFromObject($idObject);
@@ -138,7 +160,11 @@ class State
         }
     }
 
-    public static function mergeDefsBlockIdStates($defs, $concatValues, $block): \progpilot\Objects\MyDefState
+    /**
+     * @param list<MyDefinition|MyProperty> $defs
+     * @param list<string> $concatValues
+     */
+    public static function mergeDefsBlockIdStates(array $defs, array $concatValues, MyBlock $block): MyDefState
     {
         $blockId = $block->getId();
 
@@ -207,7 +233,7 @@ class State
                     foreach ($state->getArrayIndexes() as $oriArrayIndex) {
                         $retadd = $myState->addArrayIndex($oriArrayIndex->index, $oriArrayIndex->def);
                         // if tainted we force the potential existing array (could not be added before)
-                        if (!$retadd && $oriArrayIndex->def->getCurrentState()->isTainted()) {
+                        if (!$retadd && $oriArrayIndex->def->requireCurrentState()->isTainted()) {
                             $myState->overwriteArrayIndex($oriArrayIndex->index, $oriArrayIndex->def);
                         }
                     }
@@ -232,7 +258,10 @@ class State
         return $myState;
     }
 
-    public static function mergeDefStates($states): \progpilot\Objects\MyDefState
+    /**
+     * @param list<MyDefState> $states
+     */
+    public static function mergeDefStates(array $states): MyDefState
     {
         $myState = new MyDefState();
 

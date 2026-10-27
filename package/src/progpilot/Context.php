@@ -27,7 +27,7 @@ class Context extends ContextInternalApi
         $this->debugMode = $bool;
     }
 
-    public function isDebugMode()
+    public function isDebugMode(): bool
     {
         return $this->debugMode;
     }
@@ -37,7 +37,7 @@ class Context extends ContextInternalApi
         $this->maxDefinitions = $maxDefinitions;
     }
 
-    public function getMaxDefinitions()
+    public function getMaxDefinitions(): int
     {
         return $this->maxDefinitions;
     }
@@ -47,7 +47,7 @@ class Context extends ContextInternalApi
         $this->maxFileAnalysisDuration = $maxFileAnalysisDuration;
     }
 
-    public function getMaxFileAnalysisDuration()
+    public function getMaxFileAnalysisDuration(): int
     {
         return $this->maxFileAnalysisDuration;
     }
@@ -57,7 +57,7 @@ class Context extends ContextInternalApi
         $this->maxFileSize = $maxFileSize;
     }
 
-    public function getMaxFileSize()
+    public function getMaxFileSize(): int
     {
         return $this->maxFileSize;
     }
@@ -67,12 +67,12 @@ class Context extends ContextInternalApi
         $this->maxMemory = $maxMemory;
     }
 
-    public function getMaxMemory()
+    public function getMaxMemory(): int
     {
         return $this->maxMemory;
     }
 
-    public function getAnalyzeIncludes()
+    public function getAnalyzeIncludes(): bool
     {
         return $this->analyzeIncludes;
     }
@@ -82,7 +82,7 @@ class Context extends ContextInternalApi
         $this->analyzeIncludes = $analyzeIncludes;
     }
 
-    public function setConfiguration($file): void
+    public function setConfiguration(string $file): void
     {
         $this->configurationFile = $file;
     }

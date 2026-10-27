@@ -10,7 +10,16 @@
 
 namespace progpilot\Transformations\Php;
 
-use PHPCfg\Op;
+use progpilot\Context;
+use PHPCfg\Operand;
+use PHPCfg\Op\Expr\MethodCall;
+use PHPCfg\Op\Expr\New_;
+use PHPCfg\Op\Expr\Include_;
+use PHPCfg\Op\Expr\Print_;
+use PHPCfg\Op\Terminal\Echo_;
+use PHPCfg\Op\Expr\Eval_;
+use PHPCfg\Op\Terminal\Exit_;
+use PHPCfg\Op\Expr\StaticCall;
 use progpilot\Objects\MyFunction;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
@@ -19,11 +28,16 @@ use progpilot\Transformations\Php\Expr;
 
 class FuncCall
 {
-    public static function argument($context, $arg, $instFuncCallMain, $funcCallName, $numParam): void
-    {
+    public static function argument(
+        Context $context,
+        Operand $arg,
+        MyInstruction $instFuncCallMain,
+        string $funcCallName,
+        int $numParam
+    ): void {
         Expr::implicitfetch($context, $arg, null);
 
-        $instVariable = $context->getCurrentMycode()->getLastCode();
+        $instVariable = $context->requireCurrentMycode()->getLastCode();
         if ($instVariable->getOpcode() === Opcodes::VARIABLE_FETCH) {
             $defArg = $instVariable->getProperty(MyInstruction::DEF);
             $instFuncCallMain->addProperty("argoriginaldef$numParam", $defArg);
@@ -40,7 +54,7 @@ class FuncCall
             "_progpilot";
 
         $myDef = new MyDefinition(
-            $context->getCurrentBlock()->getId(),
+            $context->requireCurrentBlock()->getId(),
             $context->getCurrentMyFile(),
             $context->getCurrentLine(),
             $context->getCurrentColumn(),
@@ -49,8 +63,8 @@ class FuncCall
 
 
         $instArg = new MyInstruction(Opcodes::ARGUMENT);
-        $instArg->addProperty(MyInstruction::VARID, $context->getCurrentFunc()->getOpId($arg));
-        $context->getCurrentMycode()->addCode($instArg);
+        $instArg->addProperty(MyInstruction::VARID, $context->requireCurrentFunc()->getOpId($arg));
+        $context->requireCurrentMycode()->addCode($instArg);
 
         $instArg->addProperty("argdef$numParam", $myDef);
         $instArg->addProperty("idparam", $numParam);
@@ -62,7 +76,7 @@ class FuncCall
     arg2 : expr for the return
     arg3 : arr for the return : function_call()[0] (arr = [0])
      */
-    public static function instruction($context): void
+    public static function instruction(Context $context): void
     {
         $isMethod = false;
         $nbparams = 0;
@@ -70,13 +84,13 @@ class FuncCall
 
         // instance_name = new obj; instance_name->method_name()
 
-        if ($context->getCurrentOp() instanceof Op\Expr\MethodCall) {
+        if ($context->getCurrentOp() instanceof MethodCall) {
             $isMethod = true;
             $instanceName = Common::getNameDefinition($context->getCurrentOp()->var);
         }
 
         $funcCallName = "";
-        if ($context->getCurrentOp() instanceof Op\Expr\New_) {
+        if ($context->getCurrentOp() instanceof New_) {
             $funcCallName = "__construct";
 
             if (isset($context->getCurrentOp()->class->value)) {
@@ -97,15 +111,15 @@ class FuncCall
             Assign::instruction($context, $context->getCurrentOp(), null, null, false, true);
         }
 
-        if ($context->getCurrentOp() instanceof Op\Expr\Include_) {
+        if ($context->getCurrentOp() instanceof Include_) {
             $funcCallName = "include";
-        } elseif ($context->getCurrentOp() instanceof Op\Expr\Print_) {
+        } elseif ($context->getCurrentOp() instanceof Print_) {
             $funcCallName = "print";
-        } elseif ($context->getCurrentOp() instanceof Op\Terminal\Echo_) {
+        } elseif ($context->getCurrentOp() instanceof Echo_) {
             $funcCallName = "echo";
-        } elseif ($context->getCurrentOp() instanceof Op\Expr\Eval_) {
+        } elseif ($context->getCurrentOp() instanceof Eval_) {
             $funcCallName = "eval";
-        } elseif ($context->getCurrentOp() instanceof Op\Terminal\Exit_) {
+        } elseif ($context->getCurrentOp() instanceof Exit_) {
             $funcCallName = "exit";
         }
 
@@ -114,18 +128,18 @@ class FuncCall
         if (isset($context->getCurrentOp()->result)) {
             $instFuncCallMain->addProperty(
                 MyInstruction::RESULTID,
-                $context->getCurrentFunc()->getOpId($context->getCurrentOp()->result)
+                $context->requireCurrentFunc()->getOpId($context->getCurrentOp()->result)
             );
         }
         if (isset($context->getCurrentOp()->var)) {
             $instFuncCallMain->addProperty(
                 MyInstruction::VARID,
-                $context->getCurrentFunc()->getOpId($context->getCurrentOp()->var)
+                $context->requireCurrentFunc()->getOpId($context->getCurrentOp()->var)
             );
         } elseif (isset($context->getCurrentOp()->class)) {
             $instFuncCallMain->addProperty(
                 MyInstruction::VARID,
-                $context->getCurrentFunc()->getOpId($context->getCurrentOp()->class)
+                $context->requireCurrentFunc()->getOpId($context->getCurrentOp()->class)
             );
         }
         $instFuncCallMain->addProperty(MyInstruction::FUNCNAME, $funcCallName);
@@ -136,7 +150,7 @@ class FuncCall
         $myFunctionCall->setInstanceClassName($className);
 
         if (
-            $context->getCurrentOp() instanceof Op\Expr\StaticCall &&
+            $context->getCurrentOp() instanceof StaticCall &&
             isset($context->getCurrentOp()->class->value)
         ) {
             $nameClass = $context->getCurrentOp()->class->value;
@@ -152,21 +166,30 @@ class FuncCall
         $listArgs = [];
 
         if (
-            $context->getCurrentOp() instanceof Op\Expr\Include_
-            || $context->getCurrentOp() instanceof Op\Expr\Print_
-            || $context->getCurrentOp() instanceof Op\Terminal\Echo_
-            || $context->getCurrentOp() instanceof Op\Expr\Eval_
-            || $context->getCurrentOp() instanceof Op\Terminal\Exit_
+            $context->getCurrentOp() instanceof Include_
+            || $context->getCurrentOp() instanceof Print_
+            || $context->getCurrentOp() instanceof Echo_
+            || $context->getCurrentOp() instanceof Eval_
+            || $context->getCurrentOp() instanceof Exit_
         ) {
             if (isset($context->getCurrentOp()->expr)) {
                 $listArgs[] = $context->getCurrentOp()->expr;
             }
 
-            if ($context->getCurrentOp() instanceof Op\Expr\Include_) {
+            if ($context->getCurrentOp() instanceof Include_) {
                 $instFuncCallMain->addProperty(MyInstruction::TYPE_INCLUDE, $context->getCurrentOp()->type);
             }
         } else {
-            $listArgs = $context->getCurrentOp()->args;
+            $currentOp = $context->getCurrentOp();
+            if (
+                $currentOp instanceof \PHPCfg\Op\Expr\FuncCall
+                || $currentOp instanceof \PHPCfg\Op\Expr\NsFuncCall
+                || $currentOp instanceof \PHPCfg\Op\Expr\MethodCall
+                || $currentOp instanceof \PHPCfg\Op\Expr\StaticCall
+                || $currentOp instanceof \PHPCfg\Op\Expr\New_
+            ) {
+                $listArgs = $currentOp->args;
+            }
         }
 
         foreach ($listArgs as $arg) {
@@ -176,6 +199,6 @@ class FuncCall
 
         $myFunctionCall->setNbParams($nbparams);
         $instFuncCallMain->addProperty(MyInstruction::MYFUNC_CALL, $myFunctionCall);
-        $context->getCurrentMycode()->addCode($instFuncCallMain);
+        $context->requireCurrentMycode()->addCode($instFuncCallMain);
     }
 }

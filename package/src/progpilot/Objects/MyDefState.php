@@ -10,11 +10,15 @@
 
 namespace progpilot\Objects;
 
+use stdClass;
 use progpilot\Transformations\Php\Common;
 
 class MyDefState extends MyOp
 {
     private bool $isTainted;
+    /**
+     * @var list<array<mixed>>
+     */
     private array $taintedByDefs;
     private bool $isSanitized;
     private array $typeSanitized;
@@ -77,24 +81,36 @@ class MyDefState extends MyOp
         }
     }
 
-    public function addTaintedByDef($taintedByDef): void
+    /**
+     * @param list<MyDefinition|MyDefState|MyProperty> $taintedByDef
+     */
+    public function addTaintedByDef(array $taintedByDef): void
     {
         if (!in_array($taintedByDef, $this->taintedByDefs, true)) {
             $this->taintedByDefs[] = $taintedByDef;
         }
     }
 
-    public function getTaintedByDefs()
+    /**
+     * @return list<array<mixed>>
+     */
+    public function getTaintedByDefs(): array
     {
         return $this->taintedByDefs;
     }
 
-    public function setTaintedByDefs($defs): void
+    /**
+     * @param list<array<mixed>> $defs
+     */
+    public function setTaintedByDefs(array $defs): void
     {
         $this->taintedByDefs = $defs;
     }
 
-    public function updateIsEmbeddedByChars($chars): void
+    /**
+     * @param array<string, int> $chars
+     */
+    public function updateIsEmbeddedByChars(array $chars): void
     {
         foreach ($chars as $char => $value) {
             $curChar = isset($this->isEmbeddedByChar[$char]) ? $this->isEmbeddedByChar[$char] : 0;
@@ -102,19 +118,25 @@ class MyDefState extends MyOp
         }
     }
 
-    public function setIsEmbeddedByChars($chars): void
+    /**
+     * @param array<string, int> $chars
+     */
+    public function setIsEmbeddedByChars(array $chars): void
     {
         foreach ($chars as $char => $value) {
             $this->isEmbeddedByChar[$char] = $value % 2;
         }
     }
 
-    public function getIsEmbeddedByChars()
+    /**
+     * @return array<string, int>
+     */
+    public function getIsEmbeddedByChars(): array
     {
         return $this->isEmbeddedByChar;
     }
 
-    public function setEmbeddedByChar($value): void
+    public function setEmbeddedByChar(array $value): void
     {
         $this->isEmbeddedByChar = $value;
     }
@@ -124,7 +146,7 @@ class MyDefState extends MyOp
         $this->isEmbeddedByChar[$char] = $bool;
     }
 
-    public function getIsEmbeddedByChar($char)
+    public function getIsEmbeddedByChar(string $char): bool|int
     {
         if (isset($this->isEmbeddedByChar[$char])) {
             return $this->isEmbeddedByChar[$char];
@@ -133,31 +155,29 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function setLabel($label): void
+    public function setLabel(int $label): void
     {
         $this->label = $label;
     }
 
-    public function getLabel()
+    public function getLabel(): int
     {
         return $this->label;
     }
 
-    public function setCast($cast): void
+    public function setCast(int $cast): void
     {
         $this->cast = $cast;
     }
 
-    public function getCast()
+    public function getCast(): int
     {
         return $this->cast;
     }
 
-    public function addLastKnownValue($value): void
+    public function addLastKnownValue(string|int|bool|float $value): void
     {
-        if ($value !== null) {
-            $value = rtrim(ltrim($value));
-        }
+        $value = rtrim(ltrim((string) $value));
 
         if (
             Common::validLastKnownValue($value)
@@ -168,39 +188,45 @@ class MyDefState extends MyOp
         }
     }
 
-    public function getLastKnownValues()
+    /**
+     * @return list<string>
+     */
+    public function getLastKnownValues(): array
     {
         return $this->lastKnownValue;
     }
 
-    public function setSanitized($isSanitized): void
+    public function setSanitized(bool $isSanitized): void
     {
         $this->isSanitized = $isSanitized;
     }
 
-    public function isSanitized()
+    public function isSanitized(): bool
     {
         return $this->isSanitized;
     }
 
-    public function setTypeSanitized($typeSanitized): void
+    public function setTypeSanitized(array $typeSanitized): void
     {
         $this->typeSanitized = $typeSanitized;
     }
 
-    public function getTypeSanitized()
+    /**
+     * @return list<string>
+     */
+    public function getTypeSanitized(): array
     {
         return $this->typeSanitized;
     }
 
-    public function addTypeSanitized($typeSanitized): void
+    public function addTypeSanitized(string $typeSanitized): void
     {
         if (!in_array($typeSanitized, $this->typeSanitized, true)) {
             $this->typeSanitized[] = $typeSanitized;
         }
     }
 
-    public function isTypeSanitized($typeSanitized): bool
+    public function isTypeSanitized(string $typeSanitized): bool
     {
         if (in_array($typeSanitized, $this->typeSanitized, true)) {
             return true;
@@ -209,17 +235,20 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function isTainted()
+    public function isTainted(): bool
     {
         return $this->isTainted;
     }
 
-    public function setTainted($tainted): void
+    public function setTainted(bool $tainted): void
     {
         $this->isTainted = $tainted;
     }
 
-    public function createDefArrayIndex($blockId, $myArrayDef, $arrayIndex): array
+    /**
+     * @return list<bool|array<mixed>>
+     */
+    public function createDefArrayIndex(int $blockId, MyDefinition $myArrayDef, int|string $arrayIndex): array
     {
         $myDef = new MyDefinition(
             $blockId,
@@ -237,18 +266,21 @@ class MyDefState extends MyOp
         $existingState = $myArrayDef->getState($blockId);
 
         if (!is_null($existingState) && $existingState->isType(MyDefinition::ALL_ARRAY_ELEMENTS_TAINTED)) {
-            $myDef->getCurrentState()->setTainted(true);
-            $myDef->getCurrentState()->addTaintedByDef([$myArrayDef, $myArrayDef->getCurrentState()]);
-        } elseif ($myArrayDef->getCurrentState()->isType(MyDefinition::ALL_ARRAY_ELEMENTS_TAINTED)) {
+            $myDef->requireCurrentState()->setTainted(true);
+            $myDef->requireCurrentState()->addTaintedByDef([$myArrayDef, $myArrayDef->getCurrentState()]);
+        } elseif ($myArrayDef->requireCurrentState()->isType(MyDefinition::ALL_ARRAY_ELEMENTS_TAINTED)) {
             // data/source17.php
-            $myDef->getCurrentState()->setTainted(true);
-            $myDef->getCurrentState()->addTaintedByDef([$myArrayDef, $myArrayDef->getCurrentState()]);
+            $myDef->requireCurrentState()->setTainted(true);
+            $myDef->requireCurrentState()->addTaintedByDef([$myArrayDef, $myArrayDef->getCurrentState()]);
         }
 
         return [true, $ret];
     }
 
-    public function getOrCreateDefArrayIndex($blockId, $myArrayDef, $arrayIndex)
+    /**
+     * @return list<bool|array<mixed>>
+     */
+    public function getOrCreateDefArrayIndex(int $blockId, MyDefinition $myArrayDef, int|string $arrayIndex): array
     {
         $ret = [];
         $found = false;
@@ -266,7 +298,7 @@ class MyDefState extends MyOp
         return $this->createDefArrayIndex($blockId, $myArrayDef, $arrayIndex);
     }
 
-    public function isArrayIndexExists($arrayIndex): bool
+    public function isArrayIndexExists(int|string $arrayIndex): bool
     {
         for ($i = 0; $i < count($this->arrayIndexes); $i++) {
             if ($this->arrayIndexes[$i]->index === $arrayIndex) {
@@ -277,13 +309,13 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function addArrayIndex($arrayIndex, $def): bool
+    public function addArrayIndex(int|string $arrayIndex, MyDefinition $def): bool
     {
         if (
             !$this->isArrayIndexExists($arrayIndex)
             && count($this->arrayIndexes) < 100
         ) {
-            $ele = new \stdClass();
+            $ele = new stdClass();
             $ele->index = $arrayIndex;
             $ele->def = $def;
             $this->arrayIndexes[] = $ele;
@@ -294,7 +326,7 @@ class MyDefState extends MyOp
         return false;
     }
 
-    public function overwriteArrayIndex($arrayIndex, $def): void
+    public function overwriteArrayIndex(int $arrayIndex, MyDefinition $def): void
     {
         for ($i = 0; $i < count($this->arrayIndexes); $i++) {
             if ($this->arrayIndexes[$i]->index === $arrayIndex) {
@@ -304,22 +336,25 @@ class MyDefState extends MyOp
         }
     }
 
-    public function setArrayIndexes($arrayIndexes): void
+    public function setArrayIndexes(array $arrayIndexes): void
     {
         $this->arrayIndexes = $arrayIndexes;
     }
 
-    public function getArrayIndexes()
+    /**
+     * @return list<stdClass>
+     */
+    public function getArrayIndexes(): array
     {
         return $this->arrayIndexes;
     }
 
-    public function getObjectId()
+    public function getObjectId(): int
     {
         return $this->objectId;
     }
 
-    public function setObjectId($objectId): void
+    public function setObjectId(int $objectId): void
     {
         $this->objectId = $objectId;
     }

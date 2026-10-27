@@ -115,15 +115,18 @@ class MyOutputs extends MyOutputsInternalApi
         return $this->onAddResult;
     }
 
-    public function &getResults()
+    /**
+     * @return list<array<mixed>>
+     */
+    public function &getResults(): array
     {
         return $this->results;
     }
 
-    public function setIncludeFailuresFile($file): void
+    public function setIncludeFailuresFile(string $file): void
     {
         $log = true;
-        if (is_null($file) || empty($file)) {
+        if (empty($file)) {
             $log = false;
         }
 
@@ -131,27 +134,27 @@ class MyOutputs extends MyOutputsInternalApi
         $this->includeFailuresFile = $file;
     }
 
-    public function getIncludeFailuresFile()
+    public function getIncludeFailuresFile(): ?string
     {
         return $this->includeFailuresFile;
     }
 
-    public function taintedFlow($bool): void
+    public function taintedFlow(bool $bool): void
     {
         $this->taintedFlow = $bool;
     }
 
-    public function getTaintedFlow()
+    public function getTaintedFlow(): bool
     {
         return $this->taintedFlow;
     }
 
-    public function sarifOutput($bool): void
+    public function sarifOutput(bool $bool): void
     {
         $this->sarifOutput = $bool;
     }
 
-    public function getSarifOutput()
+    public function getSarifOutput(): bool
     {
         return $this->sarifOutput;
     }

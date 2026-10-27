@@ -10,6 +10,7 @@
 
 namespace progpilot;
 
+use Exception;
 use progpilot\Objects\MyDefinition;
 use progpilot\Objects\MyFunction;
 
@@ -28,30 +29,31 @@ class Utils
         return $pos - $lineStartPos;
     }
 
-    public static function encodeCharacters($string): string
+    public static function encodeCharacters(string $string): string
     {
         return htmlentities($string, ENT_QUOTES, 'UTF-8');
     }
 
-    public static function printWarning($context, $message): void
+    public static function printWarning(Context $context, string $message): void
     {
         if ($context->isDebugMode()) {
             fwrite(STDERR, "progpilot warning: $message\n");
-            fwrite(STDERR, "file: '" . $context->getCurrentMyFile()->getName() . "'\n");
+            fwrite(STDERR, "file: '" . $context->requireCurrentMyfile()->getName() . "'\n");
 
             // sometimes it's called outside of function context
-            if (!is_null($context->getCurrentFunc())) {
-                fwrite(STDERR, "function: '" . $context->getCurrentFunc()->getName() . "'\n");
-            }
+                fwrite(STDERR, "function: '" . $context->requireCurrentFunc()->getName() . "'\n");
         }
     }
 
     public static function printError($message): never
     {
-        throw new \Exception($message);
+        throw new Exception($message);
     }
 
-    public static function printDefinition($def, $original = null): string
+    /**
+     * @param list<MyDefinition|string|int>|null $original
+     */
+    public static function printDefinition(MyDefinition $def, ?array $original = null): string
     {
 
         $prefix = "\$";
@@ -135,9 +137,9 @@ class Utils
             foreach ($array as $index => $value) {
                 if (isset($array[$index])) {
                     if (is_string($index)) {
-                        $print .= "[\"" . Utils::encodeCharacters($index) . "\"]";
+                        $print .= "[\"" . Utils::encodeCharacters((string) $index) . "\"]";
                     } else {
-                        $print .= "[" . Utils::encodeCharacters($index) . "]";
+                        $print .= "[" . Utils::encodeCharacters((string) $index) . "]";
                     }
 
                     Utils::printArray($array[$index], $print);

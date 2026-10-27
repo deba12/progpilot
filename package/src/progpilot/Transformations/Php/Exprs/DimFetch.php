@@ -10,6 +10,8 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Op\Expr\ArrayDimFetch;
 use PHPCfg\Op;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
@@ -17,11 +19,10 @@ use progpilot\Code\Opcodes;
 
 class DimFetch
 {
-    public static function dimFetch($context, $op): void
+    public static function dimFetch(Context $context, Op $op): void
     {
         if (
-            isset($op)
-            && $op instanceof Op\Expr\ArrayDimFetch
+            $op instanceof ArrayDimFetch
         ) {
             $instDefChained = new MyInstruction(Opcodes::ARRAYDIM_FETCH);
             if (isset($op->dim->value)) {
@@ -34,21 +35,21 @@ class DimFetch
             if (isset($op->result)) {
                 $instDefChained->addProperty(
                     MyInstruction::RESULTID,
-                    $context->getCurrentFunc()->getOpId($op->result)
+                    $context->requireCurrentFunc()->getOpId($op->result)
                 );
             }
 
             if (isset($op->var)) {
                 $instDefChained->addProperty(
                     MyInstruction::VARID,
-                    $context->getCurrentFunc()->getOpId($op->var)
+                    $context->requireCurrentFunc()->getOpId($op->var)
                 );
             }
 
             // beginning of the chain
             if (isset($op->var->original)) {
                 $originalDef = new MyDefinition(
-                    $context->getCurrentBlock()->getId(),
+                    $context->requireCurrentBlock()->getId(),
                     $context->getCurrentMyFile(),
                     $context->getCurrentLine(),
                     $context->getCurrentColumn(),
@@ -58,11 +59,11 @@ class DimFetch
                 $instDefChained->addProperty(MyInstruction::ORIGINAL_DEF, $originalDef);
 
                 if ($originalDef->getName() === "GLOBALS") {
-                    $context->getCurrentFunc()->setHasGlobalVariables(true);
+                    $context->requireCurrentFunc()->setHasGlobalVariables(true);
                 }
             }
 
-            $context->getCurrentMycode()->addCode($instDefChained);
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

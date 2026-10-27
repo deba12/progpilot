@@ -10,24 +10,34 @@
 
 namespace progpilot\Representations;
 
+use progpilot\Inputs\MyCustomRule;
+use progpilot\Context;
+use progpilot\Utils;
+
 class DFSVisitor
 {
-    private $rules;
-    private $context;
+    /**
+     * @var list<MyCustomRule>
+     */
+    private array $rules;
+    private Context $context;
 
-    public function __construct($context, $rules)
+    /**
+     * @param list<MyCustomRule> $rules
+     */
+    public function __construct(Context $context, array $rules)
     {
         $this->rules = $rules;
         $this->context = $context;
     }
 
-    public function initializeNode($node): void
+    public function initializeNode(NodeCG $node): void
     {
         $node->setColor("white");
         $node->setNbViews(0);
     }
 
-    public function examineNode($node): void
+    public function examineNode(NodeCG $node): void
     {
         $node->setNbViews($node->getNbViews() + 1);
 
@@ -52,13 +62,13 @@ class DFSVisitor
                         );
 
                         if (is_null($this->context->inputs->getFalsePositiveById($hashIdVuln))) {
-                            $temp["vuln_rule"] = \progpilot\Utils::encodeCharacters($rule->getAction());
+                            $temp["vuln_rule"] = Utils::encodeCharacters($rule->getAction());
                             $temp["vuln_line"] = $node->getLine();
                             $temp["vuln_column"] = $node->getColumn();
-                            $temp["vuln_file"] = \progpilot\Utils::encodeCharacters($node->getFile());
-                            $temp["vuln_description"] = \progpilot\Utils::encodeCharacters($rule->getDescription());
-                            $temp["vuln_name"] = \progpilot\Utils::encodeCharacters($rule->getAttack());
-                            $temp["vuln_cwe"] = \progpilot\Utils::encodeCharacters($rule->getCwe());
+                            $temp["vuln_file"] = Utils::encodeCharacters($node->getFile());
+                            $temp["vuln_description"] = Utils::encodeCharacters($rule->getDescription());
+                            $temp["vuln_name"] = Utils::encodeCharacters($rule->getAttack());
+                            $temp["vuln_cwe"] = Utils::encodeCharacters($rule->getCwe());
                             $temp["vuln_id"] = $hashIdVuln;
                             $temp["vuln_type"] = "custom";
 
@@ -70,7 +80,7 @@ class DFSVisitor
         }
     }
 
-    public function examineNodeTarget($node): void
+    public function examineNodeTarget(NodeCG $node): void
     {
         if ($node->getNbViews() >= $node->getNbParents()) {
             $node->setColor("black");

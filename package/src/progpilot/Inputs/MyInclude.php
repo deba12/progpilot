@@ -12,12 +12,12 @@ namespace progpilot\Inputs;
 
 class MyInclude
 {
-    private $line;
-    private $column;
-    private $sourceFile;
-    private $value;
+    private int $line;
+    private int $column;
+    private string $sourceFile;
+    private string $value;
 
-    public function __construct($line, $column, $sourceFile, $value)
+    public function __construct(int $line, int $column, string $sourceFile, string $value)
     {
         $this->line = $line;
         $this->column = $column;
@@ -25,22 +25,22 @@ class MyInclude
         $this->value = $value;
     }
 
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    public function getColumn()
+    public function getColumn(): int
     {
         return $this->column;
     }
 
-    public function getSourceFile()
+    public function getSourceFile(): string
     {
         return $this->sourceFile;
     }
 
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }

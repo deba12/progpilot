@@ -9,6 +9,9 @@
 
 namespace progpilot\Command;
 
+use progpilot\Context;
+use progpilot\Analyzer;
+use Exception;
 use progpilot\Lang;
 use progpilot\Outputs\SarifOutput;
 use Symfony\Component\Console\Command\Command;
@@ -48,8 +51,8 @@ class ProgpilotCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $context = new \progpilot\Context();
-        $analyzer = new \progpilot\Analyzer();
+        $context = new Context();
+        $analyzer = new Analyzer();
 
         try {
             if (!is_null($input->getOption('configuration'))) {
@@ -74,7 +77,7 @@ class ProgpilotCommand extends Command
             if (count($context->outputs->getResults()) > 0) {
                 return 1;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo $e->getMessage() . "\n";
 
             if ($context->isDebugMode()) {

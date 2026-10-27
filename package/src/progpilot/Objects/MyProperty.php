@@ -22,12 +22,12 @@ class MyProperty extends MyDefinition
         $this->visibility = "public";
     }
 
-    public function setVisibility($visibility): void
+    public function setVisibility(string $visibility): void
     {
         $this->visibility = $visibility;
     }
 
-    public function getVisibility()
+    public function getVisibility(): string
     {
         return $this->visibility;
     }

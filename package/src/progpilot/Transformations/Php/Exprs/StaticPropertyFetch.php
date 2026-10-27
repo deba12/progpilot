@@ -10,8 +10,9 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
+use progpilot\Context;
+use PHPCfg\Operand\BoundVariable;
 use PHPCfg\Op;
-use PHPCfg\Operand;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
@@ -19,11 +20,10 @@ use progpilot\Transformations\Php\Common;
 
 class StaticPropertyFetch
 {
-    public static function staticPropertyFetch($context, $op): void
+    public static function staticPropertyFetch(Context $context, Op $op): void
     {
         if (
-            isset($op)
-            && $op instanceof Op\Expr\StaticPropertyFetch
+            $op instanceof Op\Expr\StaticPropertyFetch
         ) {
             $instDefChained = new MyInstruction(Opcodes::STATIC_PROPERTY_FETCH);
             $instDefChained->addProperty(MyInstruction::PROPERTY_NAME, Common::literalValue($op->name));
@@ -31,7 +31,7 @@ class StaticPropertyFetch
             // static property
             if (!is_null(Common::literalValue($op->class))) {
                 $originalDef = new MyDefinition(
-                    $context->getCurrentBlock()->getId(),
+                    $context->requireCurrentBlock()->getId(),
                     $context->getCurrentMyFile(),
                     $context->getCurrentLine(),
                     $context->getCurrentColumn(),
@@ -42,9 +42,9 @@ class StaticPropertyFetch
                 $instDefChained->addProperty(MyInstruction::ORIGINAL_DEF, $originalDef);
             }
 
-            if (isset($op->var) && $op->var instanceof Operand\BoundVariable) {
+            if (isset($op->var) && $op->var instanceof BoundVariable) {
                 $originalDef = new MyDefinition(
-                    $context->getCurrentBlock()->getId(),
+                    $context->requireCurrentBlock()->getId(),
                     $context->getCurrentMyFile(),
                     $context->getCurrentLine(),
                     $context->getCurrentColumn(),
@@ -56,17 +56,17 @@ class StaticPropertyFetch
             if (isset($op->result)) {
                 $instDefChained->addProperty(
                     MyInstruction::RESULTID,
-                    $context->getCurrentFunc()->getOpId($op->result)
+                    $context->requireCurrentFunc()->getOpId($op->result)
                 );
             }
             if (isset($op->var)) {
                 $instDefChained->addProperty(
                     MyInstruction::VARID,
-                    $context->getCurrentFunc()->getOpId($op->var)
+                    $context->requireCurrentFunc()->getOpId($op->var)
                 );
             }
 
-            $context->getCurrentMycode()->addCode($instDefChained);
+            $context->requireCurrentMycode()->addCode($instDefChained);
         }
     }
 }

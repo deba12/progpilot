@@ -18,9 +18,9 @@ use PHPCfg\Func;
 
 class CallVisitor implements Visitor
 {
-    private $context;
+    private ?Context $context = null;
 
-    public function setContext($context): void
+    public function setContext(Context $context): void
     {
         $this->context = $context;
     }

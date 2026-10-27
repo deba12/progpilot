@@ -16,17 +16,17 @@ class MyCustomRule
     public const TYPE_VARIABLE = "variable";
     public const TYPE_SEQUENCE = "sequence";
 
-    private $action;
+    private ?string $action = null;
     private string $type;
-    private $definition;
-    private $attack;
-    private $cwe;
-    private $descriptionRule;
+    private ?MySpecify $definition = null;
+    private ?string $attack = null;
+    private ?string $cwe = null;
+    private string $descriptionRule;
     private array $sequenceRule;
     private int $currentOrderNumber;
-    private $extra;
+    private ?string $extra = null;
 
-    public function __construct($descriptionRule)
+    public function __construct(string $descriptionRule)
     {
         $this->action = null;
         $this->type = MyCustomRule::TYPE_FUNCTION;
@@ -39,82 +39,85 @@ class MyCustomRule
         $this->extra = null;
     }
 
-    public function getExtra()
+    public function getExtra(): string
     {
         return $this->extra;
     }
 
-    public function setExtra($extra): void
+    public function setExtra(string $extra): void
     {
         $this->extra = $extra;
     }
 
-    public function getAttack()
+    public function getAttack(): string
     {
         return $this->attack;
     }
 
-    public function setAttack($attack): void
+    public function setAttack(string $attack): void
     {
         $this->attack = $attack;
     }
 
-    public function getCwe()
+    public function getCwe(): string
     {
         return $this->cwe;
     }
 
-    public function setCwe($cwe): void
+    public function setCwe(string $cwe): void
     {
         $this->cwe = $cwe;
     }
 
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    public function getDefinition()
+    public function getDefinition(): MySpecify
     {
         return $this->definition;
     }
 
-    public function setDefinition($definition): void
+    public function setDefinition(?MySpecify $definition): void
     {
         $this->definition = $definition;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->descriptionRule;
     }
 
-    public function setDescription($descriptionRule): void
+    public function setDescription(string $descriptionRule): void
     {
         $this->descriptionRule = $descriptionRule;
     }
 
-    public function getCurrentOrderNumber()
+    public function getCurrentOrderNumber(): int
     {
         return $this->currentOrderNumber;
     }
 
-    public function setCurrentOrderNumber($currentOrderNumber): void
+    public function setCurrentOrderNumber(int $currentOrderNumber): void
     {
         $this->currentOrderNumber = $currentOrderNumber;
     }
 
-    public function getSequence()
+    /**
+     * @return list<MyCustomFunction>
+     */
+    public function getSequence(): array
     {
         return $this->sequenceRule;
     }
 
-    public function addToSequenceWithAction($functionName, $language, $action): \progpilot\Inputs\MyCustomFunction
+    public function addToSequenceWithAction($functionName, $language, $action): MyCustomFunction
     {
         $this->currentOrderNumber++;
         $myCustomFunction = new MyCustomFunction($functionName, $language, $this->currentOrderNumber);
@@ -124,7 +127,7 @@ class MyCustomRule
         return $myCustomFunction;
     }
 
-    public function addToSequence($functionName, $language): \progpilot\Inputs\MyCustomFunction
+    public function addToSequence(string $functionName, string $language): MyCustomFunction
     {
         $this->currentOrderNumber++;
         $myCustomFunction = new MyCustomFunction($functionName, $language, $this->currentOrderNumber);
@@ -133,7 +136,7 @@ class MyCustomRule
         return $myCustomFunction;
     }
 
-    public function addFunctionDefinition($functionName, $language): \progpilot\Inputs\MyCustomFunction
+    public function addFunctionDefinition(string $functionName, string $language): MyCustomFunction
     {
         $myCustomFunction = new MyCustomFunction($functionName, $language);
         $this->definition = $myCustomFunction;
@@ -141,7 +144,7 @@ class MyCustomRule
         return $myCustomFunction;
     }
 
-    public function addVariableDefinition($variableName, $language): \progpilot\Inputs\MyCustomVariable
+    public function addVariableDefinition(string $variableName, string $language): MyCustomVariable
     {
         $myCustomVariable = new MyCustomVariable($variableName, $language);
         $this->definition = $myCustomVariable;
@@ -149,12 +152,12 @@ class MyCustomRule
         return $myCustomVariable;
     }
 
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
 
-    public function setAction($action)
+    public function setAction(string $action): string
     {
         return $this->action = $action;
     }

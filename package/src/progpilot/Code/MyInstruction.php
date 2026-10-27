@@ -38,9 +38,9 @@ class MyInstruction
     public const REFERENCE = 27;
 
     private array $properties;
-    private $opcode;
+    private int $opcode;
 
-    public function __construct($opcode)
+    public function __construct(int $opcode)
     {
         $this->properties = [];
         $this->opcode = $opcode;
@@ -56,7 +56,25 @@ class MyInstruction
         return isset($this->properties[$index]);
     }
 
-    public function getProperty($index)
+    /**
+     * The properties are set by the transformation step according to the opcode, the type depends on the key.
+     * Dynamic keys (argdefN, keyN, valueN, ...) are not described here and give mixed.
+     *
+     * @return ($index is self::MYBLOCK|self::MYBLOCK_IF|self::MYBLOCK_ELSE ? \progpilot\Objects\MyBlock
+     *     : ($index is self::MYFUNC|self::MYFUNC_CALL ? \progpilot\Objects\MyFunction
+     *     : ($index is self::MYCLASS ? \progpilot\Objects\MyClass
+     *     : ($index is self::DEF ? \progpilot\Objects\MyDefinition|null
+     *     : ($index is self::ORIGINAL_DEF ? \progpilot\Objects\MyDefinition|null
+     *     : ($index is self::FUNCNAME|self::PROPERTY_NAME ? string
+     *     : ($index is self::VARID ? int|null
+     *     : ($index is self::TYPE_INCLUDE|self::RESULTID|self::EXPRID|self::LEFTID ? int
+     *     : ($index is self::ARRAY_DIM ? int|string
+     *     : ($index is self::RIGHTID ? int|array<mixed>
+     *     : ($index is self::RETURN_DEFS ? array<mixed>
+     *     : ($index is self::REFERENCE ? bool
+     *     : mixed))))))))))))
+     */
+    public function getProperty(int|string $index): mixed
     {
         if (isset($this->properties[$index])) {
             return $this->properties[$index];
@@ -65,7 +83,7 @@ class MyInstruction
         return null;
     }
 
-    public function getOpcode()
+    public function getOpcode(): int
     {
         return $this->opcode;
     }

@@ -10,21 +10,23 @@
 
 namespace progpilot\Transformations\Php\Exprs;
 
-use PHPCfg\Operand;
+use progpilot\Context;
+use PHPCfg\Operand\Variable;
+use PHPCfg\Operand\Literal;
 use progpilot\Objects\MyDefinition;
 use progpilot\Code\MyInstruction;
 use progpilot\Code\Opcodes;
 
 class VariableFetch
 {
-    public static function variableFetch($context, $op, $expr): void
+    public static function variableFetch(Context $context, $op, ?string $expr): void
     {
         if (
-            isset($op->original) && $op->original instanceof Operand\Variable
-            && isset($op->original->name) && $op->original->name instanceof Operand\Literal
+            isset($op->original) && $op->original instanceof Variable
+            && isset($op->original->name) && $op->original->name instanceof Literal
         ) {
             $myTemp = new MyDefinition(
-                $context->getCurrentBlock()->getId(),
+                $context->requireCurrentBlock()->getId(),
                 $context->getCurrentMyFile(),
                 $context->getCurrentLine(),
                 $context->getCurrentColumn(),
@@ -37,11 +39,11 @@ class VariableFetch
 
             $instVariableFetch->addProperty(
                 $property,
-                $context->getCurrentFunc()->getOpId($op)
+                $context->requireCurrentFunc()->getOpId($op)
             );
 
             $instVariableFetch->addProperty(MyInstruction::DEF, $myTemp);
-            $context->getCurrentMycode()->addCode($instVariableFetch);
+            $context->requireCurrentMycode()->addCode($instVariableFetch);
         }
     }
 }

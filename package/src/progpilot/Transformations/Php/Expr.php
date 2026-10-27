@@ -10,6 +10,9 @@
 
 namespace progpilot\Transformations\Php;
 
+use progpilot\Context;
+use PHPCfg\Op;
+use PHPCfg\Operand;
 use progpilot\Transformations\Php\Exprs\PropertyFetch;
 use progpilot\Transformations\Php\Exprs\StaticPropertyFetch;
 use progpilot\Transformations\Php\Exprs\DimFetch;
@@ -23,7 +26,7 @@ use progpilot\Transformations\Php\Exprs\LiteralFetch;
 
 class Expr
 {
-    public static function explicitfetch($context, $op, $expr): void
+    public static function explicitfetch(Context $context, Op $op, $expr): void
     {
         CastFetch::castFetch($context, $op, $expr);
         ConcatFetch::concatFetch($context, $op, $expr);
@@ -36,7 +39,7 @@ class Expr
         ConstFetch::constFetch($context, $op);
     }
 
-    public static function implicitfetch($context, $op, $expr): void
+    public static function implicitfetch(Context $context, Operand $op, ?string $expr): void
     {
         VariableFetch::variableFetch($context, $op, $expr);
         LiteralFetch::literalFetch($context, $op);

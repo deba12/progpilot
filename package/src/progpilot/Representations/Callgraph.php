@@ -10,32 +10,41 @@
 
 namespace progpilot\Representations;
 
+use SplObjectStorage;
+use progpilot\Objects\MyBlock;
+use stdClass;
+use progpilot\Objects\MyFunction;
+use progpilot\Objects\MyClass;
+
 class Callgraph
 {
     private array $nodes;
-    private \SplObjectStorage|array $blocks;
+    private SplObjectStorage|array $blocks;
 
     public function __construct()
     {
         $this->nodes = [];
-        $this->blocks = new \SplObjectStorage();
+        $this->blocks = new SplObjectStorage();
     }
 
-    public function getNodes()
+    /**
+     * @return array<string, NodeCG>
+     */
+    public function getNodes(): array
     {
         return $this->nodes;
     }
 
-    public function newBlock($myBlock): void
+    public function newBlock(MyBlock $myBlock): void
     {
-        $obj = new \stdClass();
+        $obj = new stdClass();
         $obj->calls = [];
         $obj->children = [];
 
         $this->blocks[$myBlock] = $obj;
     }
 
-    public function addNode($myFunc, $myClass): void
+    public function addNode(MyFunction $myFunc, ?MyClass $myClass): void
     {
         $NodeCG = new NodeCG(
             $myFunc->getName(),
@@ -50,8 +59,12 @@ class Callgraph
         }
     }
 
-    public function addEdge($myFuncCaller, $myClassCaller, $myFuncCallee, $myClassCallee): void
-    {
+    public function addEdge(
+        MyFunction $myFuncCaller,
+        ?MyClass $myClassCaller,
+        MyFunction $myFuncCallee,
+        ?MyClass $myClassCallee
+    ): void {
         $NodeCGCaller = new NodeCG(
             $myFuncCaller->getName(),
             $myFuncCaller->getLine(),
@@ -84,7 +97,7 @@ class Callgraph
         }
     }
 
-    public function addFuncCall($myBlock, $myFunc, $myClass): void
+    public function addFuncCall(MyBlock $myBlock, MyFunction $myFunc, ?MyClass $myClass): void
     {
         if (!$this->blocks->offsetExists($myBlock)) {
             $this->newBlock($myBlock);
@@ -97,7 +110,7 @@ class Callgraph
         }
     }
 
-    public function addChild($myBlockParent, $myBlockChild): void
+    public function addChild(MyBlock $myBlockParent, MyBlock $myBlockChild): void
     {
         if ($myBlockParent !== $myBlockChild) {
             if (!$this->blocks->offsetExists($myBlockParent)) {
@@ -116,7 +129,10 @@ class Callgraph
         }
     }
 
-    public function getCalls($myBlock)
+    /**
+     * @return list<array<mixed>>|null
+     */
+    public function getCalls(MyBlock $myBlock): ?array
     {
         if ($this->blocks->offsetExists($myBlock)) {
             return $this->blocks[$myBlock]->calls;

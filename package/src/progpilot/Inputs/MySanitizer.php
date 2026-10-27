@@ -10,9 +10,14 @@
 
 namespace progpilot\Inputs;
 
+use stdClass;
+
 class MySanitizer extends MySpecify
 {
-    private $prevent;
+    /**
+     * @var list<string>
+     */
+    private array $prevent;
     private array $parameters;
     private bool $hasParameters;
 
@@ -25,22 +30,28 @@ class MySanitizer extends MySpecify
         $this->parameters = [];
     }
 
-    public function getPrevent()
+    /**
+     * @return list<string>
+     */
+    public function getPrevent(): array
     {
         return $this->prevent;
     }
 
-    public function addParameter($parameter, $conditions, $values = null): void
+    /**
+     * @param list<stdClass>|null $values
+     */
+    public function addParameter(int $parameter, string $conditions, ?array $values = null): void
     {
         $this->parameters[] = [$parameter, $conditions, $values];
     }
 
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
 
-    public function getParameterconditions($i)
+    public function getParameterconditions(int $i): ?string
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -54,7 +65,10 @@ class MySanitizer extends MySpecify
         return null;
     }
 
-    public function getParameterValues($i)
+    /**
+     * @return list<stdClass>|null
+     */
+    public function getParameterValues(int $i): ?array
     {
         foreach ($this->parameters as $parameter) {
             $index = $parameter[0];
@@ -83,12 +97,12 @@ class MySanitizer extends MySpecify
         return false;
     }
 
-    public function hasParameters()
+    public function hasParameters(): bool
     {
         return $this->hasParameters;
     }
 
-    public function setHasParameters($hasParameters): void
+    public function setHasParameters(bool $hasParameters): void
     {
         $this->hasParameters = $hasParameters;
     }

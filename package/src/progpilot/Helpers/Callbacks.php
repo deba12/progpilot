@@ -10,45 +10,58 @@
 
 namespace progpilot\Helpers;
 
+use progpilot\Context;
+use progpilot\Objects\MyClass;
+use progpilot\Objects\MyFunction;
+use progpilot\Objects\MyDefinition;
+use progpilot\Objects\MyBlock;
+use progpilot\Dataflow\Definitions;
 use progpilot\Objects\MyAssertion;
 
 class Callbacks
 {
-    public static function modifyMyclassOfObject($context, $idObject, $currentMyclass, $newMyclass): void
-    {
-        if (!is_null($currentMyclass) && $currentMyclass->getName() === $newMyclass->getName()) {
+    public static function modifyMyclassOfObject(
+        Context $context,
+        int $idObject,
+        MyClass $currentMyclass,
+        MyClass $newMyclass
+    ): void {
+        if ($currentMyclass->getName() === $newMyclass->getName()) {
             $context->getObjects()->addMyclassToObject($idObject, $newMyclass);
         }
     }
 
-    public static function addStateDefAsAPastArgument($myfunc, $nbparam, $arg): void
+    public static function addStateDefAsAPastArgument(MyFunction $myfunc, int $nbparam, MyDefinition $arg): void
     {
         $myfunc->addStatePastArgument($nbparam, $arg->getCurrentState());
     }
 
-    public static function addAttributesOfInitialReturnDefs($returnDef, $initialReturnDef): void
-    {
+    public static function addAttributesOfInitialReturnDefs(
+        MyDefinition $returnDef,
+        MyDefinition $initialReturnDef
+    ): void {
         $returnDef->setStates($initialReturnDef->getStates());
         $returnDef->setStatesToBlocksIds($initialReturnDef->getStatesToBlocksIds());
     }
 
-    public static function addSanitizedTypes($defValid, $sanitizedTypes): void
+    /**
+     * @param list<string> $sanitizedTypes
+     */
+    public static function addSanitizedTypes(MyDefinition $defValid, array $sanitizedTypes): void
     {
-        $defValid->getCurrentState()->setSanitized(true);
-        if (is_array($sanitizedTypes)) {
-            foreach ($sanitizedTypes as $sanitizedType) {
-                $defValid->getCurrentState()->addTypeSanitized($sanitizedType);
-            }
+        $defValid->requireCurrentState()->setSanitized(true);
+        foreach ($sanitizedTypes as $sanitizedType) {
+            $defValid->requireCurrentState()->addTypeSanitized($sanitizedType);
         }
     }
 
-    public static function addValidAssertion($defValid, $block): void
+    public static function addValidAssertion(MyDefinition $defValid, MyBlock $block): void
     {
         $myAssertion = new MyAssertion($defValid, "valid");
         $block->addAssertion($myAssertion);
     }
 
-    public static function cleanTaintedDef($def, $funcDefs): void
+    public static function cleanTaintedDef(MyDefinition $def, Definitions $funcDefs): void
     {
         $originalDef = $funcDefs->getOriginalDef($def->getId());
 
